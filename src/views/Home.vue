@@ -113,7 +113,6 @@
 </script>
 
 <style scoped lang="scss">
-	@import '~scss_vars';
 	.container {
 		font-family: "PingFangSC-Regular", "Microsoft YaHei", "sans-serif", "Arial Narrow";
 		position: absolute;
