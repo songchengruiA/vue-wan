@@ -17,14 +17,15 @@
 
 <script>
   import { requestLogin } from '../api/api';
+  import md5 from 'js-md5'
   //import NProgress from 'nprogress'
   export default {
     data() {
       return {
         logining: false,
         ruleForm2: {
-          account: 'admin',
-          checkPass: '123456'
+          account: 'song',
+          checkPass: '123song'
         },
         rules2: {
           account: [
@@ -49,20 +50,24 @@
           if (valid) {
             //_this.$router.replace('/table');
             this.logining = true;
+              let password = this.ruleForm2.checkPass
             //NProgress.start();
-            var loginParams = { username: this.ruleForm2.account, password: this.ruleForm2.checkPass };
+            var loginParams = { username: this.ruleForm2.account, password: password};
             requestLogin(loginParams).then(data => {
+                console.log(data)
               this.logining = false;
               //NProgress.done();
-              let { msg, code, user } = data;
-              if (code !== 200) {
+              let { msg, status } = data;
+              let { nickname,token } = data.data;
+              if (status !== 1) {
                 this.$message({
                   message: msg,
                   type: 'error'
                 });
               } else {
-                sessionStorage.setItem('user', JSON.stringify(user));
-                this.$router.push({ path: '/table' });
+                sessionStorage.setItem('user', JSON.stringify(nickname));
+                sessionStorage.setItem('token', JSON.stringify(token));
+                this.$router.push({ path: '/page6' });
               }
             });
           } else {

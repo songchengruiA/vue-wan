@@ -1,3 +1,6 @@
+import Vue from 'vue'
+import VueRouter from 'vue-router'
+import axios from 'axios'
 import Login from './views/Login.vue'
 import NotFound from './views/404.vue'
 import Home from './views/Home.vue'
@@ -12,6 +15,7 @@ import Page7 from './views/nav4/Page7.vue'
 import Page8 from './views/nav5/Page8.vue'
 import echarts from './views/charts/echarts.vue'
 
+Vue.use(VueRouter)
 let routes = [
     {
         path: '/login',
@@ -89,6 +93,9 @@ let routes = [
     },
     {
         path: '/',
+        meta: {
+            requireAuth: true,
+        },
         component: Home,
         name: '',
         iconCls: 'fa fa-address-card',
@@ -113,4 +120,35 @@ let routes = [
     }
 ];
 
-export default routes;
+const router = new VueRouter({
+    routes
+});
+var token = JSON.parse(sessionStorage.getItem('token'));
+router.beforeEach((to, from, next) => {
+    if (to.matched.some(r => r.meta.requireAuth)) {
+
+    }
+    else {
+        axios.interceptors.request.use(
+            config => {
+                if (token) {  // 判断是否存在token，如果存在的话，则每个http header都加上token
+                    alert(12)
+                    config.headers.Authorization = `token ${token}`;
+                }
+                return config;
+            },
+            err => {
+                alert(1212)
+            });
+        axios.interceptors.response.use(
+            response => {
+                alert(123)
+                return response;
+            },
+            error => {
+
+            });
+        next();
+    }
+})
+export default router;
