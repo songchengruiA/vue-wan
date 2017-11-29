@@ -1,5 +1,5 @@
 import axios from 'axios';
-var qs=require('qs');
+var qs = require('qs');
 
 let base = '';
 
@@ -16,10 +16,24 @@ export const editUser = params => { return axios.get(`${base}/user/edit`, { para
 export const addUser = params => { return axios.get(`${base}/user/add`, { params: params }); };
 
 //  创建预备竞猜
-//  请求赛事
 var instance = axios.create({
-    headers: {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJwd2NuIiwiaWF0IjoxNTExMzQ0NzkxfQ.izDygjOBn8TNNIK2V4QOZlV2WrdrWqNmSmhAO-BmPr8'}
+    headers: {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJwd2NuIiwiaWF0IjoxNTExODM3NDAwfQ.0DjUafYNvxw-D52zuq7JpCDi96yV2Fpybry-RrABWUc','X-Requested-With': 'XMLHttpRequest'}
 });
+//登录
 export const requestLogin = params => { return instance.post(`http://localhost:8066/admin/login`, qs.stringify(params)).then(res => res.data); };
-
+//  请求赛事
 export const getRequest = params => { return instance.get('http://localhost:8066/admin/source/gambles', { params: params }); };
+//修改电竞
+export const  renew = params => { return instance.put(`http://localhost:8066/admin/source/gambles`, qs.stringify(params)).then(res => res.data); };
+//上传电竞
+export const  upload = params => { return instance.post(`http://localhost:8066/admin/pwcn/gambles`, qs.stringify(params)).then(res => res.data); };
+//删除电竞
+export const  delGaming = params => { return instance.delete('http://localhost:8066/admin/source/gambles/' + params).then(res => res.data); };
+//获取赛事信息
+export const getGameName= params => { return instance.get('http://localhost:8066/admin/pwcn/leagues', { params: params }); };
+//获取战队信息
+export const getTeamName= params => { return instance.get('http://localhost:8066/admin/pwcn/teams', { params: params }); };
+//创建预备竞猜
+export const  creatGame = params => { return instance.post('http://localhost:8066/admin/source/gambles', qs.stringify(params) ).then(res => res.data); };
+//编辑已上传竞猜
+export const getGameGuess = params => { return instance.get('http://localhost:8066/admin/matches', { params: params }); };

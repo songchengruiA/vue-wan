@@ -13,6 +13,7 @@ import Page5 from './views/nav2/Page5.vue'
 import Page6 from './views/nav3/Page6.vue'
 import Page7 from './views/nav4/Page7.vue'
 import Page8 from './views/nav5/Page8.vue'
+import Page12 from './views/nav5/Page12.vue'
 import echarts from './views/charts/echarts.vue'
 
 Vue.use(VueRouter)
@@ -56,7 +57,9 @@ let routes = [
         iconCls: 'fa fa-address-card',
         leaf: true,//只有一个节点
         children: [
-            { path: '/page8', component: Page8, name: '编辑已上传竞猜' }
+            { path: '/page8', component: Page8, name: '编辑已上传竞猜', children:[{
+                path: '/page8/Page12', component: Page12,props: false
+            }] }
         ]
     },
     {
@@ -101,7 +104,8 @@ let routes = [
         iconCls: 'fa fa-address-card',
         leaf: true,//只有一个节点
         children: [
-            { path: '/page8', component: Page8, name: '创建趣味竞猜' }
+            { path: '/page8', component: Page8, name: '创建趣味竞猜'
+            }
         ]
     },
     {
@@ -118,6 +122,13 @@ let routes = [
         hidden: true,
         redirect: { path: '/404' }
     }
+
+
+
+
+
+
+
 ];
 
 const router = new VueRouter({
@@ -132,17 +143,14 @@ router.beforeEach((to, from, next) => {
         axios.interceptors.request.use(
             config => {
                 if (token) {  // 判断是否存在token，如果存在的话，则每个http header都加上token
-                    alert(12)
                     config.headers.Authorization = `token ${token}`;
                 }
                 return config;
             },
             err => {
-                alert(1212)
             });
         axios.interceptors.response.use(
             response => {
-                alert(123)
                 return response;
             },
             error => {

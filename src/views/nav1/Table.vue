@@ -14,7 +14,7 @@
 				</el-form-item>
 			</el-form>
 		</el-col>
-
+		<span @click="handleAdd">121122</span>
 		<!--列表-->
 		<el-table :data="users" highlight-current-row v-loading="listLoading" @selection-change="selsChange" style="width: 100%;">
 			<el-table-column type="selection" width="55">
@@ -93,7 +93,7 @@
 					<el-date-picker type="date" placeholder="选择日期" v-model="addForm.birth"></el-date-picker>
 				</el-form-item>
 				<el-form-item label="地址">
-					<el-input type="textarea" v-model="addForm.addr"></el-input>
+					<el-input type="textarea" v-model="addr"></el-input>
 				</el-form-item>
 			</el-form>
 			<div slot="footer" class="dialog-footer">
@@ -134,11 +134,12 @@
 					name: '',
 					sex: -1,
 					age: 0,
-					birth: '',
-					addr: ''
+					birth: ''
 				},
+                addr: '',
 
-				addFormVisible: false,//新增界面是否显示
+
+                addFormVisible: false,//新增界面是否显示
 				addLoading: false,
 				addFormRules: {
 					name: [

@@ -54,7 +54,6 @@
             //NProgress.start();
             var loginParams = { username: this.ruleForm2.account, password: password};
             requestLogin(loginParams).then(data => {
-                console.log(data)
               this.logining = false;
               //NProgress.done();
               let { msg, status } = data;
