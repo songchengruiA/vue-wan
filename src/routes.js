@@ -12,8 +12,9 @@ import Page4 from './views/nav2/Page4.vue'
 import Page5 from './views/nav2/Page5.vue'
 import Page6 from './views/nav3/Page6.vue'
 import Page7 from './views/nav4/Page7.vue'
+import Page from './views/nav5/Page.vue'
 import Page8 from './views/nav5/Page8.vue'
-import Page12 from './views/nav5/Page12.vue'
+import Page12 from './views/nav5/page12.vue'
 import echarts from './views/charts/echarts.vue'
 
 Vue.use(VueRouter)
@@ -57,9 +58,11 @@ let routes = [
         iconCls: 'fa fa-address-card',
         leaf: true,//只有一个节点
         children: [
-            { path: '/page8', component: Page8, name: '编辑已上传竞猜', children:[{
-                path: '/page8/Page12', component: Page12,props: false
-            }] }
+            { path: '/page8', component: Page, name: '编辑已上传竞猜',children:[
+                {path:'',component: Page8},
+                {path:'/page8/:id',component: Page12}
+                ]
+            }
         ]
     },
     {
@@ -104,7 +107,7 @@ let routes = [
         iconCls: 'fa fa-address-card',
         leaf: true,//只有一个节点
         children: [
-            { path: '/page8', component: Page8, name: '创建趣味竞猜'
+            { path: '/page12/: id', component: Page12, name: '创建趣味竞猜'
             }
         ]
     },
@@ -122,13 +125,6 @@ let routes = [
         hidden: true,
         redirect: { path: '/404' }
     }
-
-
-
-
-
-
-
 ];
 
 const router = new VueRouter({

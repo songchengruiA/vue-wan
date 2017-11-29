@@ -94,10 +94,7 @@
 					</td>
 					<td class="games-btn">
 						<div class="border last">
-							<a class="btn btn-sm btn-info"
-							   href="page7.vue">
-								{{item.match.gambleNum > 0 ? '+'+item.match.gambleNum : '+0'}}</a>
-							<router-link to="page12">/hello/you</router-link>
+							<router-link :to="{path:'/page8/'+item.match._id, query:{id:145545}}" class="btn btn-sm btn-info">{{item.match.gambleNum > 0 ? '+'+item.match.gambleNum : '+0'}}</router-link>
 						</div>
 					</td>
 				</tr>
@@ -128,7 +125,7 @@
                 dialogVisible: false,
                 gameType: 'LOL',
                 gameStatus: '全部',
-                time: '',
+                time: '12',
                 pageList: []
             }
         },

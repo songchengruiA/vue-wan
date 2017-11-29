@@ -17,7 +17,7 @@ export const addUser = params => { return axios.get(`${base}/user/add`, { params
 
 //  创建预备竞猜
 var instance = axios.create({
-    headers: {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJwd2NuIiwiaWF0IjoxNTExODM3NDAwfQ.0DjUafYNvxw-D52zuq7JpCDi96yV2Fpybry-RrABWUc','X-Requested-With': 'XMLHttpRequest'}
+    headers: {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJwd2NuIiwiaWF0IjoxNTExOTM4OTQ2fQ.P8l-FIDo1namn9u2s8XGr_vrxLVZRCY-kzbehvPF3H0'}
 });
 //登录
 export const requestLogin = params => { return instance.post(`http://localhost:8066/admin/login`, qs.stringify(params)).then(res => res.data); };
