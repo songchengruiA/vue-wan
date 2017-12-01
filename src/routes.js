@@ -8,6 +8,8 @@ import Main from './views/Main.vue'
 import Table from './views/nav1/Table.vue'
 import Form from './views/nav1/Form.vue'
 import user from './views/nav1/user.vue'
+import Page1 from './views/nav6/Page1.vue'
+import Page2 from './views/nav6/Page2.vue'
 import Page4 from './views/nav2/Page4.vue'
 import Page5 from './views/nav2/Page5.vue'
 import Page6 from './views/nav3/Page6.vue'
@@ -83,8 +85,8 @@ let routes = [
         name: '待添加赛事及战队',
         iconCls: 'fa fa-id-card-o',
         children: [
-            { path: '/page4', component: Page4, name: '待添加赛事' },
-            { path: '/page5', component: Page5, name: '待添加战队' }
+            { path: '/page1', component: Page1, name: '待添加赛事' },
+            { path: '/page2', component: Page2, name: '待添加战队' }
         ]
     },
     {

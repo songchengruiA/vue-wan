@@ -3,38 +3,38 @@
 		<form class="form-inline form-search addguess-head">
 			<div class="form-group">
 				<label class="size-set pull-left" style="margin-left: 0px">选择游戏类型:</label>
-				<el-select v-model="gameType"  value-key="id" class="selected-guess" filterable placeholder="" @change="gameChange">
+				<el-select v-model="gameType"  value-key="name" class="selected-guess" filterable placeholder="" @change="gameChange">
 					<el-option
 							v-for="item in optionsA"
 							:key="item.id"
-							:label="item.label"
+							:label="item.name"
 							:value="item">
 					</el-option>
 				</el-select>
 			</div>
 			<div class="form-group">
 				<label class="size-set pull-left">选择赛事来源:</label>
-				<el-select v-model="gameSource"  class="selected-guess" filterable placeholder="">
+				<el-select v-model="gameSource" value-key="name" class="selected-guess" filterable placeholder="">
 					<el-option
-							v-for="item in optionsB"
-							:key="item.id"
-							:label="item.label"
-							:value="item.name">
+                        v-for="item in optionsB"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item">
 					</el-option>
 				</el-select>
 			</div>
 			<div class="block">
 				<el-date-picker
-						v-model="time"
-						type="daterange"
-						placeholder="选择时间"
-						format="yyyy-MM-dd">
+                    v-model="time"
+                    type="daterange"
+                    placeholder="选择时间"
+                    format="yyyy-MM-dd">
 				</el-date-picker>
 			</div>
 			<div class="form-group" style="float: right;margin-right: 0px;margin-top: -25px">
 				<el-button type="primary" @click="search">搜索</el-button>
 			</div>
-			<div class="line-block"></div>
+            <div class="line-block"></div>
 		</form>
 		<div style="clear: both"></div>
 		<div class="col-sm-12 add-guess-list">
@@ -206,18 +206,18 @@
     import { getRequest ,renew,upload, delGaming,getGameName,getTeamName,creatGame} from '../../api/api';
     import { formatDate } from '../../api/date';
     var tableData = require('../../api/table.json')
-	console.log(tableData[0].CSGO)
     export default {
         data() {
             return {
                 optionsA: [
-                    {id: 2, label: 'LOL'},
-                    {id: 3, label: 'DOTA2'},
-                    {id: 1, label: 'CSGO'},
-                    {id: 4, label: '王者荣耀'}
-                    ],
+                    {id: 2, name: 'LOL'},
+                    {id: 3, name: 'DOTA2'},
+                    {id: 1, name: 'CSGO'},
+                    {id: 4, name: '王者荣耀'}
+				],
                 optionsB: [
-                    {id: 1, name: '后台'}
+                    {id: 1, name: '后台'},
+                    {id: 2, name : "EGB"},
 				],
                 dialogVisible: false,
                 gameType: 'LOL',
@@ -280,6 +280,7 @@
                  para.endTime = this.time[1]?Date.parse(this.time[1]):null;
                 getRequest(para).then((res) => {
 					this.pageList =  res.data.data.list
+                    console.log(this.pageList)
 				});
 
 			},
