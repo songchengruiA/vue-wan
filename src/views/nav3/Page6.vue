@@ -3,23 +3,23 @@
 		<form class="form-inline form-search addguess-head">
 			<div class="form-group">
 				<label class="size-set pull-left" style="margin-left: 0px">选择游戏类型:</label>
-				<el-select v-model="gameType"  value-key="id" class="selected-guess" filterable placeholder="" @change="gameChange">
+				<el-select v-model="gameType"  value-key="name" class="selected-guess" filterable placeholder="" @change="gameChange">
 					<el-option
 							v-for="item in optionsA"
 							:key="item.id"
-							:label="item.label"
+							:label="item.name"
 							:value="item">
 					</el-option>
 				</el-select>
 			</div>
 			<div class="form-group">
 				<label class="size-set pull-left">选择赛事来源:</label>
-				<el-select v-model="gameSource"  class="selected-guess" filterable placeholder="">
+				<el-select v-model="gameSource" value-key="name" class="selected-guess" filterable placeholder="">
 					<el-option
 							v-for="item in optionsB"
 							:key="item.id"
-							:label="item.label"
-							:value="item.name">
+							:label="item.name"
+							:value="item">
 					</el-option>
 				</el-select>
 			</div>
@@ -211,13 +211,14 @@
         data() {
             return {
                 optionsA: [
-                    {id: 2, label: 'LOL'},
-                    {id: 3, label: 'DOTA2'},
-                    {id: 1, label: 'CSGO'},
-                    {id: 4, label: '王者荣耀'}
-                    ],
+                    {id: 2, name: 'LOL'},
+                    {id: 3, name: 'DOTA2'},
+                    {id: 1, name: 'CSGO'},
+                    {id: 4, name: '王者荣耀'}
+				],
                 optionsB: [
-                    {id: 1, name: '后台'}
+                    {id: 1, name: '后台'},
+                    {id: 2, name : "EGB"},
 				],
                 dialogVisible: false,
                 gameType: 'LOL',

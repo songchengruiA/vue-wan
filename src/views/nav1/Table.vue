@@ -178,6 +178,7 @@
 					this.total = res.data.total;
 					this.users = res.data.users;
 					this.listLoading = false;
+
 					//NProgress.done();
 				});
 			},
