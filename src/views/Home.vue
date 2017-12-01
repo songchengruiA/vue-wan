@@ -119,7 +119,7 @@
 			box-shadow: 0 2px 2px 0 #e6e6e6;
 			margin-bottom: 0;
 			position: absolute;
-			z-index: 11111;
+			z-index: 222;
 			.title{
 				font-size: 28px;
 				margin-left: 40px;
@@ -232,7 +232,7 @@
 				overflow-y: auto;
 				padding: 0;
 				background: #3d4250;
-				z-index: 111111;
+				z-index: 1110;
 			}
 			.content-container {
 				// background: #f1f2f7;

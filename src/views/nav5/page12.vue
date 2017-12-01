@@ -1,3 +1,469 @@
 <template>
-    <div>21</div>
+    <div>
+        <div class="form-group width shut" style="margin-right: 50px;float: right;">
+            <div class="button-submit">
+                <button class="btn btn-sm btn-danger btn-submit">关闭</button>
+            </div>
+        </div>
+        <div class="edit-guess-list guess-table">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th class="text-right" width="280">
+                        <div class="border first" >
+                            <div class="middle padding-right-40"  style="border-left: 1px solid #d7d7d7;">
+                                <div class="team-logo pull-right">
+                                    <img v-bind:src="pageTitle.teamA.teamLogoUrl" width="80px">
+                                </div>
+                            </div>
+                        </div>
+                    </th>
+                    <th class="text-center" style="min-width: 140px;">
+                        <div class="border text-left">
+                            <div class="middle title">{{pageTitle.teamA.teamName}}</div>
+                        </div>
+                    </th>
+                    <th class="text-center" style="min-width: 240px;">
+                        <div class="border">
+                            <div class="middle">
+                                <div>{{titleData.leagueName}}</div>
+                                <div>{{titleData.endTime  | formatDate}}
+                                </div>
+                                <span class="label label-success" v-if="pageTitle.matchStatus == 1">竞猜中</span>
+                                <span class="label label-danger" v-if="pageTitle.matchStatus == 2">进行中</span>
+                                <span class="label label-info" v-if="pageTitle.matchStatus == 3">已结束</span>
+                                <span class="label label-info" v-if="pageTitle.matchStatus == 4">已结束</span>
+                                <div>
+                                    <input style="width: 71px"
+                                            type="text"
+                                            placeholder="赛制"
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </th>
+                    <th class="text-center" style="min-width: 140px;">
+                        <div class="border text-right title">
+                            <div class="middle">{{pageTitle.teamB.teamName}}</div>
+                        </div>
+                    </th>
+                    <th class="text-left" width="280">
+                        <div class="border">
+                            <div class="middle title padding-left-40"  style="border-right: 1px solid #d7d7d7;">
+                                <div class="team-logo pull-left">
+                                    <img v-bind:src="pageTitle.teamB.teamLogoUrl" width="80px">
+                                </div>
+                            </div>
+                        </div>
+                    </th>
+                    <th class="games-detail-btn" width="140">
+
+                    </th>
+                </tr>
+
+                </thead>
+                <tbody>
+                <tr v-for="item in pageList" >
+                    <td class="text-right" width="280">
+                        <div class="border first " style="border-left: 1px solid #d7d7d7;">
+                            <div class="middle">
+                                <div class="original position-left" v-show="item.gambleSource == 1">
+                                    <img src="../../images/original.png" alt="">
+                                </div>
+                                <div class="hidden-icon position-left" v-show="item.isDelete == true">
+                                    <img src="../../images/editguess-hidden.png" alt="">
+                                </div>
+                                <div class="win position-left" v-show="item.gambleStatus == 3">
+                                    <img src="../../images/win.png" alt="">
+                                </div>
+                                <div class="win position-left" v-show="item.gambleStatus == 4">
+                                    <img src="../../images/fail.png" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-center" style="min-width: 140px;">
+                        <div class="border">
+                            <div class="middle title text-left">
+                                <p>
+                                    <input :disabled="!item.edite" :class="{ 'edite-input': !item.edite}"
+                                            type="text"
+                                            v-model="item.gambleOptionA">
+                                </p>
+                                <p>
+                                    <input :disabled="!item.edite" :class="{ 'edite-input': !item.edite}"
+                                            type="text"
+                                            v-model="item.optionBOdds">
+                                </p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <div class="border">
+                            <div class="middle">
+                                <p>{{item.gambleName}}</p>
+                                <div class="dropdown input-150">
+                                    <div>
+                                        {{item.endTime | formatDate}}
+                                    </div>
+                                </div>
+                                <div>
+                                    <span class="label label-success" v-if="item.gambleStatus == 1">竞猜中</span>
+                                    <span class="label label-danger" v-if="item.gambleStatus == 2">进行中</span>
+                                    <span class="label label-info" v-if="item.gambleStatus == 3">已结束</span>
+                                    <span class="label label-info" v-if="item.gambleStatus == 4">已结束</span>
+                                    <span class="label label-info" v-if="item.gambleStatus == 6">已结束</span>
+                                </div>
+
+                                <p>
+                                </p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-center" style="min-width: 140px;">
+                        <div class="border">
+                            <div class="middle title text-right">
+                                <p>
+                                    <input :disabled="!item.edite" :class="{ 'edite-input': !item.edite}"
+                                            type="text"
+                                            v-model="item.gambleOptionB">
+                                </p>
+                                <p>
+                                    <input :disabled="!item.edite" :class="{ 'edite-input': !item.edite}"
+                                            type="text"
+                                            v-model="item.optionAOdds">
+                                </p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-left" width="280">
+                        <div class="border">
+                            <div class="middle title padding-left-40" style="border-right: 1px solid #d7d7d7;">
+                                <div class="team-logo pull-left" v-if="item.gambleStatus == 3">
+                                    565
+                                </div>
+                                <div class="team-logo pull-left" v-if="item.gambleStatus == 4">
+                                   7676
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="games-detail-btn">
+                        <div class="table-middle middle last-div">
+                                <span v-if="item.gambleStatus == 1&&!item.edite">
+                                    <button class="btn btn-sm btn-primary" @click="editGuess(item)">编辑</button>
+                                    <button class="btn btn-sm btn-delete" @click="editGuessStop(item)">停止</button>
+                                </span>
+                            <span v-if="item.gambleStatus == 1&&item.edite">
+                                    <button class="btn btn-sm btn-danger"  @click="editGuessSave(item)">保存</button>
+                                    <button class="btn btn-sm btn-success" @click="editGuessCancel(item)">取消</button>
+                                </span>
+                            <span v-if="item.gambleStatus == 2">
+                                    <button class="btn btn-sm btn-warning" @click="editGuessEnd(item)">结算</button>
+                                </span>
+                            <span v-if="item.gambleStatus == 3 || item.gambleStatus == 4">
+                                    <button class="btn btn-sm btn-black" @click="editGuessHidden(item)" v-show="item.isDelete == false" v-bind:disabled="pageTitle.gambleNum <= 0">隐藏</button>
+                                </span>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <!--结算界面-->
+        <el-dialog title="结算" v-model="dialogVisible" :close-on-click-modal="false" class="dialog-small settlement">
+            <div class="content">
+                <div class="edit-guess-end-content">
+                    <div class="col-md-3 text-center">
+                        <div class="settlement-div">{{itemData.gambleOptionA}}</div>
+                        <div>{{itemData.optionAOdds}}</div>
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <p style="margin-top: 6px">{{itemData.gambleName}}</p>
+                        <p>{{itemData.endTime | formatDate}}</p>
+                        <span class="label label-xs label-danger">进行中</span>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="settlement-div">{{itemData.gambleOptionB}}</div>
+                        <div>{{itemData.optionBOdds}}</div>
+                    </div>
+                </div>
+            </div>
+            <template>
+                <el-radio-group v-model="selectedData" class="settlement-radio">
+                    <el-radio :label="1" class="el-col-6 text-center">{{itemData.gambleOptionA}} 胜</el-radio>
+                    <el-radio :label="2" class="el-col-11 text-center">流盘</el-radio>
+                    <el-radio :label="3" class="el-col-5 text-center settlement-right">{{itemData.gambleOptionB}} 胜</el-radio>
+                </el-radio-group>
+            </template>
+            <div style="clear: both"></div>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click.native="dialogVisible = false">取消</el-button>
+                <el-button type="primary" @click.native="addSubmit(itemData)">提交</el-button>
+            </div>
+        </el-dialog>
+
+    </div>
+
 </template>
+<script>
+    import { getDetailGameGuess ,editeDetailGameGuess} from '../../api/api';
+    import { formatDate } from '../../api/date';
+    export default {
+        data() {
+            return {
+                pageTitle:{
+                    teamA:[],
+                    teamB:[]
+                },
+                titleData:{
+                    leagueName:"",
+                    endTime:"",
+                },
+                pageList:[],
+                addData:[],
+                dialogVisible:false,
+                itemData:{},
+                selectedData: 1
+
+            }
+        },
+        mounted() {
+            this.requestList();
+        },
+        filters: {
+            formatDate (time) {
+                let date = new Date(time)
+                return formatDate(date, 'yyyy-MM-dd hh:mm')
+            },
+        },
+        methods: {
+            requestList() {
+                let para = {
+                    matchId :this.$route.params.id
+                };
+                this.pageList = []
+                getDetailGameGuess(para).then((res) => {
+                    this.pageTitle=res.data.data.match
+                    this.titleData.leagueName = this.$route.query.leagueName;
+                    this.titleData.endTime = parseFloat(this.$route.query.endTime);
+                    let _this = this
+                    res.data.data.list.forEach(function (item) {
+                        item.edite = false
+                        _this.pageList.push(item)
+
+                    })
+                });
+            },
+            //编辑
+            editGuess(item) {
+                item.edite = true
+            },
+            //停止
+            editGuessStop(item) {
+                let para = {
+                    gambleId : item._id,
+                    gambleStatus: 2
+                };
+                this.$confirm('停止竞猜，本竞猜的状态将变为进行中！?', '提示', {
+                    //type: 'warning'
+                }).then(() => {
+                    editeDetailGameGuess(para.gambleId,para).then(res =>{
+                        if (res.data.status === 1) {
+                            this.requestList()
+                        } else {
+                            alert(res.msg);
+                        }
+                    })
+                }).catch(() => {
+
+                });
+            },
+            //保存
+            editGuessSave(item){
+                let para = {
+                    gambleId  : item._id,
+                    gambleName : item.gambleName,
+                    gambleOptionA : item.gambleOptionA,
+                    gambleOptionB : item.gambleOptionB,
+                    optionAOdds  : item.optionAOdds,
+                    optionBOdds  : item.optionBOdds
+                };
+                this.$confirm('确定修改?', '提示', {
+                    //type: 'warning'
+                }).then(() => {
+                    editeDetailGameGuess(para.gambleId,para).then(res =>{
+                        if (res.data.status === 1) {
+                            alert('保存成功')
+                            this.requestList()
+                        } else {
+                            alert(res.msg);
+                        }
+                    })
+                }).catch(() => {
+
+                });
+            },
+            //取消
+            editGuessCancel(item){
+                item.edite = false
+            },
+            //结算
+            editGuessEnd(item){
+                this.dialogVisible = true;
+                this.itemData = item
+            },
+            //结算提交
+            addSubmit(itemData){
+                var endData = {};
+                if (this.selectedData === 1) {
+                    endData = {
+                        gambleId : itemData._id,
+                        gambleStatus : 3
+                    }
+                } else if (this.selectedData === 2) {
+                    endData = {
+                        gambleId : itemData._id,
+                        gambleStatus : 4
+                    }
+                } else if (this.selectedData === 3) {
+                    endData = {
+                        gambleId : itemData._id,
+                        gambleStatus : 3
+                    }
+                }
+                editeDetailGameGuess(itemData._id,endData).then(res =>{
+                    if (res.data.status === 1) {
+                        this.dialogVisible = false
+                        this.requestList()
+                    } else {
+                        alert(res.msg);
+                    }
+                })
+
+            }
+        },
+
+    }
+</script>
+<style lang="scss">
+    .btn-delete ,.btn-delete:hover{
+        background: #df0059;
+        border: 1px solid #df0059;
+        color: #FFF;
+        font-weight: 600;
+    }
+    .btn-primary,.btn-primary:hover {
+        background: #169bd5;
+        border: 1px solid #169bd5;
+        color: #FFF;
+        font-weight: 600;
+    }
+    .btn-warning,.btn-warning:hover {
+        background: #666699;
+        border: 1px solid #666699;
+        color: #FFF;
+        font-weight: 600;
+    }
+    .btn-danger,.btn-danger:hover {
+        background: #e80100;
+        border: 1px solid #e80100;
+        color: #FFF;
+        font-weight: 600;
+    }
+    .btn-success,.btn-success:hover {
+        background: #24b60b;
+        border: 1px solid #24b60b;
+        color: #FFF;
+        font-weight: 600;
+    }
+    .edit-guess-list{
+        margin-top:5px;
+        table{
+            thead{
+                tr>div{
+                    border: 1px solid;
+                }
+                th{
+                    padding: 0;
+                    margin: 0;
+                    border: 0;
+                    div{
+                        background: #f6f6f6;
+                        p{
+                            margin: 0;
+                        }
+                    }
+                }
+            }
+            tbody{
+                tr>div{
+                    border: 1px solid;
+                }
+                td{
+                    padding: 0;
+                    margin: 0;
+                    border: 0;
+                    div{
+                        background: #ffff;
+                        p{
+                            margin: 0;
+                        }
+                    }
+
+                }
+                tr:hover{
+                   td div{
+                       background: #f6f6f6;
+                   }
+                    td input{
+                        background: #f6f6f6;
+                    }
+                    td .last-div{
+                        background: #fff!important;
+                    }
+                }
+                .edite-input{
+                    border: 0;
+                }
+                .position-left{
+                    position: absolute;
+                    left: 0;
+                    top:0;
+                }
+                .middle{
+                    position: relative;
+                }
+            }
+        }
+
+    }
+    .settlement{
+        .content{
+            border: 1px solid #d7d7d7;
+            height: 88px;
+        }
+        p{
+            padding: 0 0 6px;
+            margin: 0;
+        }
+        .settlement-div{
+            height: 49px;
+            line-height: 52px;
+        }
+        .settlement-radio{
+            width: 100%;
+            margin-top: 15px;
+            label{
+                font-weight: 100;
+            }
+            .el-radio__inner{
+                width: 16px;
+                height: 16px;
+            }
+            .settlement-right{
+                margin-left: 29px;
+            }
+        }
+    }
+</style>

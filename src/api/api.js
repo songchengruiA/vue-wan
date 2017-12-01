@@ -17,7 +17,7 @@ export const addUser = params => { return axios.get(`${base}/user/add`, { params
 
 //  创建预备竞猜
 var instance = axios.create({
-    headers: {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJwd2NuIiwiaWF0IjoxNTExOTM4OTQ2fQ.P8l-FIDo1namn9u2s8XGr_vrxLVZRCY-kzbehvPF3H0'}
+    headers: {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJwd2NuIiwiaWF0IjoxNTEyMDEyMDg3fQ.xQlK0Rw6bWUiOWqLHGI_VU4MtUvsmMRDm1Nh5-pVNa0'}
 });
 //登录
 export const requestLogin = params => { return instance.post(`http://localhost:8066/admin/login`, qs.stringify(params)).then(res => res.data); };
@@ -37,3 +37,7 @@ export const getTeamName= params => { return instance.get('http://localhost:8066
 export const  creatGame = params => { return instance.post('http://localhost:8066/admin/source/gambles', qs.stringify(params) ).then(res => res.data); };
 //编辑已上传竞猜
 export const getGameGuess = params => { return instance.get('http://localhost:8066/admin/matches', { params: params }); };
+//获取编辑详情
+export const getDetailGameGuess = params => { return instance.get('http://localhost:8066/admin/gambles', { params: params }); };
+//编辑取消保存详情
+export const editeDetailGameGuess = (query,params) => { return instance.put('http://localhost:8066/admin/gambles/'+query, qs.stringify(params)); };

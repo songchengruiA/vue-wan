@@ -2,7 +2,7 @@
 	<div class="col-sm-12">
 		<form class="form-inline form-search addguess-head">
 			<div class="form-group">
-				<label class="size-set pull-left" style="margin-left: 0px">选择游戏类型:</label>
+				<label class="size-set pull-left" style="margin-left: 0px">选择游戏类型:</label>{{abc | formatDate}}
 				<el-select v-model="gameType"  value-key="id" class="selected-guess" filterable placeholder="" @change="gameChange">
 					<el-option
 							v-for="item in optionsA"
@@ -69,7 +69,7 @@
 						<div class="border">
 							<div class="middle">
 								<p>{{item.leagues.leagueName}}</p>
-								<p>{{item.match.endTime}}
+								<p>{{item.match.endTime | formatDate}}
 								</p>
 								<span class="label label-success" v-if="item.match.matchStatus == 1">竞猜中</span>
 								<span class="label label-danger" v-if="item.match.matchStatus == 2">进行中</span>
@@ -94,7 +94,7 @@
 					</td>
 					<td class="games-btn">
 						<div class="border last">
-							<router-link :to="{path:'/page8/'+item.match._id, query:{id:145545}}" class="btn btn-sm btn-info">{{item.match.gambleNum > 0 ? '+'+item.match.gambleNum : '+0'}}</router-link>
+							<router-link :to="{path:'/page8/'+item.match._id, query:{leagueName:item.leagues.leagueName,endTime:item.match.endTime}}" class="btn btn-sm btn-info">{{item.match.gambleNum > 0 ? '+'+item.match.gambleNum : '+0'}}</router-link>
 						</div>
 					</td>
 				</tr>
@@ -110,6 +110,7 @@
     export default {
         data() {
             return {
+                abc: 1511937684000,
                 optionsA: [
                     {id: 2, label: 'LOL'},
                     {id: 3, label: 'DOTA2'},
@@ -272,7 +273,6 @@
 					font-size: 16px;
 					text-align: center;
 					margin-bottom: 5px;
-					width: 71px;
 					&.error{
 						border:1px solid red;
 					}

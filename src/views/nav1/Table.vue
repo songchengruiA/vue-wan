@@ -163,6 +163,7 @@
 				return row.sex == 1 ? '男' : row.sex == 0 ? '女' : '未知';
 			},
 			handleCurrentChange(val) {
+			    console.log(val)
 				this.page = val;
 				this.getUsers();
 			},
