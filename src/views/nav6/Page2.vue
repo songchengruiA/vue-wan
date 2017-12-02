@@ -1,4 +1,4 @@
-<template class="leagues">
+<template class="waitTeams">
     <div class="col-sm-12">
         <form class="form-inline form-search addguess-head">
             <div class="form-group">
@@ -51,7 +51,7 @@
 </template>
 
 <script>
-    import { getTeams, addTeams } from '../../api/api';
+    import { getWaitTeams, addTeams } from '../../api/api';
 
     export default {
         data() {
@@ -70,34 +70,39 @@
             }
         },
         mounted() {
-            this.teamsList();
+            this.waitTeamsList();
         },
         methods: {
 //            点击刷新按钮
             refreshBtn() {
-                this.teamsList();
+                this.waitTeamsList();
             },
+//            分页
             handleCurrentChange(val) {
                 this.page = val;
-                this.teamsList();
+                this.waitTeamsList();
             },
-//        请求列表
-            teamsList() {
+//            请求列表
+            waitTeamsList() {
                 let params = {
                     gameType : this.gameType.id?this.gameType.id:2,
                     offset : this.page*this.tpageSize-(this.tpageSize-1),
                     limit : this.tpageSize
                 };
-                getTeams(params).then((res) => {
-                    this.pageList =  res.data.data.list;
-                    this.total = res.data.data.total-1;
+                getWaitTeams(params).then((res) => {
+                    if (res.data.status === 1) {
+                        this.pageList =  res.data.data.list;
+                        this.total = res.data.data.total-1;
+                    } else {
+                        alert(res.data.msg);
+                    }
                 });
             },
-//        改变游戏类型
+//            改变游戏类型
             gameChange() {
-                this.teamsList();
+                this.waitTeamsList();
             },
-//        点击队伍已添加按钮
+//            点击队伍已添加按钮
             addTeamsBtn(item) {
                 let para = {
                     teamId : item._id
@@ -106,10 +111,10 @@
                     //type: 'warning'
                 }).then(() => {
                     addTeams(para).then(res => {
-                        if (res.status === 1) {
-                            this.teamsList();
+                        if (res.data.status === 1) {
+                            this.waitTeamsList();
                         } else {
-                            alert("请求失败")
+                            alert(res.data.msg)
                         }
                     })
                 }).catch(() => {

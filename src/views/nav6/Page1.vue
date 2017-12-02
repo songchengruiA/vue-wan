@@ -1,4 +1,4 @@
-<template class="leagues">
+<template class="waitLeagues">
     <div class="col-sm-12">
         <form class="form-inline form-search addguess-head">
             <div class="form-group">
@@ -63,7 +63,7 @@
 </template>
 
 <script>
-  import { getLeagues, chanLevel, saveLeagues } from '../../api/api';
+  import { getWaitLeagues, chanLevel, saveLeagues } from '../../api/api';
 
   export default {
       data() {
@@ -71,14 +71,14 @@
               total: 0,
               page: 1,
               tpageSize: 20,
+              gameType: 'LOL',
+              pageList: [],
               optionsA: [
                   {id: 2, name: 'LOL'},
                   {id: 3, name: 'DOTA2'},
                   {id: 1, name: 'CSGO'},
                   {id: 4, name: '王者荣耀'}
               ],
-              gameType: 'LOL',
-              pageList: [],
               itemLevel: [
                   {id: 1, name: 1},
                   {id: 2, name: 2},
@@ -87,32 +87,36 @@
           }
       },
     mounted() {
-        this.leaguesList();
+        this.waitLeaguesList();
     },
     methods: {
 //        点击刷新按钮
         refreshBtn() {
-            this.teamsList();
+            this.waitLeaguesList();
         },
         handleCurrentChange(val) {
             this.page = val;
-            this.leaguesList();
+            this.waitLeaguesList();
         },
 //        请求列表
-        leaguesList() {
+        waitLeaguesList() {
             let params = {
                 gameType : this.gameType.id?this.gameType.id:2,
                 offset : this.page*this.tpageSize-(this.tpageSize-1),
                 limit : this.tpageSize
-            }
-            getLeagues(params).then((res) => {
-                this.pageList =  res.data.data.list;
-                this.total = res.data.data.total-1;
+            };
+            getWaitLeagues(params).then((res) => {
+                if (res.data.status === 1) {
+                    this.pageList =  res.data.data.list;
+                    this.total = res.data.data.total-1;
+                } else  {
+                    alert(res.data.msg);
+                }
             });
         },
 //        改变游戏类型
         gameChange() {
-            this.leaguesList();
+            this.waitLeaguesList();
         },
 //        改变赛事等级
         changeLevel(item) {
@@ -121,11 +125,11 @@
                 level : item.level
             };
             chanLevel(leagueId,para).then(res => {
-                if (res.status === 1) {
-                    this.leaguesList();
+                if (res.data.status === 1) {
+                    this.waitLeaguesList();
                     alert('修改成功');
                 } else {
-                    alert('请求失败');
+                    alert(res.data.msg);
                 }
             });
         },
@@ -138,10 +142,10 @@
                 //type: 'warning'
             }).then(() => {
                 saveLeagues(para).then(res => {
-                    if (res.status === 1) {
-                        this.leaguesList();
+                    if (res.data.status === 1) {
+                        this.waitLeaguesList();
                     } else {
-                        alert("请求失败")
+                        alert(res.data.msg);
                     }
                 })
             }).catch(() => {

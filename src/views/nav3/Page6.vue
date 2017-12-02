@@ -16,25 +16,25 @@
 				<label class="size-set pull-left">选择赛事来源:</label>
 				<el-select v-model="gameSource" value-key="name" class="selected-guess" filterable placeholder="">
 					<el-option
-							v-for="item in optionsB"
-							:key="item.id"
-							:label="item.name"
-							:value="item">
+                        v-for="item in optionsB"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item">
 					</el-option>
 				</el-select>
 			</div>
 			<div class="block">
 				<el-date-picker
-						v-model="time"
-						type="daterange"
-						placeholder="选择时间"
-						format="yyyy-MM-dd">
+                    v-model="time"
+                    type="daterange"
+                    placeholder="选择时间"
+                    format="yyyy-MM-dd">
 				</el-date-picker>
 			</div>
 			<div class="form-group" style="float: right;margin-right: 0px;margin-top: -25px">
 				<el-button type="primary" @click="search">搜索</el-button>
 			</div>
-			<div class="line-block"></div>
+            <div class="line-block"></div>
 		</form>
 		<div style="clear: both"></div>
 		<div class="col-sm-12 add-guess-list">
@@ -206,7 +206,6 @@
     import { getRequest ,renew,upload, delGaming,getGameName,getTeamName,creatGame} from '../../api/api';
     import { formatDate } from '../../api/date';
     var tableData = require('../../api/table.json')
-	console.log(tableData[0].CSGO)
     export default {
         data() {
             return {
@@ -281,6 +280,7 @@
                  para.endTime = this.time[1]?Date.parse(this.time[1]):null;
                 getRequest(para).then((res) => {
 					this.pageList =  res.data.data.list
+                    console.log(this.pageList)
 				});
 
 			},
