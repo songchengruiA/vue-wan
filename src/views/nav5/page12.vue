@@ -70,13 +70,13 @@
                                 <div class="original position-left" v-show="item.gambleSource == 1">
                                     <img src="../../images/original.png" alt="">
                                 </div>
-                                <div class="hidden-icon position-left" v-show="item.isDelete == true">
+                                <div class="hidden-icon position-left-a" v-show="item.isDelete == true">
                                     <img src="../../images/editguess-hidden.png" alt="">
                                 </div>
-                                <div class="win position-left" v-show="item.gambleStatus == 3">
+                                <div class="win " v-show="item.gambleStatus == 3  && item.optionAWin">
                                     <img src="../../images/win.png" alt="">
                                 </div>
-                                <div class="win position-left" v-show="item.gambleStatus == 4">
+                                <div class="win " v-show="item.gambleStatus == 4">
                                     <img src="../../images/fail.png" alt="">
                                 </div>
                             </div>
@@ -139,11 +139,11 @@
                     <td class="text-left" width="280">
                         <div class="border">
                             <div class="middle title padding-left-40" style="border-right: 1px solid #d7d7d7;">
-                                <div class="team-logo pull-left" v-if="item.gambleStatus == 3">
-                                    565
+                                <div class="team-logo pull-left" v-if="item.gambleStatus == 3  && item.optionBWin">
+                                    <img src="../../images/win.png" alt="">
                                 </div>
                                 <div class="team-logo pull-left" v-if="item.gambleStatus == 4">
-                                   7676
+                                    <img src="../../images/fail.png" alt="">
                                 </div>
                             </div>
                         </div>
@@ -316,21 +316,11 @@
             //结算提交
             addSubmit(itemData){
                 var endData = {};
-                if (this.selectedData === 1) {
-                    endData = {
-                        gambleId : itemData._id,
-                        gambleStatus : 3
-                    }
-                } else if (this.selectedData === 2) {
-                    endData = {
-                        gambleId : itemData._id,
-                        gambleStatus : 4
-                    }
-                } else if (this.selectedData === 3) {
-                    endData = {
-                        gambleId : itemData._id,
-                        gambleStatus : 3
-                    }
+                endData = {
+                    gambleId : itemData._id,
+                    gambleStatus:((this.selectedData === 1)||(this.selectedData === 3))?3:this.selectedData === 2?4:'',
+                    optionAWin: this.selectedData === 1?true : ((this.selectedData === 2)||(this.selectedData === 3))?false:'',
+                    optionBWin: this.selectedData === 3?true : ((this.selectedData === 1)||(this.selectedData === 2))?false:'',
                 }
                 editeDetailGameGuess(itemData._id,endData).then(res =>{
                     if (res.data.status === 1) {
@@ -341,6 +331,21 @@
                     }
                 })
 
+            },
+            editGuessHidden(item){
+                console.log(item)
+                item.isDelete = true;
+                let para = {
+                    gambleId   : item._id,
+                    isDelete  : 'true'
+                };
+                editeDetailGameGuess(item._id,para).then(res =>{
+                    if (res.data.status === 1) {
+                        this.dialogVisible = false
+                    } else {
+                        alert(res.msg);
+                    }
+                })
             }
         },
 
@@ -430,6 +435,11 @@
                     position: absolute;
                     left: 0;
                     top:0;
+                }
+                .position-left-a{
+                    position: absolute;
+                    left: 0;
+                    bottom:0;
                 }
                 .middle{
                     position: relative;
