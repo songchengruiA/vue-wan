@@ -94,7 +94,7 @@
 					</td>
 					<td class="games-btn">
 						<div class="border last">
-							<router-link :to="{path:'/page8/'+item.match._id, query:{leagueName:item.leagues.leagueName,endTime:item.match.endTime}}" class="btn btn-sm btn-info">{{item.match.gambleNum > 0 ? '+'+item.match.gambleNum : '+0'}}</router-link>
+							<router-link :to="{path:'/page8/'+item.match._id, query:{leagueName:item.leagues.leagueName,endTime:item.match.endTime,gameType:item.match.gameType}}" class="btn btn-sm btn-info">{{item.match.gambleNum > 0 ? '+'+item.match.gambleNum : '+0'}}</router-link>
 						</div>
 					</td>
 				</tr>

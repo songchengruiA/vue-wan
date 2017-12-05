@@ -2,7 +2,7 @@
     <div>
         <div class="form-group width shut" style="margin-right: 50px;float: right;">
             <div class="button-submit">
-                <button class="btn btn-sm btn-danger btn-submit">关闭</button>
+                <router-link :to="{path:'/page8'}" class="btn btn-sm btn-danger btn-submit">关闭</router-link>
             </div>
         </div>
         <div class="edit-guess-list guess-table">
@@ -35,7 +35,7 @@
                                 <span class="label label-info" v-if="pageTitle.matchStatus == 4">已结束</span>
                                 <div>
                                     <input style="width: 71px"
-                                            type="text"
+                                            type="text" @blur="raceSystem(item)"
                                             placeholder="赛制"
                                     >
                                 </div>
@@ -159,7 +159,7 @@
                                     <button class="btn btn-sm btn-success" @click="editGuessCancel(item)">取消</button>
                                 </span>
                             <span v-if="item.gambleStatus == 2">
-                                    <button class="btn btn-sm btn-warning" @click="editGuessEnd(item)">结算</button>
+                                    <a class="btn btn-sm btn-warningA" @click="editGuessEnd(item)">结算</a>
                                 </span>
                             <span v-if="item.gambleStatus == 3 || item.gambleStatus == 4">
                                     <button class="btn btn-sm btn-black" @click="editGuessHidden(item)" v-show="item.isDelete == false" v-bind:disabled="pageTitle.gambleNum <= 0">隐藏</button>
@@ -202,13 +202,83 @@
                 <el-button type="primary" @click.native="addSubmit(itemData)">提交</el-button>
             </div>
         </el-dialog>
+        <!--添加界面-->
+        <el-dialog title="添加竞猜" v-model="dialogAdd" :close-on-click-modal="false" class="dialog-small add-dialog"  center>
+            <el-form :model="formData" label-width="100px" ref="addForm" >
+                <el-form-item label="竞猜名称" prop="name"  class="max-w">
+                    <el-select v-model="map"   filterable clearable  placeholder="选填">
+                        <el-option
+                                v-for="item in maps" :key="item.value"
+                                :value="item" auto-complete="off">
+                        </el-option>
+                    </el-select>
+                    <el-select v-model="selectName"   filterable clearable  placeholder="选填">
+                        <el-option
+                                :value="pageTitle.teamA.teamName" auto-complete="off">
+                        </el-option>
+                        <el-option
+                                :value="pageTitle.teamB.teamName" auto-complete="off">
+                        </el-option>
+                    </el-select>
+                    <el-select v-model="selectType"   filterable >
+                        <el-option
+                                v-for="item in types" :key="item.value"
+                                :value="item" auto-complete="off">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="下注项1名称">
+                    <el-input
+                            v-model="formData.gambleOptionA"
+                            type="datetime"
+                            placeholder="下注项1名称">
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="下注项1赔率">
+                    <el-input
+                            v-model="formData.optionAOdds"
+                            type="datetime"
+                            placeholder="下注项1赔率">
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="下注项2名称">
+                    <el-input
+                            v-model="formData.gambleOptionB"
+                            type="datetime"
+                            placeholder="下注项2名称">
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="下注项2赔率">
+                    <el-input
+                            v-model="formData.optionBOdds"
+                            type="datetime"
+                            placeholder="下注项2赔率">
+                    </el-input>
+                </el-form-item>
+                <el-form-item label="截止时间" class="addGame-input">
+                    <el-date-picker
+                            v-model="formData.date"
+                            type="datetime"
+                            placeholder="选择日期时间">
+                    </el-date-picker>
+                </el-form-item>
 
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogAdd = false">取 消</el-button>
+                <el-button type="primary" @click="submit">确 定</el-button>
+            </span>
+        </el-dialog>
+        <div class="addguess-body">
+            <a class="btn btn-default btn-lg addBtn" href="javascript:;" @click="addGuess">添加竞猜</a>
+        </div>
     </div>
 
 </template>
 <script>
-    import { getDetailGameGuess ,editeDetailGameGuess} from '../../api/api';
+    import { getDetailGameGuess ,editeDetailGameGuess,addGame} from '../../api/api';
     import { formatDate } from '../../api/date';
+    var tableData = require('../../api/table.json')
     export default {
         data() {
             return {
@@ -216,15 +286,20 @@
                     teamA:[],
                     teamB:[]
                 },
-                titleData:{
-                    leagueName:"",
-                    endTime:"",
-                },
+                titleData:{},
                 pageList:[],
                 addData:[],
                 dialogVisible:false,
+                dialogAdd:false,
                 itemData:{},
-                selectedData: 1
+                selectedData: 1,
+                formData:{},
+                maps:[],
+                map:'',
+                selectType:'独赢',
+                types:[],
+                selectName:''
+
 
             }
         },
@@ -246,6 +321,7 @@
                 getDetailGameGuess(para).then((res) => {
                     this.pageTitle=res.data.data.match
                     this.titleData.leagueName = this.$route.query.leagueName;
+                    this.titleData.gameType = this.$route.query.gameType;
                     this.titleData.endTime = parseFloat(this.$route.query.endTime);
                     let _this = this
                     res.data.data.list.forEach(function (item) {
@@ -254,6 +330,10 @@
 
                     })
                 });
+            },
+            //赛制
+            raceSystem(item){
+                console.log(item)
             },
             //编辑
             editGuess(item) {
@@ -270,7 +350,7 @@
                 }).then(() => {
                     editeDetailGameGuess(para.gambleId,para).then(res =>{
                         if (res.data.status === 1) {
-                            this.requestList()
+                            item.gambleStatus = 2
                         } else {
                             alert(res.msg);
                         }
@@ -332,18 +412,40 @@
                 })
 
             },
+            //隐藏
             editGuessHidden(item){
-                console.log(item)
-                item.isDelete = true;
                 let para = {
                     gambleId   : item._id,
                     isDelete  : 'true'
                 };
                 editeDetailGameGuess(item._id,para).then(res =>{
                     if (res.data.status === 1) {
-                        this.dialogVisible = false
+                        item.isDelete = true;
+
                     } else {
                         alert(res.msg);
+                    }
+                })
+            },
+            //添加竞猜
+            addGuess() {
+                this.dialogAdd = true;
+                let gameType = this.titleData.gameType;
+                this.maps = (gameType!==4)?tableData[0].MapOne:tableData[0].MapTwo;
+                this.types = (gameType == 2)?tableData[0].LOL:((gameType== 3)?tableData[0].Dota2:((gameType == 1)?tableData[0].CSGO:((gameType == 4)?tableData[0].Wangzhe:'独赢')));
+            },
+            submit() {
+                var name = this.map + this.selectName + this.selectType;
+                var nam = name.replace(/['0']/g,'');
+                this.formData.gambleName = nam;
+                this.formData.match = this.$route.params.id;
+                this.formData.endTime =  Date.parse(this.formData.date)
+                addGame(this.formData).then(res =>{
+                    if (res.data.status === 1) {
+                        this.dialogAdd = false
+                        this.requestList();
+                    } else {
+                        alert(res.data.msg);
                     }
                 })
             }
@@ -364,7 +466,7 @@
         color: #FFF;
         font-weight: 600;
     }
-    .btn-warning,.btn-warning:hover {
+    .btn-warningA,.btn-warningA:hover {
         background: #666699;
         border: 1px solid #666699;
         color: #FFF;
@@ -381,6 +483,10 @@
         border: 1px solid #24b60b;
         color: #FFF;
         font-weight: 600;
+    }
+    .btn-black,.btn-black:hover {
+        background: #636668;
+        color: #fff;
     }
     .edit-guess-list{
         margin-top:5px;
@@ -474,6 +580,22 @@
             .settlement-right{
                 margin-left: 29px;
             }
+        }
+    }
+    .add-dialog{
+        .el-dialog--small{
+            max-width: 650px !important;
+        }
+        .el-select{
+            max-width: 150px!important;
+        }
+        .addGame-input{
+            .el-date-editor.el-input{
+                width: 100%!important;
+            }
+        }
+        .el-dialog__footer{
+            text-align: center;
         }
     }
 </style>
