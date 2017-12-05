@@ -92,7 +92,7 @@ let routes = [
     {
         path: '/',
         component: Home,
-        name: '添加赛事以及战队',
+        name: '添加赛事及战队',
         iconCls: 'fa fa-id-card-o',
         children: [
             { path: '/page4', component: Page4, name: '添加赛事' },

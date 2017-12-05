@@ -88,7 +88,7 @@
 
 		</div>
 		<!--新增界面-->
-		<el-dialog title="新增" v-model="dialogVisible" :close-on-click-modal="false" class="dialog-small">
+		<el-dialog v-model="dialogVisible" :close-on-click-modal="false" class="dialog-small">
 			<el-form :model="addData" label-width="100px" ref="addForm" >
 				<el-form-item label="游戏类型" prop="name">
 					<el-input v-model="addData.gameTypeName" auto-complete="off" disabled></el-input>
@@ -198,14 +198,13 @@
 				<el-button type="primary" @click.native="addSubmit">提交</el-button>
 			</div>
 		</el-dialog>
-
-	</div>
+    </div>
 </template>
 
 <script>
     import { getRequest ,renew,upload, delGaming,getGameName,getTeamName,creatGame} from '../../api/api';
     import { formatDate } from '../../api/date';
-    var tableData = require('../../api/table.json')
+    var tableData = require('../../api/table.json');
     export default {
         data() {
             return {
@@ -253,7 +252,7 @@
 		},
         filters: {
             formatDate (time) {
-                let date = new Date(time)
+                let date = new Date(time);
                 return formatDate(date, 'yyyy-MM-dd')
             },
         },
@@ -273,7 +272,6 @@
                  para.startTime = this.time[0]?Date.parse(this.time[0]):null;
                  para.endTime = this.time[1]?Date.parse(this.time[1]):null;
                 getRequest(para).then((res) => {
-                    console.log(12333)
 					this.pageList =  res.data.data.list
                     console.log(this.pageList)
 				});
