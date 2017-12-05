@@ -21,7 +21,7 @@
         <!-- 添加team按钮 -->
         <div class="text-right" style="padding-bottom:10px;margin-top: 10px;">
             <button class="btn btn-success" type="button" ng-click="addLeaguesModal()">
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"> 添加</span>
+                <span class="glyphicon glyphicon-plus" aria-hidden="true" @click="addLeaguesBtn"> 添加</span>
             </button>
         </div>
         <!-- 赛事列表 -->
@@ -36,7 +36,7 @@
 
                     <div class="col-xs-7" style="padding-top:8px">
                         <label>{{item.leagueName}}</label>
-                        <p>{{item.createdAt}}</p>
+                        <p>{{item.createdAt | formatDate}}</p>
                         <small>{{item.leagueImageUrl}}</small>
                     </div>
                     <div class="text-right col-xs-3" style="padding-top:30px">
@@ -59,31 +59,136 @@
             <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="tpageSize" :total="total">
             </el-pagination>
         </el-col>
+        <!--新增界面-->
+        <el-dialog v-model="dialogVisible" :close-on-click-modal="false" class="dialog-small">
+            <el-form :model="divisionData" label-width="100px" ref="addForm" >
+                <el-form-item label="游戏类型:" prop="name">
+                    <el-input v-model="gameTypeName" auto-complete="off" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="所属赛事:" prop="name">
+                    <el-input v-model="divisionData.leagueName" auto-complete="off" placeholder="请输入赛事名称"></el-input>
+                </el-form-item>
+                <el-form-item label="赛事等级:" prop="name">
+                    <el-select v-model="level"  value-key="name"  filterable  placeholder="请选择赛事等级">
+                        <el-option
+                                v-for="item in levels"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item" auto-complete="off">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="风险金:" prop="name">
+                    <el-input v-model="levels[level.id - 1].riskFund" auto-complete="off" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="单注赔付上线:" prop="name">
+                    <el-input v-model="levels[level.id - 1].payCeiling" auto-complete="off" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="赛事图片:" prop="name">
+                    <el-input v-model="imageUrl" auto-complete="off"></el-input>
+                    <el-upload
+                            class="avatar-uploader"
+                            action="http://47.93.223.69:8066/admin/uploadimage"
+                            :show-file-list="false"
+                            :on-success="handleAvatarSuccess"
+                            :before-upload="beforeAvatarUpload">
+                        <img v-if="imageUrl" :src="imageUrl" class="avatar" style="margin-top: 6px;">
+                        <i v-else class="el-icon-plus avatar-uploader-icon" style="display: none"></i>
+                        <el-button size="small" type="primary">点击上传</el-button>
+                    </el-upload>
+                </el-form-item>
+                <el-form-item label="赛事来源:" prop="name">
+                    <el-select v-model="divisionData.leagueSource"  value-key="name"  filterable  placeholder="请选择赛事来源">
+                        <el-option
+                                v-for="item in optionsB"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item" auto-complete="off">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="所属赛区:" prop="name">
+                    <el-select v-model="divisionData.division"  value-key="name"  filterable  placeholder="请选择所属赛区">
+                        <el-option
+                                v-for="item in divisionJson"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item" auto-complete="off">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="别名组（多个用英文逗号隔开）" prop="name" id="textarea-box">
+                    <el-input
+                            :autosize="{ minRows: 2}"
+                            type="textarea"
+                            placeholder="请输入别名组"
+                            v-model="divisionData.alias">
+                    </el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取消</el-button>
+                <el-button type="primary" @click="addSubmit">提交</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
 <script>
-  import { getLeagues, searchLeagues } from '../../api/api';
-
+  import { getLeagues, searchLeagues, addLeagues } from '../../api/api';
+  import { formatDate } from '../../api/date';
+  var tableData = require('../../api/table.json');
   export default {
       data() {
           return {
+              ww:'',
               total: 0,
               page: 1,
               tpageSize: 10,
               postsName: '',
               gameType: 'LOL',
+              imageUrl: '',
               pageList: [],
+              leagueList:[],
+              searchTitle: '',
+              gameTypeName:'',
               optionsA: [
                   {id: 2, name: 'LOL'},
                   {id: 3, name: 'DOTA2'},
                   {id: 1, name: 'CSGO'},
                   {id: 4, name: '王者荣耀'}
+              ],
+              optionsB: [
+                  {id: 1, name: '后台'},
+                  {id: 2, name : "EGB"},
+                  {id: 3, name : "平博"}
+              ],
+              dialogVisible: false,
+              divisionJson: tableData[0].codeJson,
+              divisionData:{
+                  "division":{},
+                  "leagueSource":{}
+              },
+              level:{
+                  "id":'1',
+                  "name": '1: 1'
+              },
+              levels : [
+                  {id: 1, name: '1: 1',payCeiling:1000,riskFund:10000},
+                  {id: 2, name: '2: 2',payCeiling:2000,riskFund:20000},
+                  {id: 3, name: '3: 3',payCeiling:3000,riskFund:30000}
               ]
           }
       },
       mounted() {
           this.leaguesList();
+          console.log(this.divisionJson)
+      },
+      filters: {
+          formatDate (time) {
+              let date = new Date(time)
+              return formatDate(date, 'yyyy-MM-dd')
+          },
       },
       methods: {
 //         改变游戏类型
@@ -92,6 +197,9 @@
           },
 //         点击搜索按钮
           searchPosts() {
+              if (this.searchTitle == '') {
+                  this.leaguesList();
+              };
               let params = {
                   gameType : this.gameType.id?this.gameType.id:2,
                   leagueName: this.postsName
@@ -121,17 +229,47 @@
                   if (res.data.status === 1) {
                       this.pageList =  res.data.data.list;
                       this.total = res.data.data.total-1;
-                      this.pageList.forEach(function (value) {
-                          console.log(value.createdAt);
-//                          String date = value.createdAt;
-//                          date = value.createdAt.replace("Z", " UTC");//注意是空格+UTC
-//                          SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS Z");//注意格式化的表达式
-//                          Date d = format.parse(date );
-                      })
                   } else {
                       alert(res.data.msg);
                   }
 
+              })
+          },
+//          图片上传
+          handleAvatarSuccess(res, file) {
+              this.imageUrl = URL.createObjectURL(file.raw);
+          },
+          beforeAvatarUpload(file) {
+//              const isJPG = file.type === 'image/jpeg';
+              const isLt2M = file.size / 1024 / 1024 < 2;
+
+//              if (!isJPG) {
+//                  this.$message.error('上传头像图片只能是 JPG 格式!');
+//              }
+              if (!isLt2M) {
+                  this.$message.error('上传头像图片大小不能超过 2MB!');
+              }
+              return isLt2M;
+          },
+//          添加
+          addLeaguesBtn() {
+              this.dialogVisible = true;
+              this.gameTypeName = this.gameType.name?this.gameType.name:'LOL';
+
+          },
+//          点击提交按钮
+          addSubmit() {
+              this.divisionData.leagueImageUrl = this.imageUrl;
+              var params = this.divisionData;
+              params.level = this.level.id;
+              params.riskFund = this.levels[this.level.id - 1].riskFund;
+              params.payCeiling = this.levels[this.level.id - 1].payCeiling;
+              params.gameType = this.gameType.id?this.gameType.id:2;
+              params.leagueSource = this.divisionData.leagueSource.id;
+              params.division = this.divisionData.division.name;
+              addLeagues(params).then((res) => {
+                  this.dialogVisible = false;
+                  this.leaguesList();
               })
           },
 //          修改
@@ -140,8 +278,8 @@
 //          复制赛事ID
           copyId(item) {
               console.log(item._id)
-            item.select();
-            document.execCommand("Copy");
+              item.select();
+              document.execCommand("Copy");
           }
       }
   }
@@ -157,6 +295,52 @@
     .leaguesList{
         padding: 10px 25px;
     }
+    .el-form-item__label{
+        display: block;
+    }
+    #textarea-box{
+        .el-form-item__label{
+            display: block;
+            width: 235px !important;
+        }
+        .el-form-item__content{
+            margin-left: 28px !important;
+        }
+    }
+   .avatar-uploader .el-upload {
+       border: 1px dashed #d9d9d9;
+       border-radius: 6px;
+       cursor: pointer;
+       position: relative;
+       overflow: hidden;
+   }
+   .avatar-uploader .el-upload:hover {
+       border-color: #409EFF;
+   }
+   .avatar-uploader-icon {
+       font-size: 28px;
+       color: #8c939d;
+       width: 178px;
+       height: 178px;
+       line-height: 178px;
+       text-align: center;
+   }
+   .avatar {
+       max-width: 200px;
+       max-height: 200px;
+       display: block;
+   }
+   input[type=file]{
+       display: none !important;
+   }
+   .avatar-uploader .el-upload{
+       border:none !important;
+   }
+   .img-thumbnail{
+       max-width: 223px;
+       max-height: 184px;
+   }
+
     /*.glyphicon{*/
         /*font-weight: bolder;*/
     /*}*/

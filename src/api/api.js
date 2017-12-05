@@ -17,7 +17,7 @@ export const addUser = params => { return axios.get(`${base}/user/add`, { params
 
 //  创建预备竞猜
 var instance = axios.create({
-    headers: {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJwd2NuIiwiaWF0IjoxNTEyMTExODc0fQ.-nmJeKrGgejEptcA9WW1kbcUgV0Ts42fZZzK2LfKzBk'}
+    headers: {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJwd2NuIiwiaWF0IjoxNTEyMzgzMzUyfQ.d7jGX6jvCPiHzOXqDdxlWxF4zHqUNRH5iYNbkDMND6U'}
 });
 //登录
 export const requestLogin = params => { return instance.post(`http://47.93.223.69:8066/admin/login`, qs.stringify(params)).then(res => res.data); };
@@ -37,6 +37,8 @@ export const getTeamName= params => { return instance.get('http://47.93.223.69:8
 export const  creatGame = params => { return instance.post('http://47.93.223.69:8066/admin/source/gambles', qs.stringify(params) ).then(res => res.data); };
 //编辑已上传竞猜
 export const getGameGuess = params => { return instance.get('http://47.93.223.69:8066/admin/matches', { params: params }); };
+
+//待添加赛事及战队
 //待添加赛事列表
 export const getWaitLeagues = params => { return instance.get('http://47.93.223.69:8066/admin/source/leagues', { params: params }); };
 //改变赛事等级
@@ -47,12 +49,22 @@ export const  saveLeagues = params => { return instance.post('http://47.93.223.6
 export const getWaitTeams = params => { return instance.get('http://47.93.223.69:8066/admin/source/teams', {params: params}); };
 //队伍已添加
 export const addTeams = params =>{ return instance.post('http://47.93.223.69:8066/admin/source/teams', qs.stringify(params) ).then(res => res.data); };
+
+//添加赛事及战队
 //添加赛事列表
 export const getLeagues = params => { return instance.get('http://47.93.223.69:8066/admin/pwcn/leagues', {params: params}); };
 //添加赛事中的按品类搜索的列表
 export const searchLeagues = params => { return instance.get('http://47.93.223.69:8066/getleague', {params: params}); };
-export const getGameGuess = params => { return instance.get('http://47.93.223.69:8066/admin/matches', { params: params }); };
 //获取编辑详情
 export const getDetailGameGuess = params => { return instance.get('http://47.93.223.69:8066/admin/gambles', { params: params }); };
 //编辑取消保存详情
 export const editeDetailGameGuess = (query,params) => { return instance.put('http://47.93.223.69:8066/admin/gambles/'+query, qs.stringify(params)); };
+//添加战队列表
+export const getTeams = params => { return instance.get('http://47.93.223.69:8066/teams', {params: params}); };
+//添加战队中的按品类搜索的列表
+export const searchTeams = params => { return instance.get('http://47.93.223.69:8066/admin/pwcn/teams', {params: params}); };
+//赛事中的添加按钮
+export const  addLeagues = params => { return instance.post('http://47.93.223.69:8066/leagues', qs.stringify(params)).then(res => res.data); };
+//赛事中的修改按钮
+//赛事中的详情按钮
+//赛事中的删除按钮
