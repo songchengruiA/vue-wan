@@ -41,11 +41,11 @@
                     </div>
                     <div class="text-right col-xs-3" style="padding-top:30px">
                         <div>
-                            <button class="btn btn-info" type="button">详情</button>
+                            <button class="btn btn-info" type="button" @click="detailTeams(item)">详情</button>
                             <button class="btn btn-danger" type="button">删除</button>
                         </div>
                         <div style="padding-top:5px">
-                            <button class="btn btn-primary" type="button">修改</button>
+                            <button class="btn btn-primary" type="button" @click="modifyTeams(item)">修改</button>
                             <button class="btn btn-default" type="button">
                                 <span class="glyphicon glyphicon-copy">复制战队 ID</span>
                             </button>
@@ -66,17 +66,19 @@
                     <el-input v-model="gameTypeName" auto-complete="off" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="战队名称:" prop="name">
-                    <el-input v-model="teamsData.teamName" auto-complete="off" placeholder="请输入赛事名称"></el-input>
+                    <el-input v-model="teamsData.teamName" auto-complete="off" placeholder="请输入赛事名称" :disabled='isDisabled'></el-input>
                 </el-form-item>
                 <el-form-item label="战队积分:" prop="name">
-                    <el-input v-model="teamsData.teamIntegral" auto-complete="off" placeholder="请输入战队积分"></el-input>
+                    <el-input v-model="teamsData.teamIntegral" auto-complete="off" placeholder="请输入战队积分" :disabled='isDisabled'></el-input>
                 </el-form-item>
                 <el-form-item label="战队胜率:" prop="name">
-                    <el-input v-model="teamsData.teamWinningPr" auto-complete="off" placeholder="请输入战队胜率"></el-input>
+                    <el-input v-model="teamsData.teamWinningPr" auto-complete="off" placeholder="请输入战队胜率" :disabled='isDisabled'></el-input>
                 </el-form-item>
                 <el-form-item label="战队LOGO:" prop="name">
-                    <el-input v-model="imageUrl" auto-complete="off"></el-input>
+                    <el-input v-model="imageUrl" auto-complete="off" :disabled='isDisabled'></el-input>
+                    <!--添加-->
                     <el-upload
+                            v-if="showImg1"
                             class="avatar-uploader"
                             action="http://47.93.223.69:8066/admin/uploadimage"
                             :headers="myHeaders"
@@ -85,11 +87,13 @@
                             :before-upload="beforeAvatarUpload">
                         <img v-if="imageUrl" :src="imageUrl" class="avatar" style="margin-top: 6px;">
                         <i v-else class="el-icon-plus avatar-uploader-icon" style="display: none"></i>
-                        <el-button size="small" type="primary">点击上传</el-button>
+                        <el-button size="small" type="primary" v-if="showBtn">点击上传</el-button>
                     </el-upload>
+                    <!--详情-->
+                    <img v-if="showImg2" :src="imageUrl" class="avatar" style="margin-top: 6px;">
                 </el-form-item>
                 <el-form-item label="所属国际:" prop="name">
-                    <el-select v-model="teamsData.nationality"  value-key="country"  filterable  placeholder="请选择所属国际">
+                    <el-select v-model="teamsData.nationality"  value-key="country"  filterable  placeholder="请选择所属国际" :disabled='isDisabled'>
                         <el-option
                                 v-for="item in countryJson"
                                 :key="item.id"
@@ -97,10 +101,13 @@
                                 :value="item" auto-complete="off">
                         </el-option>
                     </el-select>
+                    <!--添加-->
                     <img :src="teamsLogoUrl+teamsData.nationality.flag" style="position: absolute;right: 1%;width: 154px;height: 100px;" v-if="teamsData.nationality.country">
+                    <!--详情-->
+                    <img :src="picUrl" style="position: absolute;right: 1%;width: 154px;height: 100px;" v-if="showDetail">
                 </el-form-item>
                 <el-form-item label="所属赛区:" prop="name">
-                    <el-select v-model="teamsData.division"  value-key="name"  filterable  placeholder="请选择所属赛区">
+                    <el-select v-model="teamsData.division"  value-key="name"  filterable  placeholder="请选择所属赛区" :disabled='isDisabled'>
                         <el-option
                                 v-for="item in divisionList"
                                 :key="item.id"
@@ -114,7 +121,8 @@
                             :autosize="{ minRows: 2}"
                             type="textarea"
                             placeholder="请输入战队介绍"
-                            v-model="teamsData.teamDesc">
+                            v-model="teamsData.teamDesc"
+                            :disabled='isDisabled'>
                     </el-input>
                 </el-form-item>
                 <el-form-item label="别名组（多个用英文逗号隔开）" prop="name" id="textarea-box">
@@ -122,19 +130,30 @@
                             :autosize="{ minRows: 2}"
                             type="textarea"
                             placeholder="请输入别名组"
-                            v-model="teamsData.alias">
+                            v-model="teamsData.alias"
+                            :disabled='isDisabled'>
                     </el-input>
                 </el-form-item>
             </el-form>
-            <div slot="footer" class="dialog-footer">
+            <!--添加-->
+            <div slot="footer" class="dialog-footer" v-if="showImg1">
                 <el-button @click="dialogVisible = false">取消</el-button>
                 <el-button type="primary" @click="addSubmit">提交</el-button>
+            </div>
+            <!--详情-->
+            <div slot="footer" class="dialog-footer" v-if="showImg2">
+                <el-button type="primary" @click="dialogVisible = false">关闭</el-button>
+            </div>
+            <!--修改-->
+            <div slot="footer" class="dialog-footer" v-if="showImg3">
+                <el-button @click="dialogVisible = false">取消</el-button>
+                <el-button type="primary" @click="modifyBtn(item)">提交</el-button>
             </div>
         </el-dialog>
     </div>
 </template>
 <script>
-    import { getTeams, searchTeams, addTeam } from '../../api/api';
+    import { getTeams, searchTeams, addTeam, getTeamsDetail, modifyTeam } from '../../api/api';
     import { formatDate } from '../../api/date';
     var tableData = require('../../api/country.json');
     var divisionData = require('../../api/table.json');
@@ -147,11 +166,18 @@
                 tpageSize: 10,
                 postsName: '',
                 imageUrl: '',
+                picUrl: '',
                 gameType: 'LOL',
                 reveal: false,
                 pageList: [],
                 searchTitle: '',
                 gameTypeName:'',
+                isDisabled: false,
+                showDetail: false,
+                showBtn: false,
+                showImg1: false,
+                showImg2: false,
+                showImg3: false,
                 optionsA: [
                     {id: 2, name: 'LOL'},
                     {id: 3, name: 'DOTA2'},
@@ -241,12 +267,18 @@
             },
 //            添加
             addLeaguesBtn() {
+                this.showImg1 = true;
+                this.showImg2 = false;
+                this.showImg3 = false;
+                this.isDisabled = false;
+                this.showBtn = true;
                 this.imageUrl = '';
                 this.teamsData = {
                     "division":{},
                     "nationality":{}
                 };
                 this.dialogVisible = true;
+//                this.showDetail = true;
                 this.gameTypeName = this.gameType.name?this.gameType.name:'LOL';
             },
 //            点击提交按钮
@@ -262,15 +294,68 @@
                     this.teamsList();
                 })
             },
-//          修改
-//          详情
+//            修改
+            modifyTeams(item) {
+                this.showImg1 = false;
+                this.showImg2 = false;
+                this.showImg3 = true;
+                this.isDisabled = false;
+                this.showBtn = false;
+                this.dialogVisible = true;
+                var params = {
+                    teamsId: item._id
+                };
+                getTeamsDetail(params).then((res) => {
+                    this.showDetail = true;
+                    this.teamsData = res.data.data.teams;
+                    this.gameTypeName = this.gameType.name?this.gameType.name:'LOL';
+                    this.teamsData.division = this.divisionList[this.teamsData.division + 1].name;
+                    this.imageUrl = res.data.data.teams.teamLogoUrl?res.data.data.teams.teamLogoUrl:'';
+                    this.picUrl = res.data.data.teams.teamFlagUrl?res.data.data.teams.teamFlagUrl:'';
+                })
+            },
+//            点击修改后的提交按钮
+            modifyBtn(item) {
+                this.teamsData.teamLogoUrl = this.imageUrl;
+                var params = this.teamsData;
+                params.teamsId = item._id;
+                params.teamFlagUrl = this.teamsData.nationality.flag
+                params.gameType = this.gameType.id?this.gameType.id:2;
+                params.division = this.teamsData.division.id;
+                params.nationality = this.teamsData.nationality.country;
+                modifyTeam(params).then((res) => {
+                    this.dialogVisible = false;
+                    this.teamsList();
+                })
+            },
+//            详情
+            detailTeams(item) {
+                this.showImg1 = false;
+                this.showImg2 = true;
+                this.showImg3 = false;
+                this.showBtn = false;
+                this.dialogVisible = true;
+                this.isDisabled = true;
+                var params = {
+                    teamsId: item._id
+                };
+                getTeamsDetail(params).then((res) => {
+                    this.showDetail = true;
+                    this.teamsData = res.data.data.teams;
+                    this.gameTypeName = this.gameType.name?this.gameType.name:'LOL';
+                    this.teamsData.division = this.divisionList[this.teamsData.division + 1].name;
+                    this.imageUrl = res.data.data.teams.teamLogoUrl?res.data.data.teams.teamLogoUrl:'';
+                    this.picUrl = res.data.data.teams.teamFlagUrl?res.data.data.teams.teamFlagUrl:'';
+                    this.teamsData.nationality = res.data.data.teams.nationality;
+                })
+            }
 //          删除
 //          复制赛事ID
-            copyId(item) {
-                console.log(item._id)
-                item.select();
-                document.execCommand("Copy");
-            }
+//            copyId(item) {
+//                console.log(item._id)
+//                item.select();
+//                document.execCommand("Copy");
+//            }
         }
     }
 
@@ -330,6 +415,7 @@
         max-width: 223px;
         max-height: 184px;
     }
-
-
+    .el-dialog__footer{
+        text-align: center;
+    }
 </style>

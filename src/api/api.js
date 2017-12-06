@@ -67,6 +67,8 @@ export const searchTeams = params => { return instance.get('http://47.93.223.69:
 export const  addLeagues = params => { return instance.post('http://47.93.223.69:8066/leagues', qs.stringify(params)).then(res => res.data); };
 //战队中的添加按钮
 export const  addTeam = params => { return instance.post('http://47.93.223.69:8066/teams', qs.stringify(params)).then(res => res.data); };
-//赛事中的修改按钮
-//赛事中的详情按钮
+//战队的详情
+export const getTeamsDetail = params => { return instance.get('http://47.93.223.69:8066/teamsdetail', {params: params}); };
+//战队中修改后的提交按钮
+export const  modifyTeam = params => { return instance.post('http://47.93.223.69:8066/teamsupdate', qs.stringify(params)).then(res => res.data); };
 //赛事中的删除按钮
