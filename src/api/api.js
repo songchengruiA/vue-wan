@@ -17,7 +17,7 @@ export const addUser = params => { return axios.get(`${base}/user/add`, { params
 
 //  创建预备竞猜
 var instance = axios.create({
-    headers: {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJwd2NuIiwiaWF0IjoxNTEyMzgzMzUyfQ.d7jGX6jvCPiHzOXqDdxlWxF4zHqUNRH5iYNbkDMND6U'}
+    headers: {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJwd2NuIiwiaWF0IjoxNTEyNDQxNTE2fQ.9oaz53lrnYM_ZwPHarSx2d-hPIqIMfQcOI--ybcnvTo'}
 });
 //登录
 export const requestLogin = params => { return instance.post(`http://47.93.223.69:8066/admin/login`, qs.stringify(params)).then(res => res.data); };
@@ -65,6 +65,8 @@ export const getTeams = params => { return instance.get('http://47.93.223.69:806
 export const searchTeams = params => { return instance.get('http://47.93.223.69:8066/admin/pwcn/teams', {params: params}); };
 //赛事中的添加按钮
 export const  addLeagues = params => { return instance.post('http://47.93.223.69:8066/leagues', qs.stringify(params)).then(res => res.data); };
+//战队中的添加按钮
+export const  addTeam = params => { return instance.post('http://47.93.223.69:8066/teams', qs.stringify(params)).then(res => res.data); };
 //赛事中的修改按钮
 //赛事中的详情按钮
 //赛事中的删除按钮

@@ -18,9 +18,9 @@
             </div>
             <div class="line-block"></div>
         </form>
-        <!-- 添加team按钮 -->
+        <!-- 添加按钮 -->
         <div class="text-right" style="padding-bottom:10px;margin-top: 10px;">
-            <button class="btn btn-success" type="button" ng-click="addLeaguesModal()">
+            <button class="btn btn-success" type="button">
                 <span class="glyphicon glyphicon-plus" aria-hidden="true" @click="addLeaguesBtn"> 添加</span>
             </button>
         </div>
@@ -88,7 +88,8 @@
                     <el-input v-model="imageUrl" auto-complete="off"></el-input>
                     <el-upload
                             class="avatar-uploader"
-                            action="http://47.93.223.69:8066/admin/uploadimage"
+                            action="http://47.93.223.69:8066/admin/media"
+                            :headers="myHeaders"
                             :show-file-list="false"
                             :on-success="handleAvatarSuccess"
                             :before-upload="beforeAvatarUpload">
@@ -141,7 +142,7 @@
   export default {
       data() {
           return {
-              ww:'',
+              myHeaders: {token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJwd2NuIiwiaWF0IjoxNTEyNDQxNTE2fQ.9oaz53lrnYM_ZwPHarSx2d-hPIqIMfQcOI--ybcnvTo'},
               total: 0,
               page: 1,
               tpageSize: 10,
@@ -240,12 +241,7 @@
               this.imageUrl = URL.createObjectURL(file.raw);
           },
           beforeAvatarUpload(file) {
-//              const isJPG = file.type === 'image/jpeg';
               const isLt2M = file.size / 1024 / 1024 < 2;
-
-//              if (!isJPG) {
-//                  this.$message.error('上传头像图片只能是 JPG 格式!');
-//              }
               if (!isLt2M) {
                   this.$message.error('上传头像图片大小不能超过 2MB!');
               }
@@ -253,9 +249,13 @@
           },
 //          添加
           addLeaguesBtn() {
+              this.imageUrl = '';
+              this.divisionData = {
+                  "division":{},
+                  "leagueSource":{}
+              },
               this.dialogVisible = true;
               this.gameTypeName = this.gameType.name?this.gameType.name:'LOL';
-
           },
 //          点击提交按钮
           addSubmit() {
