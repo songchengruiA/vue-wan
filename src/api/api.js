@@ -57,7 +57,19 @@ export const getLeagues = params => { return instance.get(url+'/admin/pwcn/leagu
 export const searchLeagues = params => { return instance.get(url+'/getleague', {params: params}); };
 //获取编辑详情
 export const getDetailGameGuess = params => { return instance.get(url+'/admin/gambles', { params: params }); };
-//编辑取消保存详情
+//添加战队列表
+export const getTeams = params => { return instance.get('http://47.93.223.69:8066/teams', {params: params}); };
+//添加战队中的按品类搜索的列表
+export const searchTeams = params => { return instance.get('http://47.93.223.69:8066/admin/pwcn/teams', {params: params}); };
+//赛事中的添加按钮
+export const  addLeagues = params => { return instance.post('http://47.93.223.69:8066/leagues', qs.stringify(params)).then(res => res.data); };
+//战队中的添加按钮
+export const  addTeam = params => { return instance.post('http://47.93.223.69:8066/teams', qs.stringify(params)).then(res => res.data); };
+//战队的详情
+export const getTeamsDetail = params => { return instance.get('http://47.93.223.69:8066/teamsdetail', {params: params}); };
+//战队中修改后的提交按钮
+export const  modifyTeam = params => { return instance.post('http://47.93.223.69:8066/teamsupdate', qs.stringify(params)).then(res => res.data); };
+//赛事中的删除按钮
 export const editeDetailGameGuess = (query,params) => { return instance.put(url+'/admin/gambles/'+query, qs.stringify(params)); };
 //添加竞猜
 export const addGame = params => { return instance.post(url+'/admin/gambles', qs.stringify(params)); };
