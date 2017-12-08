@@ -12,6 +12,9 @@
                     </el-option>
                 </el-select>
             </div>
+            <button class="btn" data-clipboard-text="Just because you can doesn't mean you should — clipboard.js!">
+                Copy to clipboard
+            </button>
             <el-input placeholder="请输入要搜索的品类" v-model="postsName" class="input-guess" style="width:170px;"></el-input>
             <div class="form-group" style="float: right;margin-right: 0px;margin-top: -5px">
                 <el-button type="primary" @click="searchPosts">搜索</el-button>
@@ -46,7 +49,7 @@
                         </div>
                         <div style="padding-top:5px">
                             <button class="btn btn-primary" type="button" @click="modifyTeams(item)">修改</button>
-                            <button class="btn btn-default" type="button">
+                            <button class="btn btn-default bb" type="button" :data-clipboard-text='item._id'>
                                 <span class="glyphicon glyphicon-copy">复制战队 ID</span>
                             </button>
                         </div>
@@ -156,6 +159,7 @@
 <script>
     import { getTeams, searchTeams, addTeam, getTeamsDetail, modifyTeam, deleteTeams } from '../../api/api';
     import { formatDate } from '../../api/date';
+    import Clipboard from 'clipboard';
     var tableData = require('../../api/country.json');
     var divisionData = require('../../api/table.json');
     export default {
@@ -204,8 +208,8 @@
             }
         },
         mounted() {
+            const clipboard = new Clipboard('.bb');
             this.teamsList();
-            console.log(tableData)
         },
         filters: {
             formatDate (time) {
@@ -373,12 +377,6 @@
 
                 });
             },
-//          复制赛事ID
-//            copyId(item) {
-//                console.log(item._id)
-//                item.select();
-//                document.execCommand("Copy");
-//            }
         }
     }
 

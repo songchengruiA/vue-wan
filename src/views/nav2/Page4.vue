@@ -62,82 +62,6 @@
                            :total="total">
             </el-pagination>
         </el-col>
-        <!--添加界面-->
-        <el-dialog v-model="dialogVisible" :close-on-click-modal="false" class="dialog-small">
-            <el-form :model="addForm" label-width="120px" ref="addForm">
-                <el-form-item label="游戏类型:" prop="name">
-                    <el-input v-model="addForm.gameTypeName" auto-complete="off" disabled></el-input>
-                </el-form-item>
-                <el-form-item label="所属赛事:" prop="name">
-                    <el-input v-model="addForm.leagueName" auto-complete="off" placeholder="请输入赛事名称"></el-input>
-                </el-form-item>
-                <el-form-item label="赛事等级:" prop="name">
-                    <el-select v-model="addForm.levelItem" value-key="name" filterable placeholder="请选择赛事等级">
-                        <el-option
-                                v-for="item in addForm.levels"
-                                :key="item.id"
-                                :label="item.name"
-                                :value="item" auto-complete="off">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="风险金:" prop="name">
-                    <el-input v-model="addForm.levels[addForm.levelItem.id - 1].riskFund" auto-complete="off"
-                              disabled></el-input>
-                </el-form-item>
-                <el-form-item label="单注赔付上线:" prop="name">
-                    <el-input v-model="addForm.levels[addForm.levelItem.id - 1].payCeiling" auto-complete="off"
-                              disabled></el-input>
-                </el-form-item>
-                <el-form-item label="赛事图片:" prop="name">
-                    <el-input v-model="imageUrl" auto-complete="off"></el-input>
-                    <el-upload
-                            class="avatar-uploader"
-                            action="http://47.93.223.69:8066/admin/media"
-                            :headers="myHeaders"
-                            :show-file-list="false"
-                            :data="fileData"
-                            :on-success="handleAvatarSuccess"
-                            :before-upload="beforeAvatarUpload">
-                        <img v-if="imageUrl" :src="imageUrl" class="avatar" style="margin-top: 6px;">
-                        <i v-else class="el-icon-plus avatar-uploader-icon" style="display: none"></i>
-                        <el-button size="small" type="primary">点击上传</el-button>
-                    </el-upload>
-                </el-form-item>
-                <el-form-item label="赛事来源:" prop="name">
-                    <el-select v-model="addForm.leagueSource" value-key="name" filterable placeholder="请选择赛事来源">
-                        <el-option
-                                v-for="item in optionsB"
-                                :key="item.id"
-                                :label="item.name"
-                                :value="item" auto-complete="off">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="所属赛区:" prop="name">
-                    <el-select v-model="addForm.division" value-key="name" filterable placeholder="请选择所属赛区">
-                        <el-option
-                                v-for="item in divisionJson"
-                                :key="item.id"
-                                :label="item.name"
-                                :value="item" auto-complete="off">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="别名组（多个用英文逗号隔开）" prop="name" id="textarea-box">
-                    <el-input
-                            :autosize="{ minRows: 2}"
-                            type="textarea"
-                            placeholder="请输入别名组"
-                            v-model="addForm.alias">
-                    </el-input>
-                </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取消</el-button>
-                <el-button type="primary" @click="addSubmit">提交</el-button>
-            </div>
-        </el-dialog>
         <!--修改界面-->
         <el-dialog v-model="dialogVisible" :close-on-click-modal="false" class="dialog-small">
             <el-form :model="editForm.editFormList" label-width="120px" ref="addForm" >
@@ -175,7 +99,7 @@
                             :before-upload="beforeAvatarUpload">
                         <img v-if="imageUrl" :src="imageUrl" class="avatar" style="margin-top: 6px;">
                         <i v-else class="el-icon-plus avatar-uploader-icon" style="display: none"></i>
-                        <el-button size="small" type="primary" :disabled='isDisabled'>点击上传</el-button>
+                        <el-button size="small" type="primary" >点击上传</el-button>
                     </el-upload>
                 </el-form-item>
                 <el-form-item label="赛事来源:" prop="name">
@@ -233,6 +157,7 @@
                 pageList: [],
                 leagueList: [],
                 searchTitle: '',
+                alias: '',
                 isDisabled: false,
                 optionsA: [
                     {id: 2, name: 'LOL'},
@@ -265,10 +190,11 @@
 //                修改数据
 
                 editForm: {
-                    editFormList: [],
+                    editFormList: {},
                     division: {},
                     leagueSource: {},
                     gameTypeName: '',
+                    alias: '',
                     levelItem: {
                         "id": '1',
                         "name": '1: 1'
@@ -402,6 +328,7 @@
                     this.editForm.division = res.data.data.leagues.division;
                     this.itemId = res.data.data.leagues._id;
                     this.imageUrl = res.data.data.leagues.leagueImageUrl;
+                    this.editForm.editFormList.alias = res.data.data.leagues.alias.join(',')
                 })
             },
 //            点击提交按钮

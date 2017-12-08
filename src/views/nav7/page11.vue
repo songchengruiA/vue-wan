@@ -74,7 +74,7 @@
                 <el-col :span="9">
                     <el-input v-model="item.optionOdds" :disabled="edite"></el-input>
                 </el-col>
-                <span style="position: relative;left: 8px;cursor: pointer" v-if="index>0" @click="delGame(index)">删除</span>
+                <span style="position: relative;left: 8px;cursor: pointer" v-if="index>0 && !edite" @click="delGame(index)">删除</span>
             </el-form-item>
 
         </el-form-item>
