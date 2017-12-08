@@ -2,7 +2,7 @@
 	<div class="col-sm-12">
 		<form class="form-inline form-search addguess-head">
 			<div class="form-group">
-				<label class="size-set pull-left" style="margin-left: 0px">选择游戏类型:</label>{{abc | formatDate}}
+				<label class="size-set pull-left" style="margin-left: 0px">选择游戏类型:</label>
 				<el-select v-model="gameType"  value-key="id" class="selected-guess" filterable placeholder="" @change="gameChange">
 					<el-option
 							v-for="item in optionsA"
@@ -110,7 +110,6 @@
     export default {
         data() {
             return {
-                abc: 1511937684000,
                 optionsA: [
                     {id: 2, label: 'LOL'},
                     {id: 3, label: 'DOTA2'},

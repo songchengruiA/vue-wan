@@ -88,12 +88,12 @@
                     <el-input v-model="imageUrl" auto-complete="off"></el-input>
                     <el-upload
                             class="avatar-uploader"
-                            action="http://47.93.223.69:8066/admin/uploadimage"
+                            action="http://47.93.223.69:8066/admin/media"
+                            :headers="myHeaders"
                             :show-file-list="false"
                             :on-success="handleAvatarSuccess"
                             :before-upload="beforeAvatarUpload">
                         <img v-if="imageUrl" :src="imageUrl" class="avatar" style="margin-top: 6px;">
-                        <i v-else class="el-icon-plus avatar-uploader-icon" style="display: none"></i>
                         <el-button size="small" type="primary">点击上传</el-button>
                     </el-upload>
                 </el-form-item>
@@ -138,9 +138,11 @@
   import { getLeagues, searchLeagues, addLeagues } from '../../api/api';
   import { formatDate } from '../../api/date';
   var tableData = require('../../api/table.json');
+  var token =  localStorage.getItem('token') // 要保证取到
   export default {
       data() {
           return {
+              myHeaders: {token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJwd2NuIiwiaWF0IjoxNTEyNjI2ODc2fQ.kPYiLY0z65M6_B_wxStnKebrAO7WtTR3hywj-i8m9zk"},
               ww:'',
               total: 0,
               page: 1,

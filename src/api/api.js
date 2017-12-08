@@ -17,7 +17,7 @@ export const addUser = params => { return axios.get(`${base}/user/add`, { params
 
 //  创建预备竞猜
 var instance = axios.create({
-    headers: {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJwd2NuIiwiaWF0IjoxNTEyNDQxNTE2fQ.9oaz53lrnYM_ZwPHarSx2d-hPIqIMfQcOI--ybcnvTo'}
+    headers: {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJwd2NuIiwiaWF0IjoxNTEyNjI2ODc2fQ.kPYiLY0z65M6_B_wxStnKebrAO7WtTR3hywj-i8m9zk'}
 });
 /*var url = 'http://localhost:8066/'*/
 var url = 'http://47.93.223.69:8066'
@@ -39,6 +39,8 @@ export const getTeamName= params => { return instance.get(url+'/admin/pwcn/teams
 export const  creatGame = params => { return instance.post(url+'/admin/source/gambles', qs.stringify(params) ).then(res => res.data); };
 //编辑已上传竞猜
 export const getGameGuess = params => { return instance.get(url+'/admin/matches', { params: params }); };
+//赛制
+export const postGameGuess = (query,params) => { return instance.post(url+'/admin/matches/'+query, qs.stringify(params)); };
 //待添加赛事列表
 export const getWaitLeagues = params => { return instance.get(url+'/admin/source/leagues', { params: params }); };
 //改变赛事等级
@@ -59,3 +61,9 @@ export const getDetailGameGuess = params => { return instance.get(url+'/admin/ga
 export const editeDetailGameGuess = (query,params) => { return instance.put(url+'/admin/gambles/'+query, qs.stringify(params)); };
 //添加竞猜
 export const addGame = params => { return instance.post(url+'/admin/gambles', qs.stringify(params)); };
+// 获取趣味竞猜列表
+export const getSetGuess = params => { return instance.get(url+'/admin/funbets', { params: params }); };
+// 添加 结算趣味竞猜列表
+export const postSetGuess = params => { return instance.post(url+'/admin/funbets',params); };
+//编辑趣味竞猜详情
+export const editeGameGuess = query => { return instance.get(url+'/admin/funbets/'+query); };

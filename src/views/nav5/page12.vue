@@ -34,8 +34,8 @@
                                 <span class="label label-info" v-if="pageTitle.matchStatus == 3">已结束</span>
                                 <span class="label label-info" v-if="pageTitle.matchStatus == 4">已结束</span>
                                 <div>
-                                    <input style="width: 71px"
-                                            type="text" @blur="raceSystem(item)"
+                                    <input style="width: 71px" v-model="pageTitle.raceSystem"
+                                            type="text" @blur="raceSystem"
                                             placeholder="赛制"
                                     >
                                 </div>
@@ -276,7 +276,7 @@
 
 </template>
 <script>
-    import { getDetailGameGuess ,editeDetailGameGuess,addGame} from '../../api/api';
+    import { getDetailGameGuess ,editeDetailGameGuess,addGame,postGameGuess} from '../../api/api';
     import { formatDate } from '../../api/date';
     var tableData = require('../../api/table.json')
     export default {
@@ -332,8 +332,19 @@
                 });
             },
             //赛制
-            raceSystem(item){
-                console.log(item)
+            raceSystem(){
+                console.log(this.pageTitle)
+                let _id = this.pageTitle._id;
+                let para = {
+                    raceSystem:this.pageTitle.raceSystem
+                };
+                postGameGuess(_id,para).then(res =>{
+                    if (res.data.status === 1) {
+                        alert(res.data.data)
+                    } else {
+                        alert(res.data.msg);
+                    }
+                })
             },
             //编辑
             editGuess(item) {
