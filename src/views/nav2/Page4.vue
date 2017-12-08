@@ -22,7 +22,7 @@
         <!-- 添加按钮 -->
         <div class="text-right" style="padding-bottom:10px;margin-top: 10px;">
             <button class="btn btn-success" type="button">
-                <span class="glyphicon glyphicon-plus" aria-hidden="true" @click="addLeaguesBtn"> 添加</span>
+                <span class="glyphicon glyphicon-plus" aria-hidden="true" @click="addLeaguesBtn">添加</span>
             </button>
         </div>
         <!-- 赛事列表 -->
@@ -35,7 +35,6 @@
                                  :src="item.leagueImageUrl">
                         </div>
                     </div>
-
                     <div class="col-xs-7" style="padding-top:8px">
                         <label>{{item.leagueName}}</label>
                         <p>{{item.createdAt | formatDate}}</p>
@@ -333,15 +332,8 @@
             },
 //            点击提交按钮
             modifySubmit() {
-                console.log(this.imageUrl)
                 this.editForm.leagueImageUrl = this.imageUrl;
                 var params = this.editForm.editFormList;
-//                params.level = this.editForm.levelItem.id;
-//                params.riskFund = this.editForm.levels[this.editForm.levelItem.id - 1].riskFund;
-//                params.payCeiling = this.editForm.levels[this.editForm.levelItem.id - 1].payCeiling;
-//                params.gameType = this.gameType.id ? this.gameType.id : 2;
-//                params.leagueSource = this.editForm.leagueSource.id;
-////                params.division = this.editForm.division.name;
                 params.leaguesId = this.editForm.editFormList._id;
                 console.log(params)
                 modifyLeagues(params).then((res) => {
