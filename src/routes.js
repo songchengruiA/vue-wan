@@ -17,6 +17,8 @@ import Page7 from './views/nav4/Page7.vue'
 import Page from './views/nav5/Page.vue'
 import Page8 from './views/nav5/Page8.vue'
 import Page12 from './views/nav5/page12.vue'
+import Page10 from './views/nav7/page10.vue'
+import Page11 from './views/nav7/page11.vue'
 import echarts from './views/charts/echarts.vue'
 
 Vue.use(VueRouter)
@@ -101,16 +103,16 @@ let routes = [
     },
     {
         path: '/',
-        meta: {
-            requireAuth: true,
-        },
         component: Home,
         name: '',
         iconCls: 'fa fa-address-card',
         leaf: true,//只有一个节点
         children: [
-            { path: '/page12/: id', component: Page12, name: '创建趣味竞猜'
-            }
+            { path: '/page10', component: Page, name: '创建趣味竞猜' ,children:[
+                {path:'',component: Page10},
+                {path:'/page10/add/',component: Page11},
+                {path:'/page10/add/:id',component: Page11}
+            ]}
         ]
     },
     {

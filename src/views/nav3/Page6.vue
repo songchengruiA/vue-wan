@@ -137,7 +137,7 @@
 				<el-form-item label="竞猜名称" prop="name"  class="max-w">
 					<el-select v-model="map"   filterable  placeholder="选填">
 						<el-option
-								v-for="item in maps"
+								v-for="item in maps" :key="item.value"
 								:value="item" auto-complete="off">
 						</el-option>
 					</el-select>
@@ -151,7 +151,7 @@
 					</el-select>
 					<el-select v-model="selectType"   filterable >
 						<el-option
-								v-for="item in types"
+								v-for="item in types" :key="item.value"
 								:value="item" auto-complete="off">
 						</el-option>
 					</el-select>
@@ -227,12 +227,6 @@
                 teamList: [],
                 //新增界面数据
                 addData: {
-                    gameTypeName: '',
-                    optionA:'',
-                    oddsA:'',
-                    optionB:'',
-                    oddsB:'',
-                    date:''
                 },
 				teamA:{
                     teamName:''
@@ -362,14 +356,7 @@
                 });
 			},
             addGame() {
-                this.addData = {
-                    gameTypeName: '',
-                    optionA:'',
-                    oddsA:'',
-                    optionB:'',
-                    oddsB:'',
-                    date:''
-                },
+                this.addData = {},
 				this.league={
                     _id:'',
                     leagueName:''
@@ -387,7 +374,7 @@
 				this.selectName ='',
 				this.selectType = '独赢',
 				this.types = [],
-                this.addData.gameTypeName = this.gameType.label?this.gameType.label:'LOL',
+                this.addData.gameTypeName = this.gameType.name?this.gameType.name:'LoL',
                 this.dialogVisible = true
 				let data = {
                     limit: 10000,
