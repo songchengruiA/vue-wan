@@ -17,7 +17,7 @@ export const addUser = params => { return axios.get(`${base}/user/add`, { params
 
 //  创建预备竞猜
 var instance = axios.create({
-    headers: {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJwd2NuIiwiaWF0IjoxNTEyNDQxNTE2fQ.9oaz53lrnYM_ZwPHarSx2d-hPIqIMfQcOI--ybcnvTo'}
+    headers: {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJwd2NuIiwiaWF0IjoxNTEyNzA1NDc4fQ.GNuIxMb_VxhvIeEynghoXsZNBj8Lcv5Q6WhzF7hiPvI'}
 });
 //登录
 export const requestLogin = params => { return instance.post(`http://47.93.223.69:8066/admin/login`, qs.stringify(params)).then(res => res.data); };
@@ -65,10 +65,19 @@ export const getTeams = params => { return instance.get('http://47.93.223.69:806
 export const searchTeams = params => { return instance.get('http://47.93.223.69:8066/admin/pwcn/teams', {params: params}); };
 //赛事中的添加按钮
 export const  addLeagues = params => { return instance.post('http://47.93.223.69:8066/leagues', qs.stringify(params)).then(res => res.data); };
+//赛事的详情
+export const getLeaguesDetail = params => { return instance.get('http://47.93.223.69:8066/leaguesdetail', {params: params}); };
+//修改赛事之后提交
+export const  modifyLeagues = params => { return instance.post('http://47.93.223.69:8066/leaguesupdate', qs.stringify(params)).then(res => res.data); };
+//删除赛事
+export const  deleteLeagues = params => { return instance.post('http://47.93.223.69:8066/leaguesdelete', qs.stringify(params)).then(res => res.data); };
+
 //战队中的添加按钮
 export const  addTeam = params => { return instance.post('http://47.93.223.69:8066/teams', qs.stringify(params)).then(res => res.data); };
 //战队的详情
 export const getTeamsDetail = params => { return instance.get('http://47.93.223.69:8066/teamsdetail', {params: params}); };
 //战队中修改后的提交按钮
 export const  modifyTeam = params => { return instance.post('http://47.93.223.69:8066/teamsupdate', qs.stringify(params)).then(res => res.data); };
-//赛事中的删除按钮
+//删除战队
+export const  deleteTeams = params => { return instance.post('http://47.93.223.69:8066/teamsdelete', qs.stringify(params)).then(res => res.data); };
+

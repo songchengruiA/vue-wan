@@ -42,7 +42,7 @@
                     <div class="text-right col-xs-3" style="padding-top:30px">
                         <div>
                             <button class="btn btn-info" type="button" @click="detailTeams(item)">详情</button>
-                            <button class="btn btn-danger" type="button">删除</button>
+                            <button class="btn btn-danger" type="button" @click="deleteTeamsBtn(item)">删除</button>
                         </div>
                         <div style="padding-top:5px">
                             <button class="btn btn-primary" type="button" @click="modifyTeams(item)">修改</button>
@@ -82,6 +82,7 @@
                             class="avatar-uploader"
                             action="http://47.93.223.69:8066/admin/uploadimage"
                             :headers="myHeaders"
+                            :data="fileData"
                             :show-file-list="false"
                             :on-success="handleAvatarSuccess"
                             :before-upload="beforeAvatarUpload">
@@ -153,7 +154,7 @@
     </div>
 </template>
 <script>
-    import { getTeams, searchTeams, addTeam, getTeamsDetail, modifyTeam } from '../../api/api';
+    import { getTeams, searchTeams, addTeam, getTeamsDetail, modifyTeam, deleteTeams } from '../../api/api';
     import { formatDate } from '../../api/date';
     var tableData = require('../../api/country.json');
     var divisionData = require('../../api/table.json');
@@ -196,7 +197,10 @@
                     "nationality":{}
                 },
                 divisionList: divisionData[0].codeJson,
-                teamsLogoUrl: 'http://osjpvss28.bkt.clouddn.com/'
+                teamsLogoUrl: 'http://osjpvss28.bkt.clouddn.com/',
+                fileData: {
+                    mediaCategory: 1002
+                }
             }
         },
         mounted() {
@@ -255,10 +259,11 @@
                 })
             },
 //           图片上传
-            handleAvatarSuccess(res, file) {
-                this.imageUrl = URL.createObjectURL(file.raw);
+            handleAvatarSuccess(res) {
+                this.imageUrl = res.data.avatar;
             },
             beforeAvatarUpload(file) {
+                this.fileData.media = file;
                 const isLt2M = file.size / 1024 / 1024 < 2;
                 if (!isLt2M) {
                     this.$message.error('上传头像图片大小不能超过 2MB!');
@@ -348,8 +353,26 @@
                     this.picUrl = res.data.data.teams.teamFlagUrl?res.data.data.teams.teamFlagUrl:'';
                     this.teamsData.nationality = res.data.data.teams.nationality;
                 })
-            }
+            },
 //          删除
+            deleteTeamsBtn(item) {
+                var params = {
+                    teamsId : item._id
+                };
+                this.$confirm('确认删除吗?', '提示', {
+                    type: 'warning'
+                }).then(() => {
+                    deleteTeams(params).then((res) => {
+                        if (res.status === 1) {
+                            this.teamsList();
+                        } else {
+                            alert(res.data.msg);
+                        }
+                    })
+                }).catch(() => {
+
+                });
+            },
 //          复制赛事ID
 //            copyId(item) {
 //                console.log(item._id)

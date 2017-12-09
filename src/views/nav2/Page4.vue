@@ -3,7 +3,8 @@
         <form class="form-inline form-search addguess-head">
             <div class="form-group">
                 <label class="size-set pull-left" style="margin-left: 0px">选择游戏类型:</label>
-                <el-select v-model="gameType"  value-key="name" class="selected-guess" filterable placeholder="" @change="gameChange">
+                <el-select v-model="gameType" value-key="name" class="selected-guess" filterable placeholder=""
+                           @change="gameChange">
                     <el-option
                             v-for="item in optionsA"
                             :key="item.id"
@@ -30,7 +31,8 @@
                 <div class="row">
                     <div class="col-xs-2">
                         <div class="rectangle-container">
-                            <img class="imageslib-thumb-image absolute-position img-thumbnail" alt="无缩略图" :src="item.leagueImageUrl">
+                            <img class="imageslib-thumb-image absolute-position img-thumbnail" alt="无缩略图"
+                                 :src="item.leagueImageUrl">
                         </div>
                     </div>
 
@@ -41,11 +43,11 @@
                     </div>
                     <div class="text-right col-xs-3" style="padding-top:30px">
                         <div>
-                            <button class="btn btn-info" type="button">详情</button>
-                            <button class="btn btn-danger" type="button">删除</button>
+                            <button class="btn btn-info" type="button" @click="detailLeaguesBtn(item)">详情</button>
+                            <button class="btn btn-danger" type="button" @click="deleteLeaguesBtn(item)">删除</button>
                         </div>
                         <div style="padding-top:5px">
-                            <button class="btn btn-primary" type="button">修改</button>
+                            <button class="btn btn-primary" type="button" @click="modifyLeaguesBtn(item)">修改</button>
                             <button class="btn btn-default" type="button">
                                 <span class="glyphicon glyphicon-copy" @click="copyId(item)">复制赛事 ID</span>
                             </button>
@@ -56,22 +58,23 @@
         </ul>
         <!--工具条-->
         <el-col :span="24" class="toolbar">
-            <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="tpageSize" :total="total">
+            <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="tpageSize"
+                           :total="total">
             </el-pagination>
         </el-col>
-        <!--新增界面-->
+        <!--添加界面-->
         <el-dialog v-model="dialogVisible" :close-on-click-modal="false" class="dialog-small">
-            <el-form :model="divisionData" label-width="100px" ref="addForm" >
+            <el-form :model="addForm" label-width="120px" ref="addForm">
                 <el-form-item label="游戏类型:" prop="name">
-                    <el-input v-model="gameTypeName" auto-complete="off" disabled></el-input>
+                    <el-input v-model="addForm.gameTypeName" auto-complete="off" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="所属赛事:" prop="name">
-                    <el-input v-model="divisionData.leagueName" auto-complete="off" placeholder="请输入赛事名称"></el-input>
+                    <el-input v-model="addForm.leagueName" auto-complete="off" placeholder="请输入赛事名称"></el-input>
                 </el-form-item>
                 <el-form-item label="赛事等级:" prop="name">
-                    <el-select v-model="level"  value-key="name"  filterable  placeholder="请选择赛事等级">
+                    <el-select v-model="addForm.levelItem" value-key="name" filterable placeholder="请选择赛事等级">
                         <el-option
-                                v-for="item in levels"
+                                v-for="item in addForm.levels"
                                 :key="item.id"
                                 :label="item.name"
                                 :value="item" auto-complete="off">
@@ -79,10 +82,12 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="风险金:" prop="name">
-                    <el-input v-model="levels[level.id - 1].riskFund" auto-complete="off" disabled></el-input>
+                    <el-input v-model="addForm.levels[addForm.levelItem.id - 1].riskFund" auto-complete="off"
+                              disabled></el-input>
                 </el-form-item>
                 <el-form-item label="单注赔付上线:" prop="name">
-                    <el-input v-model="levels[level.id - 1].payCeiling" auto-complete="off" disabled></el-input>
+                    <el-input v-model="addForm.levels[addForm.levelItem.id - 1].payCeiling" auto-complete="off"
+                              disabled></el-input>
                 </el-form-item>
                 <el-form-item label="赛事图片:" prop="name">
                     <el-input v-model="imageUrl" auto-complete="off"></el-input>
@@ -91,6 +96,7 @@
                             action="http://47.93.223.69:8066/admin/media"
                             :headers="myHeaders"
                             :show-file-list="false"
+                            :data="fileData"
                             :on-success="handleAvatarSuccess"
                             :before-upload="beforeAvatarUpload">
                         <img v-if="imageUrl" :src="imageUrl" class="avatar" style="margin-top: 6px;">
@@ -99,7 +105,7 @@
                     </el-upload>
                 </el-form-item>
                 <el-form-item label="赛事来源:" prop="name">
-                    <el-select v-model="divisionData.leagueSource"  value-key="name"  filterable  placeholder="请选择赛事来源">
+                    <el-select v-model="addForm.leagueSource" value-key="name" filterable placeholder="请选择赛事来源">
                         <el-option
                                 v-for="item in optionsB"
                                 :key="item.id"
@@ -109,7 +115,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="所属赛区:" prop="name">
-                    <el-select v-model="divisionData.division"  value-key="name"  filterable  placeholder="请选择所属赛区">
+                    <el-select v-model="addForm.division" value-key="name" filterable placeholder="请选择所属赛区">
                         <el-option
                                 v-for="item in divisionJson"
                                 :key="item.id"
@@ -123,7 +129,7 @@
                             :autosize="{ minRows: 2}"
                             type="textarea"
                             placeholder="请输入别名组"
-                            v-model="divisionData.alias">
+                            v-model="addForm.alias">
                     </el-input>
                 </el-form-item>
             </el-form>
@@ -132,220 +138,398 @@
                 <el-button type="primary" @click="addSubmit">提交</el-button>
             </div>
         </el-dialog>
+        <!--修改界面-->
+        <el-dialog v-model="dialogVisible" :close-on-click-modal="false" class="dialog-small">
+            <el-form :model="editForm.editFormList" label-width="120px" ref="addForm" >
+                <el-form-item label="游戏类型:" prop="name">
+                    <el-input v-model="editForm.gameTypeName" auto-complete="off" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="所属赛事:" prop="name">
+                    <el-input v-model="editForm.editFormList.leagueName" auto-complete="off" placeholder="请输入赛事名称" :disabled='isDisabled'></el-input>
+                </el-form-item>
+                <el-form-item label="赛事等级:" prop="name">
+                    <el-select v-model="editForm.levelItem"  value-key="name"  filterable  placeholder="请选择赛事等级" :disabled='isDisabled'>
+                        <el-option
+                                v-for="item in editForm.levels"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item" auto-complete="off">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="风险金:" prop="name">
+                    <el-input v-model="editForm.levels[editForm.levelItem.id - 1].riskFund" auto-complete="off" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="单注赔付上线:" prop="name">
+                    <el-input v-model="editForm.levels[editForm.levelItem.id - 1].payCeiling" auto-complete="off" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="赛事图片:" prop="name">
+                    <el-input v-model="imageUrl" auto-complete="off" :disabled='isDisabled'></el-input>
+                    <el-upload
+                            class="avatar-uploader"
+                            action="http://47.93.223.69:8066/admin/media"
+                            :headers="myHeaders"
+                            :data="fileData"
+                            :show-file-list="false"
+                            :on-success="handleAvatarSuccess"
+                            :before-upload="beforeAvatarUpload">
+                        <img v-if="imageUrl" :src="imageUrl" class="avatar" style="margin-top: 6px;">
+                        <i v-else class="el-icon-plus avatar-uploader-icon" style="display: none"></i>
+                        <el-button size="small" type="primary" :disabled='isDisabled'>点击上传</el-button>
+                    </el-upload>
+                </el-form-item>
+                <el-form-item label="赛事来源:" prop="name">
+                    <el-select v-model="editForm.leagueSource"  value-key="name"  filterable  placeholder="请选择赛事来源" :disabled='isDisabled'>
+                        <el-option
+                                v-for="item in optionsB"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item" auto-complete="off">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="所属赛区:" prop="name">
+                    <el-select v-model="editForm.division"  value-key="name"  filterable  placeholder="请选择所属赛区" :disabled='isDisabled'>
+                        <el-option
+                                v-for="item in divisionJson"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item" auto-complete="off">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="别名组（多个用英文逗号隔开）" prop="name" class="textarea-box">
+                    <el-input
+                            :disabled='isDisabled'
+                            :autosize="{ minRows: 2}"
+                            type="textarea"
+                            placeholder="请输入别名组"
+                            v-model="editForm.editFormList.alias">
+                    </el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取消</el-button>
+                <el-button type="primary" @click="modifySubmit()">提交</el-button>
+            </div>
+        </el-dialog>
     </div>
 </template>
 
 <script>
-  import { getLeagues, searchLeagues, addLeagues } from '../../api/api';
-  import { formatDate } from '../../api/date';
-  var tableData = require('../../api/table.json');
-  export default {
-      data() {
-          return {
-              myHeaders: {token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJwd2NuIiwiaWF0IjoxNTEyNDQxNTE2fQ.9oaz53lrnYM_ZwPHarSx2d-hPIqIMfQcOI--ybcnvTo'},
-              total: 0,
-              page: 1,
-              tpageSize: 10,
-              postsName: '',
-              gameType: 'LOL',
-              imageUrl: '',
-              pageList: [],
-              leagueList:[],
-              searchTitle: '',
-              gameTypeName:'',
-              optionsA: [
-                  {id: 2, name: 'LOL'},
-                  {id: 3, name: 'DOTA2'},
-                  {id: 1, name: 'CSGO'},
-                  {id: 4, name: '王者荣耀'}
-              ],
-              optionsB: [
-                  {id: 1, name: '后台'},
-                  {id: 2, name : "EGB"},
-                  {id: 3, name : "平博"}
-              ],
-              dialogVisible: false,
-              divisionJson: tableData[0].codeJson,
-              divisionData:{
-                  "division":{},
-                  "leagueSource":{}
-              },
-              level:{
-                  "id":'1',
-                  "name": '1: 1'
-              },
-              levels : [
-                  {id: 1, name: '1: 1',payCeiling:1000,riskFund:10000},
-                  {id: 2, name: '2: 2',payCeiling:2000,riskFund:20000},
-                  {id: 3, name: '3: 3',payCeiling:3000,riskFund:30000}
-              ]
-          }
-      },
-      mounted() {
-          this.leaguesList();
-          console.log(this.divisionJson)
-      },
-      filters: {
-          formatDate (time) {
-              let date = new Date(time)
-              return formatDate(date, 'yyyy-MM-dd')
-          },
-      },
-      methods: {
-//         改变游戏类型
-          gameChange() {
-              this.leaguesList();
-          },
-//         点击搜索按钮
-          searchPosts() {
-              if (this.searchTitle == '') {
-                  this.leaguesList();
-              };
-              let params = {
-                  gameType : this.gameType.id?this.gameType.id:2,
-                  leagueName: this.postsName
-              };
-              searchLeagues(params).then((res) => {
-                  if (res.data.status === 1) {
-                      this.pageList =  res.data.data;
-                      this.total = 1;
-                  } else {
-                      alert(res.data.msg);
-                  }
-              })
-          },
-//          分页
-          handleCurrentChange(val) {
-              this.page = val;
-              this.leaguesList();
-          },
-//          请求赛事
-          leaguesList() {
-              let params = {
-                  gameType : this.gameType.id?this.gameType.id:2,
-                  offset : this.page*this.tpageSize-(this.tpageSize-1),
-                  limit : this.tpageSize
-              };
-              getLeagues(params).then((res) => {
-                  if (res.data.status === 1) {
-                      this.pageList =  res.data.data.list;
-                      this.total = res.data.data.total-1;
-                  } else {
-                      alert(res.data.msg);
-                  }
+    import {getLeagues, searchLeagues, addLeagues, getLeaguesDetail, modifyLeagues, deleteLeagues } from '../../api/api';
+    import {formatDate} from '../../api/date';
+    var tableData = require('../../api/table.json');
+    export default {
+        data() {
+            return {
+                myHeaders: {token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJwd2NuIiwiaWF0IjoxNTEyNzA1NDc4fQ.GNuIxMb_VxhvIeEynghoXsZNBj8Lcv5Q6WhzF7hiPvI'},
+                total: 0,
+                page: 1,
+                imageUrl: '',
+                tpageSize: 10,
+                postsName: '',
+                gameType: 'LOL',
+                pageList: [],
+                leagueList: [],
+                searchTitle: '',
+                isDisabled: false,
+                optionsA: [
+                    {id: 2, name: 'LOL'},
+                    {id: 3, name: 'DOTA2'},
+                    {id: 1, name: 'CSGO'},
+                    {id: 4, name: '王者荣耀'}
+                ],
+                optionsB: [
+                    {id: 1, name: '后台'},
+                    {id: 2, name: "EGB"},
+                    {id: 3, name: "平博"}
+                ],
+                divisionJson: tableData[0].codeJson,
+                dialogVisible: false,
+//                添加数据
+                addForm: {
+                    division: {},
+                    leagueSource: {},
+                    gameTypeName: '',
+                    levelItem: {
+                        "id": '1',
+                        "name": '1: 1'
+                    },
+                    levels: [
+                        {id: 1, name: '1: 1', payCeiling: 1000, riskFund: 10000},
+                        {id: 2, name: '2: 2', payCeiling: 2000, riskFund: 20000},
+                        {id: 3, name: '3: 3', payCeiling: 3000, riskFund: 30000}
+                    ]
+                },
+//                修改数据
 
-              })
-          },
+                editForm: {
+                    editFormList: [],
+                    division: {},
+                    leagueSource: {},
+                    gameTypeName: '',
+                    levelItem: {
+                        "id": '1',
+                        "name": '1: 1'
+                    },
+                    levels: [
+                        {id: 1, name: '1: 1', payCeiling: 1000, riskFund: 10000},
+                        {id: 2, name: '2: 2', payCeiling: 2000, riskFund: 20000},
+                        {id: 3, name: '3: 3', payCeiling: 3000, riskFund: 30000}
+                    ]
+                },
+                itemId: '',
+                fileData: {
+                    mediaCategory: 1002
+                }
+            }
+        },
+        mounted() {
+            this.leaguesList();
+        },
+        filters: {
+            formatDate (time) {
+                let date = new Date(time)
+                return formatDate(date, 'yyyy-MM-dd')
+            },
+        },
+        methods: {
+//         改变游戏类型
+            gameChange() {
+                this.leaguesList();
+            },
+//         点击搜索按钮
+            searchPosts() {
+                if (this.searchTitle == '') {
+                    this.leaguesList();
+                }
+                ;
+                let params = {
+                    gameType: this.gameType.id ? this.gameType.id : 2,
+                    leagueName: this.postsName
+                };
+                searchLeagues(params).then((res) => {
+                    if (res.data.status === 1) {
+                        this.pageList = res.data.data;
+                        this.total = 1;
+                    } else {
+                        alert(res.data.msg);
+                    }
+                })
+            },
+//          分页
+            handleCurrentChange(val) {
+                this.page = val;
+                this.leaguesList();
+            },
+//          请求赛事
+            leaguesList() {
+                let params = {
+                    gameType: this.gameType.id ? this.gameType.id : 2,
+                    offset: this.page * this.tpageSize - this.tpageSize,
+                    limit: this.tpageSize
+                };
+                getLeagues(params).then((res) => {
+                    if (res.data.status === 1) {
+                        this.pageList = res.data.data.list;
+                        this.total = res.data.data.total - 1;
+                    } else {
+                        alert(res.data.msg);
+                    }
+
+                })
+            },
 //          图片上传
-          handleAvatarSuccess(res, file) {
-              this.imageUrl = URL.createObjectURL(file.raw);
-          },
-          beforeAvatarUpload(file) {
-              const isLt2M = file.size / 1024 / 1024 < 2;
-              if (!isLt2M) {
-                  this.$message.error('上传头像图片大小不能超过 2MB!');
-              }
-              return isLt2M;
-          },
+            handleAvatarSuccess(res) {
+                this.imageUrl = res.data.avatar;
+            },
+            beforeAvatarUpload(file) {
+                this.fileData.media = file;
+                const isLt2M = file.size / 1024 / 1024 < 2;
+                if (!isLt2M) {
+                    this.$message.error('上传头像图片大小不能超过 2MB!');
+                }
+                return isLt2M;
+            },
 //          添加
-          addLeaguesBtn() {
-              this.imageUrl = '';
-              this.divisionData = {
-                  "division":{},
-                  "leagueSource":{}
-              },
-              this.dialogVisible = true;
-              this.gameTypeName = this.gameType.name?this.gameType.name:'LOL';
-          },
+            addLeaguesBtn() {
+                this.addForm = {
+                    division: {},
+                    leagueSourc: {},
+                    levelItem: {
+                        "id": '1',
+                        "name": '1: 1'
+                    },
+                    levels: [
+                        {id: 1, name: '1: 1', payCeiling: 1000, riskFund: 10000},
+                        {id: 2, name: '2: 2', payCeiling: 2000, riskFund: 20000},
+                        {id: 3, name: '3: 3', payCeiling: 3000, riskFund: 30000}
+                    ],
+
+                    imageUrl : ''
+                };
+                this.dialogVisible = true;
+                this.addForm.gameTypeName = this.gameType.name ? this.gameType.name : 'LOL';
+            },
 //          点击提交按钮
-          addSubmit() {
-              this.divisionData.leagueImageUrl = this.imageUrl;
-              var params = this.divisionData;
-              params.level = this.level.id;
-              params.riskFund = this.levels[this.level.id - 1].riskFund;
-              params.payCeiling = this.levels[this.level.id - 1].payCeiling;
-              params.gameType = this.gameType.id?this.gameType.id:2;
-              params.leagueSource = this.divisionData.leagueSource.id;
-              params.division = this.divisionData.division.name;
-              addLeagues(params).then((res) => {
-                  this.dialogVisible = false;
-                  this.leaguesList();
-              })
-          },
+            addSubmit() {
+                this.addForm.leagueImageUrl = this.imageUrl;
+                var params = this.addForm;
+                params.level = this.addForm.levelItem.id;
+                params.riskFund = this.addForm.levels[this.addForm.levelItem.id - 1].riskFund;
+                params.payCeiling = this.addForm.levels[this.addForm.levelItem.id - 1].payCeiling;
+                params.gameType = this.gameType.id ? this.gameType.id : 2;
+                params.leagueSource = this.addForm.leagueSource.id;
+                params.division = this.addForm.division.name;
+                addLeagues(params).then((res) => {
+                    this.dialogVisible = false;
+                    this.leaguesList();
+                })
+            },
 //          修改
+            modifyLeaguesBtn(item) {
+                this.dialogVisible = true;
+                this.editForm.leagueImageUrl = this.imageUrl;
+                this.editForm.gameTypeName = this.gameType.name?this.gameType.name:'LOL';
+                var params = {
+                    leaguesId: item._id
+                };
+                getLeaguesDetail(params).then((res) => {
+                    this.editForm.editFormList = res.data.data.leagues;
+                    this.editForm.imageUrl = res.data.data.leagues.leagueImageUrl;
+                    this.editForm.leagueSource = this.optionsB[res.data.data.leagues.leagueSource - 1].name;
+                    this.editForm.division = res.data.data.leagues.division;
+                    this.itemId = res.data.data.leagues._id;
+                    this.imageUrl = res.data.data.leagues.leagueImageUrl;
+                })
+            },
+//            点击提交按钮
+            modifySubmit() {
+                console.log(this.imageUrl)
+                this.editForm.leagueImageUrl = this.imageUrl;
+                var params = this.editForm.editFormList;
+//                params.level = this.editForm.levelItem.id;
+//                params.riskFund = this.editForm.levels[this.editForm.levelItem.id - 1].riskFund;
+//                params.payCeiling = this.editForm.levels[this.editForm.levelItem.id - 1].payCeiling;
+//                params.gameType = this.gameType.id ? this.gameType.id : 2;
+//                params.leagueSource = this.editForm.leagueSource.id;
+////                params.division = this.editForm.division.name;
+                params.leaguesId = this.editForm.editFormList._id;
+                console.log(params)
+                modifyLeagues(params).then((res) => {
+                    this.dialogVisible = false;
+                    alert("修改成功");
+                    this.leaguesList();
+                })
+            },
 //          详情
+            detailLeaguesBtn(item) {
+                this.isDisabled = true;
+                this.modifyLeaguesBtn(item)
+            },
 //          删除
+            deleteLeaguesBtn(item) {
+                var params = {
+                    leaguesId : item._id
+                };
+                this.$confirm('确认删除吗?', '提示', {
+                    type: 'warning'
+                }).then(() => {
+                    deleteLeagues(params).then((res) => {
+                        if (res.status === 1) {
+                            this.leaguesList();
+                        } else {
+                            alert(res.data.msg);
+                        }
+                    })
+                }).catch(() => {
+
+                });
+            },
 //          复制赛事ID
-          copyId(item) {
-              console.log(item._id)
-              item.select();
-              document.execCommand("Copy");
-          }
-      }
-  }
+            copyId(item) {
+                console.log(item._id)
+                item.select();
+                document.execCommand("Copy");
+            }
+        }
+    }
 
 </script>
 <style lang="scss">
-   .input-guess{
-       margin-left: 30px;
-       .el-input__inner{
-           width:170px;height: 22px;line-height: 22px;
-       }
-   }
-    .leaguesList{
+    .input-guess {
+        margin-left: 30px;
+        .el-input__inner {
+            width: 170px;
+            height: 22px;
+            line-height: 22px;
+        }
+    }
+
+    .leaguesList {
         padding: 10px 25px;
     }
-    .el-form-item__label{
+
+    .el-form-item__label {
         display: block;
     }
-    #textarea-box{
-        .el-form-item__label{
+
+    #textarea-box {
+        .el-form-item__label {
             display: block;
             width: 235px !important;
         }
-        .el-form-item__content{
+        .el-form-item__content {
             margin-left: 28px !important;
         }
     }
-   .avatar-uploader .el-upload {
-       border: 1px dashed #d9d9d9;
-       border-radius: 6px;
-       cursor: pointer;
-       position: relative;
-       overflow: hidden;
-   }
-   .avatar-uploader .el-upload:hover {
-       border-color: #409EFF;
-   }
-   .avatar-uploader-icon {
-       font-size: 28px;
-       color: #8c939d;
-       width: 178px;
-       height: 178px;
-       line-height: 178px;
-       text-align: center;
-   }
-   .avatar {
-       max-width: 200px;
-       max-height: 200px;
-       display: block;
-   }
-   input[type=file]{
-       display: none !important;
-   }
-   .avatar-uploader .el-upload{
-       border:none !important;
-   }
-   .img-thumbnail{
-       max-width: 223px;
-       max-height: 184px;
-   }
+
+    .avatar-uploader .el-upload {
+        border: 1px dashed #d9d9d9;
+        border-radius: 6px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .avatar-uploader .el-upload:hover {
+        border-color: #409EFF;
+    }
+
+    .avatar-uploader-icon {
+        font-size: 28px;
+        color: #8c939d;
+        width: 178px;
+        height: 178px;
+        line-height: 178px;
+        text-align: center;
+    }
+
+    .avatar {
+        max-width: 200px;
+        max-height: 200px;
+        display: block;
+    }
+
+    input[type=file] {
+        display: none !important;
+    }
+
+    .avatar-uploader .el-upload {
+        border: none !important;
+    }
+
+    .img-thumbnail {
+        max-width: 223px;
+        max-height: 184px;
+    }
 
     /*.glyphicon{*/
-        /*font-weight: bolder;*/
+    /*font-weight: bolder;*/
     /*}*/
-   /*.btn {*/
-       /*border: 0;*/
-       /*font-weight: bolder;*/
-   /*}*/
+    /*.btn {*/
+    /*border: 0;*/
+    /*font-weight: bolder;*/
+    /*}*/
 </style>
