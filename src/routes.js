@@ -4,10 +4,6 @@ import axios from 'axios'
 import Login from './views/Login.vue'
 import NotFound from './views/404.vue'
 import Home from './views/Home.vue'
-import Main from './views/Main.vue'
-import Table from './views/nav1/Table.vue'
-import Form from './views/nav1/Form.vue'
-import user from './views/nav1/user.vue'
 import Page1 from './views/nav6/Page1.vue'
 import Page2 from './views/nav6/Page2.vue'
 import Page4 from './views/nav2/Page4.vue'
@@ -19,7 +15,6 @@ import Page8 from './views/nav5/Page8.vue'
 import Page12 from './views/nav5/page12.vue'
 import Page10 from './views/nav7/page10.vue'
 import Page11 from './views/nav7/page11.vue'
-import echarts from './views/charts/echarts.vue'
 
 Vue.use(VueRouter)
 let routes = [
@@ -72,18 +67,6 @@ let routes = [
     {
         path: '/',
         component: Home,
-        name: '导航一',
-        iconCls: 'el-icon-message',//图标样式class
-        children: [
-            { path: '/main', component: Main, name: '主页', hidden: true },
-            { path: '/table', component: Table, name: 'Table' },
-            { path: '/form', component: Form, name: 'Form' },
-            { path: '/user', component: user, name: '列表' },
-        ]
-    },
-    {
-        path: '/',
-        component: Home,
         name: '待添加赛事及战队',
         iconCls: 'fa fa-id-card-o',
         children: [
@@ -108,7 +91,7 @@ let routes = [
         iconCls: 'fa fa-address-card',
         leaf: true,//只有一个节点
         children: [
-            { path: '/page10', component: Page, name: '创建趣味竞猜' ,children:[
+            { path: '/page10', component: Page, name: '创建冠军竞猜' ,children:[
                 {path:'',component: Page10},
                 {path:'/page10/add/',component: Page11},
                 {path:'/page10/add/:id',component: Page11}
