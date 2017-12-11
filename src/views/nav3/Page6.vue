@@ -135,13 +135,13 @@
 					</div>
 				</el-form-item>
 				<el-form-item label="竞猜名称" prop="name"  class="max-w">
-					<el-select v-model="map"   filterable  placeholder="选填">
+					<el-select v-model="map"   filterable  placeholder="选填" style="width: 113px">
 						<el-option
 								v-for="item in maps" :key="item.value"
 								:value="item" auto-complete="off">
 						</el-option>
 					</el-select>
-					<el-select v-model="selectName"   filterable  placeholder="选填">
+					<el-select v-model="selectName"   filterable  placeholder="选填"  style="width: 113px">
 						<el-option
 								:value="teamA.teamName" auto-complete="off">
 						</el-option>
@@ -374,7 +374,7 @@
 				this.selectName ='',
 				this.selectType = '独赢',
 				this.types = [],
-                this.addData.gameTypeName = this.gameType.name?this.gameType.name:'LoL',
+                this.addData.gameTypeName = this.gameType.name?this.gameType.name:'LOL',
                 this.dialogVisible = true
 				let data = {
                     limit: 10000,
@@ -425,6 +425,9 @@
     }
 </script>
 <style lang="scss">
+	.is-active{
+		color: #fff!important;
+	}
 	.dialog-small{
 		.el-dialog{
 			width: 40%!important;

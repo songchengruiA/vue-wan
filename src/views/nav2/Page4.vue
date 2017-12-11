@@ -279,6 +279,7 @@
             },
 //          添加
             addLeaguesBtn() {
+                this.editForm.editFormList =''
                 this.addForm = {
                     division: {},
                     leagueSourc: {},
