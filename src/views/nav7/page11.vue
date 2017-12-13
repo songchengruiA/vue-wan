@@ -9,8 +9,8 @@
                     <el-option label="王者荣耀" value="4"></el-option>
                 </el-select>
                 <router-link :to="{path:'/page10'}" class="btn btn-sm btn-danger btn-submit"  style="float: right">关闭</router-link>
-                <button class="btn btn-sm btn-danger btn-submit" @click="saveSetGuess()" style="float: right;margin-right: 14px" v-if="!edite&&!$route.params.id">提交</button>
-                <button class="btn btn-sm btn-danger btn-submit" @click="saveSetGuessA()" style="float: right;margin-right: 14px" v-if="!edite&&$route.params.id">提交</button>
+                <button class="btn btn-sm btn-danger btn-submit" @click="saveSetGuess('form')" style="float: right;margin-right: 14px" v-if="!edite&&!$route.params.id">提交</button>
+                <button class="btn btn-sm btn-danger btn-submit" @click="saveSetGuessA('form')" style="float: right;margin-right: 14px" v-if="!edite&&$route.params.id">提交</button>
             </el-col>
 
         </el-form-item>
@@ -90,7 +90,7 @@
     export default {
         data() {
             return {
-                myHeaders: {token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJwd2NuIiwiaWF0IjoxNTEyNjI2ODc2fQ.kPYiLY0z65M6_B_wxStnKebrAO7WtTR3hywj-i8m9zk"},
+                myHeaders: {token:JSON.parse(sessionStorage.getItem("token")) ? JSON.parse(sessionStorage.getItem("token")) : ''},
                 leagueList:[],
                 imageUrl:'',
                 name1:'',
@@ -210,7 +210,7 @@
                 postSetGuess(formData).then((res)=> {
                     if (res.data.status === 1) {
                         alert(res.data.data)
-                        window.history.go(-1);
+                        this.$router.push({ path: '/page10' });
                     } else {
                         alert(res.data.msg);
                     }

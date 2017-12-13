@@ -47,8 +47,8 @@
                         </div>
                         <div style="padding-top:5px">
                             <button class="btn btn-primary" type="button" @click="modifyLeaguesBtn(item)">修改</button>
-                            <button class="btn btn-default" type="button">
-                                <span class="glyphicon glyphicon-copy" @click="copyId(item)">复制赛事 ID</span>
+                            <button class="btn btn-default bb" type="button" :data-clipboard-text='item._id'>
+                                <span class="glyphicon glyphicon-copy">复制战队 ID</span>
                             </button>
                         </div>
                     </div>
@@ -63,17 +63,17 @@
         </el-col>
         <!--修改界面-->
         <el-dialog v-model="dialogVisible" :close-on-click-modal="false" class="dialog-small">
-            <el-form :model="editForm.editFormList" label-width="120px" ref="addForm" >
+            <el-form :model="leaguesForm.leaguesFormList" label-width="120px" ref="leaguesForm" >
                 <el-form-item label="游戏类型:" prop="name">
-                    <el-input v-model="editForm.gameTypeName" auto-complete="off" disabled></el-input>
+                    <el-input v-model="leaguesForm.gameTypeName" auto-complete="off" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="所属赛事:" prop="name">
-                    <el-input v-model="editForm.editFormList.leagueName" auto-complete="off" placeholder="请输入赛事名称" :disabled='isDisabled'></el-input>
+                    <el-input v-model="leaguesForm.leaguesFormList.leagueName" auto-complete="off" placeholder="请输入赛事名称" :disabled='isDisabled'></el-input>
                 </el-form-item>
                 <el-form-item label="赛事等级:" prop="name">
-                    <el-select v-model="editForm.levelItem"  value-key="name"  filterable  placeholder="请选择赛事等级" :disabled='isDisabled'>
+                    <el-select v-model="leaguesForm.levelItem"  value-key="name"  filterable  placeholder="请选择赛事等级" :disabled='isDisabled'>
                         <el-option
-                                v-for="item in editForm.levels"
+                                v-for="item in leaguesForm.levels"
                                 :key="item.id"
                                 :label="item.name"
                                 :value="item" auto-complete="off">
@@ -81,10 +81,10 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="风险金:" prop="name">
-                    <el-input v-model="editForm.levels[editForm.levelItem.id - 1].riskFund" auto-complete="off" disabled></el-input>
+                    <el-input v-model="leaguesForm.levels[leaguesForm.levelItem.id - 1].riskFund" auto-complete="off" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="单注赔付上线:" prop="name">
-                    <el-input v-model="editForm.levels[editForm.levelItem.id - 1].payCeiling" auto-complete="off" disabled></el-input>
+                    <el-input v-model="leaguesForm.levels[leaguesForm.levelItem.id - 1].payCeiling" auto-complete="off" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="赛事图片:" prop="name">
                     <el-input v-model="imageUrl" auto-complete="off" :disabled='isDisabled'></el-input>
@@ -102,7 +102,7 @@
                     </el-upload>
                 </el-form-item>
                 <el-form-item label="赛事来源:" prop="name">
-                    <el-select v-model="editForm.leagueSource"  value-key="name"  filterable  placeholder="请选择赛事来源" :disabled='isDisabled'>
+                    <el-select v-model="leaguesForm.leagueSource"  value-key="name"  filterable  placeholder="请选择赛事来源" :disabled='isDisabled'>
                         <el-option
                                 v-for="item in optionsB"
                                 :key="item.id"
@@ -112,7 +112,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="所属赛区:" prop="name">
-                    <el-select v-model="editForm.division"  value-key="name"  filterable  placeholder="请选择所属赛区" :disabled='isDisabled'>
+                    <el-select v-model="leaguesForm.division"  value-key="name"  filterable  placeholder="请选择所属赛区" :disabled='isDisabled'>
                         <el-option
                                 v-for="item in divisionJson"
                                 :key="item.id"
@@ -127,13 +127,18 @@
                             :autosize="{ minRows: 2}"
                             type="textarea"
                             placeholder="请输入别名组"
-                            v-model="editForm.editFormList.alias">
+                            v-model="leaguesForm.leaguesFormList.alias">
                     </el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取消</el-button>
-                <el-button type="primary" @click="modifySubmit()">提交</el-button>
+                <el-button @click="dialogVisible = false" v-if='isDisabled1'>取消</el-button>
+                <!--添加-->
+                <el-button type="primary" @click="addSubmit()" v-if='isDisabled2'>提交</el-button>
+                <!--修改-->
+                <el-button type="primary" @click="modifySubmit()" v-if='isDisabled3'>提交</el-button>
+                <!--详情-->
+                <el-button type="primary" @click="dialogVisible = false" v-if='isDisabled4'>关闭</el-button>
             </div>
         </el-dialog>
     </div>
@@ -142,11 +147,12 @@
 <script>
     import {getLeagues, searchLeagues, addLeagues, getLeaguesDetail, modifyLeagues, deleteLeagues } from '../../api/api';
     import {formatDate} from '../../api/date';
+    import Clipboard from 'clipboard';
     var tableData = require('../../api/table.json');
     export default {
         data() {
             return {
-                myHeaders: {token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJwd2NuIiwiaWF0IjoxNTEyNzA1NDc4fQ.GNuIxMb_VxhvIeEynghoXsZNBj8Lcv5Q6WhzF7hiPvI'},
+                myHeaders: {token:JSON.parse(sessionStorage.getItem("token")) ? JSON.parse(sessionStorage.getItem("token")) : ''},
                 total: 0,
                 page: 1,
                 imageUrl: '',
@@ -158,6 +164,10 @@
                 searchTitle: '',
                 alias: '',
                 isDisabled: false,
+                isDisabled1: false,
+                isDisabled2: false,
+                isDisabled3: false,
+                isDisabled4: false,
                 optionsA: [
                     {id: 2, name: 'LOL'},
                     {id: 3, name: 'DOTA2'},
@@ -171,25 +181,9 @@
                 ],
                 divisionJson: tableData[0].codeJson,
                 dialogVisible: false,
-//                添加数据
-                addForm: {
-                    division: {},
-                    leagueSource: {},
-                    gameTypeName: '',
-                    levelItem: {
-                        "id": '1',
-                        "name": '1: 1'
-                    },
-                    levels: [
-                        {id: 1, name: '1: 1', payCeiling: 1000, riskFund: 10000},
-                        {id: 2, name: '2: 2', payCeiling: 2000, riskFund: 20000},
-                        {id: 3, name: '3: 3', payCeiling: 3000, riskFund: 30000}
-                    ]
-                },
-//                修改数据
-
-                editForm: {
-                    editFormList: {},
+                addForm: {},
+                leaguesForm: {
+                    leaguesFormList: {},
                     division: {},
                     leagueSource: {},
                     gameTypeName: '',
@@ -279,10 +273,7 @@
             },
 //          添加
             addLeaguesBtn() {
-                this.editForm.editFormList =''
-                this.addForm = {
-                    division: {},
-                    leagueSourc: {},
+                this.leaguesForm = {
                     levelItem: {
                         "id": '1',
                         "name": '1: 1'
@@ -291,23 +282,28 @@
                         {id: 1, name: '1: 1', payCeiling: 1000, riskFund: 10000},
                         {id: 2, name: '2: 2', payCeiling: 2000, riskFund: 20000},
                         {id: 3, name: '3: 3', payCeiling: 3000, riskFund: 30000}
-                    ],
-
-                    imageUrl : ''
+                    ]
                 };
+                this.leaguesForm.leaguesFormList = {};
+                this.imageUrl = '';
+                this.isDisabled = false;
                 this.dialogVisible = true;
-                this.addForm.gameTypeName = this.gameType.name ? this.gameType.name : 'LOL';
+                this.isDisabled1 = true;
+                this.isDisabled2 = true;
+                this.isDisabled3 = false;
+                this.isDisabled4 = false;
+                this.leaguesForm.gameTypeName = this.gameType.name ? this.gameType.name : 'LOL';
             },
 //          点击提交按钮
             addSubmit() {
-                this.addForm.leagueImageUrl = this.imageUrl;
-                var params = this.addForm;
-                params.level = this.addForm.levelItem.id;
-                params.riskFund = this.addForm.levels[this.addForm.levelItem.id - 1].riskFund;
-                params.payCeiling = this.addForm.levels[this.addForm.levelItem.id - 1].payCeiling;
+                var params = this.leaguesForm.leaguesFormList;
+                params.leagueImageUrl = this.imageUrl;
+                params.level = this.leaguesForm.levelItem.id;
+                params.riskFund = this.leaguesForm.levels[this.leaguesForm.levelItem.id - 1].riskFund;
+                params.payCeiling = this.leaguesForm.levels[this.leaguesForm.levelItem.id - 1].payCeiling;
                 params.gameType = this.gameType.id ? this.gameType.id : 2;
-                params.leagueSource = this.addForm.leagueSource.id;
-                params.division = this.addForm.division.name;
+                params.leagueSource = this.leaguesForm.leagueSource.id;
+                params.division = this.leaguesForm.division.name;
                 addLeagues(params).then((res) => {
                     this.dialogVisible = false;
                     this.leaguesList();
@@ -316,27 +312,36 @@
 //          修改
             modifyLeaguesBtn(item) {
                 this.dialogVisible = true;
-                this.editForm.leagueImageUrl = this.imageUrl;
-                this.editForm.gameTypeName = this.gameType.name?this.gameType.name:'LOL';
+                this.isDisabled = false;
+                this.isDisabled1 = true;
+                this.isDisabled2 = false;
+                this.isDisabled3 = true;
+                this.isDisabled4 = false;
+                this.leaguesForm.leagueImageUrl = this.imageUrl;
+                this.leaguesForm.gameTypeName = this.gameType.name?this.gameType.name:'LOL';
                 var params = {
                     leaguesId: item._id
                 };
                 getLeaguesDetail(params).then((res) => {
-                    this.editForm.editFormList = res.data.data.leagues;
-                    this.editForm.imageUrl = res.data.data.leagues.leagueImageUrl;
-                    this.editForm.leagueSource = this.optionsB[res.data.data.leagues.leagueSource - 1].name;
-                    this.editForm.division = res.data.data.leagues.division;
+                    this.leaguesForm.leaguesFormList = res.data.data.leagues;
+                    this.leaguesForm.leagueSource = this.optionsB[res.data.data.leagues.leagueSource - 1].name;
+                    this.leaguesForm.division = res.data.data.leagues.division;
                     this.itemId = res.data.data.leagues._id;
                     this.imageUrl = res.data.data.leagues.leagueImageUrl;
-                    this.editForm.editFormList.alias = res.data.data.leagues.alias.join(',')
+                    this.leaguesForm.leaguesFormList.alias = res.data.data.leagues.alias.join(',')
                 })
             },
 //            点击提交按钮
             modifySubmit() {
-                this.editForm.leagueImageUrl = this.imageUrl;
-                var params = this.editForm.editFormList;
-                params.leaguesId = this.editForm.editFormList._id;
-                console.log(params)
+                var params = this.leaguesForm.leaguesFormList;
+                params.leagueImageUrl = this.imageUrl;
+                params.level = this.leaguesForm.levelItem.id;
+                params.riskFund = this.leaguesForm.levels[this.leaguesForm.levelItem.id - 1].riskFund;
+                params.payCeiling = this.leaguesForm.levels[this.leaguesForm.levelItem.id - 1].payCeiling;
+                params.gameType = this.gameType.id ? this.gameType.id : 2;
+                params.leagueSource = this.leaguesForm.leagueSource.id;
+                params.division = this.leaguesForm.division.name;
+                params.leaguesId = this.leaguesForm.leaguesFormList._id;
                 modifyLeagues(params).then((res) => {
                     this.dialogVisible = false;
                     alert("修改成功");
@@ -345,8 +350,12 @@
             },
 //          详情
             detailLeaguesBtn(item) {
+                this.modifyLeaguesBtn(item);
                 this.isDisabled = true;
-                this.modifyLeaguesBtn(item)
+                this.isDisabled1 = false;
+                this.isDisabled2 = false;
+                this.isDisabled3 = false;
+                this.isDisabled4 = true;
             },
 //          删除
             deleteLeaguesBtn(item) {

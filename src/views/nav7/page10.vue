@@ -34,7 +34,7 @@
                     <td class="text-right" width="280">
                         <div class="border"  style="border-left: 1px solid #d7d7d7;">
                             <div class="middle">
-                                <img v-bind:src="item.publicityImage" width="180px" @click="bigPic(item)">
+                                <img v-bind:src="item.publicityImage" width="180px" height="72" @click="bigPic(item)">
                             </div>
                         </div>
                     </td>

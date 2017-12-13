@@ -50,7 +50,7 @@
           if (valid) {
             //_this.$router.replace('/table');
             this.logining = true;
-              let password = this.ruleForm2.checkPass
+            let password = this.ruleForm2.checkPass
             //NProgress.start();
             var loginParams = { username: this.ruleForm2.account, password: password};
             requestLogin(loginParams).then(data => {
