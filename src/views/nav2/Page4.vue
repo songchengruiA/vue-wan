@@ -162,7 +162,6 @@
                 pageList: [],
                 leagueList: [],
                 searchTitle: '',
-                alias: '',
                 isDisabled: false,
                 isDisabled1: false,
                 isDisabled2: false,
@@ -187,7 +186,6 @@
                     division: {},
                     leagueSource: {},
                     gameTypeName: '',
-                    alias: '',
                     levelItem: {
                         "id": '1',
                         "name": '1: 1'
