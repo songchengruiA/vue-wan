@@ -75,7 +75,7 @@ export const  addTeam = params => { return instance.post(url+'/teams', qs.string
 //战队的详情
 export const getTeamsDetail = params => { return instance.get(url+'/teamsdetail', {params: params}); };
 //战队中修改后的提交按钮
-export const  modifyTeam = params => { return instance.post(url+'/teamsupdate', qs.stringify(params)).then(res => res.data); };
+export const  modifyTeams = params => { return instance.post(url+'/teamsupdate', qs.stringify(params)).then(res => res.data); };
 //删除战队
 export const  deleteTeams = params => { return instance.post(url+'/teamsdelete', qs.stringify(params)).then(res => res.data); };
 
