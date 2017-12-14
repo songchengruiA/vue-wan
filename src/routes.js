@@ -70,8 +70,8 @@ let routes = [
         name: '待添加赛事及战队',
         iconCls: 'fa fa-id-card-o',
         children: [
-            { path: '/page1', component: Page1, name: '待添加赛事' },
-            { path: '/page2', component: Page2, name: '待添加战队' }
+            { path: '/page1',iconCls: 'fa fa-address-card', component: Page1, name: '待添加赛事' },
+            { path: '/page2',iconCls: 'fa fa-address-card', component: Page2, name: '待添加战队' }
         ]
     },
     {

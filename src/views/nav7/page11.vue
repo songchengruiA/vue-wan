@@ -1,5 +1,5 @@
 <template>
-    <el-form ref="form" :model="form" label-width="110px" @submit.prevent="onSubmit" style="margin:20px;width:60%;min-width:600px;">
+    <el-form ref="form" :model="form" :rules="rules" label-width="110px" @submit.prevent="onSubmit" style="margin:20px;width:70%;min-width:805px;" class="gameAdd">
         <el-form-item label="选择游戏类型:">
             <el-col :span="18">
                 <el-select v-model="form.gameType" placeholder="选择游戏类型" @change="typeChange" :disabled="edite">
@@ -12,16 +12,15 @@
                 <button class="btn btn-sm btn-danger btn-submit" @click="saveSetGuess('form')" style="float: right;margin-right: 14px" v-if="!edite&&!$route.params.id">提交</button>
                 <button class="btn btn-sm btn-danger btn-submit" @click="saveSetGuessA('form')" style="float: right;margin-right: 14px" v-if="!edite&&$route.params.id">提交</button>
             </el-col>
-
         </el-form-item>
-        <el-form-item label="赛事名称:">
-            <el-col :span="7">
-                <el-select v-model="league"  value-key="leagueName" class="selected-gameTypeName" filterable  placeholder="请选择游戏赛事"  :disabled="edite">
+        <el-form-item label="赛事名称:" prop="leagueName">
+            <el-col :span="9">
+                <el-select v-model="form.leagueName"  value-key="leagueName" class="selected-gameTypeName" filterable  placeholder="请选择游戏赛事"  :disabled="edite">
                     <el-option
                             v-for="item in leagueList"
                             :key="item.id"
                             :label="item.leagueName"
-                            :value="item"auto-complete="off">
+                            :value="item.leagueName"auto-complete="off">
                     </el-option>
                 </el-select>
             </el-col>
@@ -31,7 +30,8 @@
                 <img v-if="imageUrl" :src="imageUrl" class="avatar" style="margin-top: 6px;">
             </el-col>
         </el-form-item>
-        <el-form-item label="赛事图片:" v-if="!edite">
+        <el-form-item label="赛事图片:" v-if="!edite" prop="imageUrl">
+            <el-input type="hidden" style="position: absolute" v-model="form.imageUrl"></el-input>
             <el-col :span="15">
                 <el-upload
                         class="avatar-uploader"
@@ -47,37 +47,41 @@
                 </el-upload>
             </el-col>
         </el-form-item>
-        <el-form-item label="风险金:" >
-            <el-col :span="7">
-                <el-input v-model="form.optionRiskFund" :disabled="edite"></el-input>
+        <el-form-item label="风险金:"  prop="optionRiskFund">
+            <el-col :span="9">
+                <el-input v-model="form.optionRiskFund" style="max-width: 196px" :disabled="edite"></el-input>
             </el-col>
         </el-form-item>
-        <el-form-item label="竞猜名称:" >
-            <el-col :span="7">
+        <el-col :span="9">
+            <el-form-item label="竞猜名称:"  prop="betName">
                 <el-input v-model="form.betName"  :disabled="edite" ></el-input>
-            </el-col>
-            <el-form-item label="竞猜时间:"  class="inputStyle">
-                <el-col :span="9">
-                    <el-date-picker  :disabled="edite"
-                            v-model="form.endTime"
-                            type="datetime"
-                            placeholder="选择日期时间">
-                    </el-date-picker>
-                </el-col>
             </el-form-item>
-        </el-form-item>
-        <el-form-item :label=name1+(index+1)+name2  v-for="(item,index) in form.betOptions">
-            <el-col :span="7">
-                <el-input v-model="item.optionName" :disabled="edite"></el-input>
-            </el-col>
-            <el-form-item :label=name1+(index+1)+name2  >
-                <el-col :span="9">
-                    <el-input v-model="item.optionOdds" :disabled="edite"></el-input>
-                </el-col>
-                <span style="position: relative;left: 8px;cursor: pointer" v-if="index>0 && !edite" @click="delGame(index)">删除</span>
+        </el-col>
+        <el-col :span="9">
+            <el-form-item label="竞猜时间:" class="inputStyle"  prop="endTime">
+                <el-date-picker  :disabled="edite"
+                                 v-model="form.endTime"
+                                 type="datetime"
+                                 placeholder="选择日期时间">
+                </el-date-picker>
             </el-form-item>
+        </el-col>
+        <div style="clear: both"></div>
+        <div v-for="(item,index) in form.betOptions" >
+            <el-col :span="9">
+                <el-form-item :label=name1+(index+1)+name2  >
+                    <el-input v-model="item.optionName" :disabled="edite"></el-input>
 
-        </el-form-item>
+                </el-form-item>
+            </el-col>
+            <el-col :span="9">
+                <el-form-item :label=name1+(index+1)+name3  class="inputStyle">
+                        <el-input v-model="item.optionOdds" :disabled="edite"></el-input>
+                    <span style="position: absolute;right: -32px;cursor: pointer;top: 0;" v-if="index>0 && !edite" @click="delGame(index)">删除</span>
+                </el-form-item>
+            </el-col>
+        </div>
+        <div style="clear: both"></div>
         <div class="addguess-body" v-if="!edite">
             <a class="btn btn-default btn-lg addBtn" @click="addOption">添加下注项</a>
         </div>
@@ -95,15 +99,36 @@
                 imageUrl:'',
                 name1:'',
                 name2:'',
-                league:'',
+                name3:'',
                 edite:false,
                 form: {
+                    leagueName:'',
                     gameType:'2',
                     endTime:'',
-                    betOptions:[{}]
+                    optionRiskFund:'',
+                    betOptions:[{optionName:'',optionOdds:''}]
                 },
                 fileData:{
                     mediaCategory:1002,
+                },
+                rules: {
+                    optionRiskFund: [
+                        { required: true, message: '请输入风险金', trigger: 'blur' },
+                        {
+                            pattern: /(^[1-9](\d+)?(\.\d{1,2})?$)|(^(0){1}$)|(^\d\.\d{1,2}?$)/,
+                            message: '请输入正确的风险金'
+                        }
+                    ],
+                    leagueName: [
+                        { required: true, message: '请选择赛事名称', trigger: 'change' }
+                    ],
+                    betName: [
+                        { required: true, message: '请输入竞猜名称', trigger: 'blur' }
+                    ],
+                    imageUrl: [
+                        { required: true, message: '请上传图片',trigger: 'blur' }
+                    ],
+                    endTime: [{"message": "请选择竞猜时间","required": true}]
                 }
             }
         },
@@ -116,7 +141,8 @@
 
             gameList(){
                 this.name1='下注项';
-                this.name2='赔率';
+                this.name3='赔率:';
+                this.name2='名称:';
                 let data = {
                     limit: 10000,
                     gameType: this.form.gameType,
@@ -136,6 +162,7 @@
                     image.onload = function () {
                         if(this.width == 375 && this.height ==150){
                             _this.imageUrl = res.data.avatar;
+                            _this.form.imageUrl = res.data.avatar;
                         }else {
                             alert("图片仅能上传375*150的图片")
                         }
@@ -163,18 +190,31 @@
                 this.form.betOptions.splice(index,1);
             },
             //提交竞猜
-            saveSetGuess() {
-                var data = this.form
-                data.publicityImage = this.imageUrl;
-                data.leagueName = this.league.leagueName;
-                data.endTime = Date.parse(this.form.endTime)
-                postSetGuess(data).then((res)=> {
-                    if (res.data.status === 1) {
-                        window.history.go(-1);
+            saveSetGuess(form) {
+                this.$refs[form].validate((valid) => {
+                    if (!valid) {
+                        console.log('error submit!!');
+                        return false;
                     } else {
-                        alert(res.msg);
+                        var data = this.form
+                        data.publicityImage = this.imageUrl;
+                        data.endTime = new Date(this.form.endTime)
+                        console.log(this.form.betOptions)
+                        if(this.form.betOptions[0].optionName !=''&& this.form.betOptions[0].optionOdds !=''){
+                            postSetGuess(data).then((res)=> {
+                                if (res.data.status === 1) {
+                                    window.history.go(-1);
+                                } else {
+                                    alert('请查看选项是否填写完整');
+                                }
+                            })
+                        }else {
+                            alert('请查看选项是否填写完整');
+                        }
+
                     }
                 })
+
             },
             //详情
             detail(){
@@ -182,9 +222,9 @@
                     this.edite = !this.edite
                     let id = this.$route.params.id
                     editeGameGuess(id).then((res) => {
+                        console.log(res)
                         this.form=res.data.data
                         this.form.gameType = String(res.data.data.gameType)
-                        this.league = res.data.data.leagueName
                         this.imageUrl = res.data.data.publicityImage
                     });
                 }
@@ -195,7 +235,7 @@
                 this.edite = this.$route.query.edite
             },
             //编辑提交
-            saveSetGuessA(){
+            saveSetGuessA(form){
                 let formData = {
                     funbetId : this.$route.params.id,
                     betName : this.form.betName,
@@ -203,7 +243,7 @@
                     endTime : this.form.endTime,
                     betOptions : this.form.betOptions,
                     gameType : this.form.gameType,
-                    leagueName : this.league,
+                    leagueName : this.form.leagueName,
                     publicityImage : this.imageUrl,
                     optionRiskFund : this.form.optionRiskFund
                 }
@@ -216,16 +256,23 @@
                     }
                 })
 
+
             }
         }
     }
 
 </script>
 <style lang="scss">
-    .inputStyle{
-        .el-date-editor.el-input{
-            width: 100%!important;
+    .gameAdd{
+        input{
+            min-width: 200px;
+        }
+        .inputStyle{
+            .el-date-editor.el-input{
+                width: 100%!important;
+            }
         }
     }
+
 
 </style>

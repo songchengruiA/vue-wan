@@ -156,7 +156,7 @@
                 total: 0,
                 page: 1,
                 imageUrl: '',
-                tpageSize: 10,
+                tpageSize: 5,
                 postsName: '',
                 gameType: 'LOL',
                 pageList: [],
