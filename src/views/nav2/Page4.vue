@@ -143,16 +143,16 @@
         </el-dialog>
     </div>
 </template>
-
 <script>
     import {getLeagues, searchLeagues, addLeagues, getLeaguesDetail, modifyLeagues, deleteLeagues } from '../../api/api';
     import {formatDate} from '../../api/date';
     import Clipboard from 'clipboard';
     var tableData = require('../../api/table.json');
+    import '../../styles/stylesheets/screen.css';
     export default {
         data() {
             return {
-                myHeaders: {token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJwd2NuIiwiaWF0IjoxNTEyNzA1NDc4fQ.GNuIxMb_VxhvIeEynghoXsZNBj8Lcv5Q6WhzF7hiPvI'},
+                myHeaders: {token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJwd2NuIiwiaWF0IjoxNTEzMzA1Mzg3fQ.HMGj4j8hZr0su2cWbaX1MfSDAqzLsjyLrcvVyCd9blM'},
                 total: 0,
                 page: 1,
                 imageUrl: '',
