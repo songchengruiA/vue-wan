@@ -15,7 +15,7 @@
 
             <div class="form-group">
                 <label class="size-set pull-left">选择竞猜状态:</label>
-                <el-select v-model="gameStatus" value-key="id" class="selected-guess" filterable placeholder=""  @change="gameChange">
+                <el-select v-model="betStatus" value-key="id" class="selected-guess" filterable placeholder=""  @change="gameChange">
                     <el-option
                             v-for="item in optionsB"
                             :key="item.id"
@@ -34,7 +34,7 @@
                     <td class="text-right" width="280">
                         <div class="border"  style="border-left: 1px solid #d7d7d7;">
                             <div class="middle">
-                                <img v-bind:src="item.publicityImage" width="180px" @click="bigPic(item)">
+                                <img v-bind:src="item.publicityImage" width="180px" height="72" @click="bigPic(item)">
                             </div>
                         </div>
                     </td>
@@ -133,14 +133,14 @@
                 ],
                 dialogVisible: false,
                 gameType: 'LOL',
-                gameStatus: '全部',
+                betStatus: '全部',
                 time: '',
                 pageList: [],
                 bigImg: false,
                 bigPicUrl:'',
                 itemData:{},
                 selectedData:1,
-                optionOdds:''
+                optionOdds:'',
             }
         },
         mounted() {
@@ -155,7 +155,7 @@
         methods: {
             requestList() {
                 let para = {
-                    gameStatus:this.gameStatus.id?this.gameStatus.id:'',
+                    betStatus:this.betStatus.id?this.betStatus.id:'',
                     gameType:this.gameType.id?this.gameType.id:2,
                 };
                 getSetGuess(para).then((res) => {

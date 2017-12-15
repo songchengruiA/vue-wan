@@ -1,32 +1,19 @@
 import axios from 'axios';
 var qs = require('qs');
-
-let base = '';
-
-export const getUserList = params => { return axios.get(`${base}/user/list`, { params: params }); };
-
-export const getUserListPage = params => { return axios.get(`${base}/user/listpage`, { params: params }); };
-
-export const removeUser = params => { return axios.get(`${base}/user/remove`, { params: params }); };
-
-export const batchRemoveUser = params => { return axios.get(`${base}/user/batchremove`, { params: params }); };
-
-export const editUser = params => { return axios.get(`${base}/user/edit`, { params: params }); };
-
-export const addUser = params => { return axios.get(`${base}/user/add`, { params: params }); };
+var tokenVal= JSON.parse(sessionStorage.getItem("token")) ? JSON.parse(sessionStorage.getItem("token")) : '';
 
 //  创建预备竞猜
 var instance = axios.create({
-    headers: {'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJwd2NuIiwiaWF0IjoxNTEyOTc0MDQwfQ.eBDcihsQv3PXdfvxIMSHsNU0-AM0r_KTi1VNo_74uuY'}
+    headers: {'token': tokenVal}
 });
-/*var url = 'http://localhost:8066/'*/
+/*var url = 'http://localhost:8066'*/
 var url = 'http://47.93.223.69:8066'
 //登录
-export const requestLogin = params => { return instance.post(url+`admin/login`, qs.stringify(params)).then(res => res.data); };
+export const requestLogin = params => { return instance.post(url+`/admin/login`, qs.stringify(params)).then(res => res.data); };
 //  请求赛事
 export const getRequest = params => { return instance.get(url+`/admin/source/gambles`, { params: params }); };
 //修改电竞
-export const  renew = params => { return instance.put(url+`admin/source/gambles`, qs.stringify(params)).then(res => res.data); };
+export const  renew = params => { return instance.put(url+`/admin/source/gambles`, qs.stringify(params)).then(res => res.data); };
 //上传电竞
 export const  upload = params => { return instance.post(url+`/admin/pwcn/gambles`, qs.stringify(params)).then(res => res.data); };
 //删除电竞

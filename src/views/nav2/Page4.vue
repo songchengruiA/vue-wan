@@ -152,11 +152,11 @@
     export default {
         data() {
             return {
-                myHeaders: {token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJwd2NuIiwiaWF0IjoxNTEyNzA1NDc4fQ.GNuIxMb_VxhvIeEynghoXsZNBj8Lcv5Q6WhzF7hiPvI'},
+                myHeaders: {token:JSON.parse(sessionStorage.getItem("token")) ? JSON.parse(sessionStorage.getItem("token")) : ''},
                 total: 0,
                 page: 1,
                 imageUrl: '',
-                tpageSize: 10,
+                tpageSize: 5,
                 postsName: '',
                 gameType: 'LOL',
                 pageList: [],

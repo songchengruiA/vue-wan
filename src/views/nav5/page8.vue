@@ -100,7 +100,9 @@
 				</tr>
 			</table>
 		</div>
-		<div class="no-data" v-if="pageList.length == 0"></div>
+		<div class="addguess-body">
+			<div class="no-data setguess ng-scope" v-if="pageList.length == 0"></div>
+		</div>
 	</div>
 </template>
 
