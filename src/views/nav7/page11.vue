@@ -198,7 +198,7 @@
                     } else {
                         var data = this.form
                         data.publicityImage = this.imageUrl;
-                        data.endTime = new Date(this.form.endTime)
+                        data.endTime = Date.parse(new Date(this.form.endTime))
                         console.log(this.form.betOptions)
                         if(this.form.betOptions[0].optionName !=''&& this.form.betOptions[0].optionOdds !=''){
                             postSetGuess(data).then((res)=> {
@@ -240,7 +240,7 @@
                     funbetId : this.$route.params.id,
                     betName : this.form.betName,
                     betSource : this.form.betSource,
-                    endTime : this.form.endTime,
+                    endTime : Date.parse(new Date(this.form.endTime)),
                     betOptions : this.form.betOptions,
                     gameType : this.form.gameType,
                     leagueName : this.form.leagueName,

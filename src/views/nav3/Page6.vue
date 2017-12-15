@@ -250,7 +250,7 @@
                 selectType:'独赢',
                 types:[],
                 rules: {
-                    date: [{"message": "请选择竞猜时间","required": true}],
+                    date: [{ type: 'date', required: true, message: '请选择时间', trigger: 'change' }],
                     optionA: [
                         { required: true, message: '请选择赛事名称', trigger: 'blur' }
                     ],
@@ -374,8 +374,9 @@
 
                 });
             },
-            addGame() {
-                this.addData = {},
+            addGame(addData) {
+                this.addData = {
+				},
 				this.league={
 					_id:'',
 					leagueName:''
@@ -408,7 +409,7 @@
                 })
                 this.maps = (data.gameType!==4)?this.table[0].MapOne:this.table[0].MapTwo;
                 this.types = (data.gameType == 2)?this.table[0].LOL:((data.gameType== 3)?this.table[0].Dota2:((data.gameType == 1)?this.table[0].CSGO:((data.gameType == 4)?this.table[0].Wangzhe:'独赢')))
-            },
+			},
             addSubmit(addData){
                 let leagueName = this.league.leagueName;
                 let	teamA = this.teamA.teamName;
@@ -425,8 +426,8 @@
                                     var nam = name.replace(/['0']/g,'')
                                     let saveData = {
                                         leagueId : this.league._id,
-                                        gambleSourceId: new Date(new Date()),
-                                        endTime :new Date(this.addData.date),
+                                        gambleSourceId: Date.parse(new Date()),
+                                        endTime :Date.parse(new Date(this.addData.date)),
                                         gambleName : nam,
                                         gambleSource : 1,
                                         gambleType : 1,
