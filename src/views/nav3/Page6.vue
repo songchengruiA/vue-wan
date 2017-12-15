@@ -2,7 +2,7 @@
 	<div class="col-sm-12">
 		<form class="form-inline form-search addguess-head">
 			<div class="form-group">
-				<label class="size-set pull-left" style="margin-left: 0px">选择游戏类型:</label>
+				<label class="size-set pull-left " style="margin-left: 0px">选择游戏类型:</label>
 				<el-select v-model="gameType"  value-key="name" class="selected-guess" filterable placeholder="" @change="gameChange">
 					<el-option
 							v-for="item in optionsA"
@@ -16,25 +16,25 @@
 				<label class="size-set pull-left">选择赛事来源:</label>
 				<el-select v-model="gameSource" value-key="name" class="selected-guess" filterable placeholder="">
 					<el-option
-                        v-for="item in optionsB"
-                        :key="item.id"
-                        :label="item.name"
-                        :value="item">
+							v-for="item in optionsB"
+							:key="item.id"
+							:label="item.name"
+							:value="item">
 					</el-option>
 				</el-select>
 			</div>
 			<div class="block">
 				<el-date-picker
-                    v-model="time"
-                    type="daterange"
-                    placeholder="选择时间"
-                    format="yyyy-MM-dd">
+						v-model="time"
+						type="daterange"
+						placeholder="选择时间"
+						format="yyyy-MM-dd">
 				</el-date-picker>
 			</div>
 			<div class="form-group" style="float: right;margin-right: 0px;margin-top: -25px">
 				<el-button type="primary" @click="search">搜索</el-button>
 			</div>
-            <div class="line-block"></div>
+			<div class="line-block"></div>
 		</form>
 		<div style="clear: both"></div>
 		<div class="col-sm-12 add-guess-list">
@@ -60,8 +60,8 @@
 				<tr>
 					<td class="td-font-size">{{item.optionA.name}}</td>
 					<td class="td-font-size">{{item.optionA.odds}}</td>
-					<td class="td-font-size td-bg-c"><input type="text" v-model="item.optionA.payCeiling" @change="upData(item)"></td>
-					<td class="td-font-size td-bg-c"><input type="text" v-model="item.optionA.riskFund" @change="upData(item)"></td>
+					<td class="td-font-size td-bg-c"><input type="number" v-model="item.optionA.payCeiling" @change="upData(item)"></td>
+					<td class="td-font-size td-bg-c"><input type="number" v-model="item.optionA.riskFund" @change="upData(item)"></td>
 				</tr>
 				<tr>
 					<td rowspan="2">{{item.gambleName}}</td>
@@ -77,8 +77,8 @@
 				<tr>
 					<td class="td-font-size">{{item.optionB.name}}</td>
 					<td class="td-font-size">{{item.optionB.odds}}</td>
-					<td class="td-font-size td-bg-c"><input type="text" v-model="item.optionB.payCeiling" @change="upData(item)"></td>
-					<td class="td-font-size td-bg-c"><input type="text" v-model="item.optionB.riskFund" @change="upData(item)"></td>
+					<td class="td-font-size td-bg-c"><input v-model="item.optionB.payCeiling" @change="upData(item)" type="number"></td>
+					<td class="td-font-size td-bg-c"><input v-model="item.optionB.riskFund" @change="upData(item)" type="number"></td>
 				</tr>
 			</table>
 		</div>
@@ -89,12 +89,13 @@
 		</div>
 		<!--新增界面-->
 		<el-dialog v-model="dialogVisible" :close-on-click-modal="false" class="dialog-small">
-			<el-form :model="addData" label-width="100px" ref="addForm" >
-				<el-form-item label="游戏类型" prop="name">
+			<el-form label-width="110px"  ref="addData" :model="addData" :rules="rules" @submit.prevent="onSubmit">
+				<el-form-item label="游戏类型">
 					<el-input v-model="addData.gameTypeName" auto-complete="off" disabled></el-input>
 				</el-form-item>
-				<el-form-item label="所属赛事" prop="name">
-					<el-select v-model="league"  value-key="leagueName" class="selected-gameTypeName" filterable  placeholder="请选择游戏赛事">
+				<el-form-item label="所属赛事" prop="name" class="league" :class="{ 'langueClass': langueClass}">
+					<span class="before-icon"></span>
+					<el-select v-model="league"  value-key="leagueName" class="selected-gameTypeName aaaaaa" filterable  placeholder="请选择游戏赛事" @change="leagueName">
 						<el-option
 								v-for="item in leagueList"
 								:key="item.id"
@@ -103,8 +104,9 @@
 						</el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="所属比赛" prop="name">
-					<el-select v-model="teamA"  value-key="teamName"  filterable  placeholder="请选择战队A">
+				<el-form-item label="所属比赛" prop="teamA" class="league">
+					<span class="before-icon"></span>
+					<el-select v-model="teamA"  value-key="teamName"  filterable  placeholder="请选择战队A" @change="teamAChange" :class="{ 'teamAClass': teamAClass}">
 						<el-option
 								v-for="item in teamList"
 								:key="item.id"
@@ -113,7 +115,7 @@
 						</el-option>
 					</el-select>
 					VS
-					<el-select v-model="teamB"  value-key="teamName"  filterable  placeholder="请选择战队B">
+					<el-select v-model="teamB"  value-key="teamName"  filterable  placeholder="请选择战队B" @change="teamBChange" :class="{ 'teamBClass': teamBClass}">
 						<el-option
 								v-for="item in teamList"
 								:key="item.id"
@@ -156,49 +158,48 @@
 						</el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="截止时间">
+				<el-form-item label="截止时间" prop="date">
 					<el-date-picker
 							v-model="addData.date"
 							type="datetime"
 							placeholder="选择日期时间">
 					</el-date-picker>
 				</el-form-item>
-				<el-form-item label="下注项1名称">
+				<el-form-item label="下注项1名称" prop="optionA">
 					<el-input
 							v-model="addData.optionA"
 							type="datetime"
 							placeholder="下注项1名称">
 					</el-input>
 				</el-form-item>
-				<el-form-item label="下注项1赔率">
+				<el-form-item label="下注项1赔率" prop="oddsA">
 					<el-input
 							v-model="addData.oddsA"
 							type="datetime"
 							placeholder="下注项1赔率">
 					</el-input>
 				</el-form-item>
-				<el-form-item label="下注项2名称">
+				<el-form-item label="下注项2名称" prop="optionB">
 					<el-input
 							v-model="addData.optionB"
 							type="datetime"
 							placeholder="下注项2名称">
 					</el-input>
 				</el-form-item>
-				<el-form-item label="下注项2赔率">
+				<el-form-item label="下注项2赔率" prop="oddsB">
 					<el-input
 							v-model="addData.oddsB"
 							type="datetime"
 							placeholder="下注项2赔率">
 					</el-input>
 				</el-form-item>
-
+				<div class="dialog-footer">
+					<el-button @click.native="dialogVisible = false">取消</el-button>
+					<el-button type="primary" @click.native="addSubmit('addData','teamA')">提交</el-button>
+				</div>
 			</el-form>
-			<div slot="footer" class="dialog-footer">
-				<el-button @click.native="dialogVisible = false">取消</el-button>
-				<el-button type="primary" @click.native="addSubmit">提交</el-button>
-			</div>
 		</el-dialog>
-    </div>
+	</div>
 </template>
 
 <script>
@@ -208,16 +209,19 @@
     export default {
         data() {
             return {
+                langueClass:false,
+                teamAClass:false,
+                teamBClass:false,
                 optionsA: [
                     {id: 2, name: 'LOL'},
                     {id: 3, name: 'DOTA2'},
                     {id: 1, name: 'CSGO'},
                     {id: 4, name: '王者荣耀'}
-				],
+                ],
                 optionsB: [
                     {id: 1, name: '后台'},
                     {id: 2, name : "EGB"},
-				],
+                ],
                 dialogVisible: false,
                 gameType: 'LOL',
                 gameSource: '后台',
@@ -228,28 +232,43 @@
                 //新增界面数据
                 addData: {
                 },
-				teamA:{
+                teamA:{
                     teamName:''
                 },
-				teamB: {
+                teamB: {
                     teamName:''
                 },
                 league:{
-                    _id:'',
+                    id:'',
                     leagueName:''
-				},
-				limit:'',
-				table: tableData,
-				map:'',
-				maps:[],
+                },
+                limit:'',
+                table: tableData,
+                map:'',
+                maps:[],
                 selectName:'',
                 selectType:'独赢',
-                types:[]
+                types:[],
+                rules: {
+                    date: [{"message": "请选择竞猜时间","required": true}],
+                    optionA: [
+                        { required: true, message: '请选择赛事名称', trigger: 'blur' }
+                    ],
+                    oddsA: [
+                        { required: true, message: '请选择赛事名称', trigger: 'blur' }
+                    ],
+                    optionB: [
+                        { required: true, message: '请选择赛事名称', trigger: 'blur' }
+                    ],
+                    oddsB: [
+                        { required: true, message: '请选择赛事名称', trigger: 'blur' }
+                    ],
+                }
             }
         },
         mounted() {
             this.requestList();
-		},
+        },
         filters: {
             formatDate (time) {
                 let date = new Date(time);
@@ -267,23 +286,23 @@
             requestList() {
                 let para = {
                     gambleSource:1,
-					gameType:this.gameType.id?this.gameType.id:2,
+                    gameType:this.gameType.id?this.gameType.id:2,
                 };
-                 para.startTime = this.time[0]?Date.parse(this.time[0]):null;
-                 para.endTime = this.time[1]?Date.parse(this.time[1]):null;
+                para.startTime = this.time[0]?Date.parse(this.time[0]):null;
+                para.endTime = this.time[1]?Date.parse(this.time[1]):null;
                 getRequest(para).then((res) => {
-					this.pageList =  res.data.data.list
+                    this.pageList =  res.data.data.list
                     console.log(this.pageList)
-				});
+                });
 
-			},
-			gameChange() {
+            },
+            gameChange() {
                 this.requestList()
-			},
+            },
             search() {
                 this.requestList()
-			},
-			upData(item) {
+            },
+            upData(item) {
                 let data ={
                     gambleId : item._id,
                     optionA: {
@@ -294,16 +313,16 @@
                         riskFund: item.optionB.riskFund,
                         payCeiling: item.optionB.payCeiling
                     }
-				};
+                };
                 renew(data).then(res => {
                     if (res.status === 1) {
                         alert('修改成功');
                     } else {
                         alert('请求失败');
                     }
-				});
-			},
-    		addGuess(item) {
+                });
+            },
+            addGuess(item) {
                 var saveData = {
                     leagueId : item._id,
                     leagueName: item.leagueName,
@@ -334,13 +353,13 @@
                         } else {
                             alert(res.msg);
                         }
-					})
+                    })
                 }).catch(() => {
 
                 });
-			},
+            },
             delGuess(item) {
-				let _id = item._id
+                let _id = item._id
                 this.$confirm('确认删除吗?', '提示', {
                     //type: 'warning'
                 }).then(() => {
@@ -354,70 +373,103 @@
                 }).catch(() => {
 
                 });
-			},
+            },
             addGame() {
                 this.addData = {},
 				this.league={
-                    _id:'',
-                    leagueName:''
+					_id:'',
+					leagueName:''
 				},
-                this.teamA = {
-                    teamName:''
-                },
-                this.teamB = {
-                    teamName:''
-                },
-                this.limit ='',
+				this.teamA = {
+					teamName:''
+				},
+				this.teamB = {
+					teamName:''
+				},
+				this.limit ='',
 				this.table = tableData,
 				this.map = '',
 				this.maps = [],
 				this.selectName ='',
 				this.selectType = '独赢',
 				this.types = [],
-                this.addData.gameTypeName = this.gameType.name?this.gameType.name:'LOL',
-                this.dialogVisible = true
-				let data = {
+				this.addData.gameTypeName = this.gameType.name?this.gameType.name:'LOL',
+				this.dialogVisible = true
+                let data = {
                     limit: 10000,
                     gameType: this.gameType.id?this.gameType.id:'2',
-				};
+                };
                 getGameName(data).then((res) => {
                     this.leagueList = res.data.data.list
-					console.log(this.leagueList)
+                    console.log(this.leagueList)
                 });
                 getTeamName(data).then((res) => {
                     this.teamList = res.data.data.list
-				})
-				this.maps = (data.gameType!==4)?this.table[0].MapOne:this.table[0].MapTwo;
-				this.types = (data.gameType == 2)?this.table[0].LOL:((data.gameType== 3)?this.table[0].Dota2:((data.gameType == 1)?this.table[0].CSGO:((data.gameType == 4)?this.table[0].Wangzhe:'独赢')))
+                })
+                this.maps = (data.gameType!==4)?this.table[0].MapOne:this.table[0].MapTwo;
+                this.types = (data.gameType == 2)?this.table[0].LOL:((data.gameType== 3)?this.table[0].Dota2:((data.gameType == 1)?this.table[0].CSGO:((data.gameType == 4)?this.table[0].Wangzhe:'独赢')))
             },
-            addSubmit(){
-                var name = this.map + this.selectName + this.selectType
-                var nam = name.replace(/['0']/g,'')
-                let saveData = {
-                    leagueId : this.league._id,
-                    gambleSourceId: Date.parse(new Date()),
-                    endTime : Date.parse(this.addData.date),
-                    gambleName : nam,
-                    gambleSource : 1,
-                    gambleType : 1,
-                    gambleStatus : 1,
-                    gameType: this.gameType.id?this.gameType.id:'2',
-                    leagueName: this.league.leagueName,
-                    teamA : this.teamA.teamName,
-                    teamB : this.teamB.teamName,
-                    optionA : this.addData.optionA,
-                    optionB : this.addData.optionB,
-                    oddsA : this.addData.oddsA,
-                    oddsB : this.addData.oddsB
-				}
-                creatGame(saveData).then(res =>{
-                    if (res.status === 1) {
-                        this.dialogVisible = false;
-                        this.requestList()
+            addSubmit(addData){
+                let leagueName = this.league.leagueName;
+                let	teamA = this.teamA.teamName;
+                let teamB = this.teamB.teamName;
+                this.$refs[addData].validate((valid) => {
+                    if (!valid) {
+                        console.log('error submit!!');
+                        return false;
                     } else {
-                        alert(res.msg);
+                        if(leagueName){
+                            if(teamA){
+                                if(teamB){
+                                    var name = this.map + this.selectName + this.selectType
+                                    var nam = name.replace(/['0']/g,'')
+                                    let saveData = {
+                                        leagueId : this.league._id,
+                                        gambleSourceId: new Date(new Date()),
+                                        endTime :new Date(this.addData.date),
+                                        gambleName : nam,
+                                        gambleSource : 1,
+                                        gambleType : 1,
+                                        gambleStatus : 1,
+                                        gameType: this.gameType.id?this.gameType.id:'2',
+                                        leagueName: this.league.leagueName,
+                                        teamA : this.teamA.teamName,
+                                        teamB : this.teamB.teamName,
+                                        optionA : this.addData.optionA,
+                                        optionB : this.addData.optionB,
+                                        oddsA : this.addData.oddsA,
+                                        oddsB : this.addData.oddsB
+                                    }
+                                    creatGame(saveData).then(res =>{
+                                        if (res.status === 1) {
+                                            this.dialogVisible = false;
+                                            this.requestList()
+                                        } else {
+                                            alert(res.msg);
+                                        }
+                                    })
+                                }else {
+                                    this.teamBClass = true
+                                }
+                            }else {
+                                this.teamAClass = true
+                            }
+
+                        }else {
+                            this.langueClass = true
+                        }
                     }
                 })
+
+            },
+            leagueName() {
+                this.langueClass = false
+            },
+            teamAChange() {
+                this.teamAClass = false
+            },
+            teamBChange() {
+                this.teamBClass = false
             }
 
         },
@@ -438,6 +490,10 @@
 		.selected-gameTypeName{
 			width: 100%;
 		}
+		.dialog-footer{
+			text-align: center;
+			padding-top: 14px;
+		}
 		.flag-img{
 			width: 120px;
 			height: 86px;
@@ -456,6 +512,24 @@
 				max-width: 184px;
 			}
 		}
+		.league .el-form-item__content{
+			position: relative;
+		}
+		.before-icon{
+			position: absolute;
+			left: -78px;
+		}
+		.before-icon::before{
+			content:'*';
+			color: #ff4949;
+			margin-right: 2px;
+		}
+		.langueClass ,.teamAClass,.teamBClass{
+			input{
+				border: 1px solid red;
+			}
+		}
+
 	}
 	.el-select-dropdown__item {
 		padding: 4px 10px!important;

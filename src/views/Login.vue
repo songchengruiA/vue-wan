@@ -5,7 +5,7 @@
       <el-input type="text" v-model="ruleForm2.account" auto-complete="off" placeholder="账号"></el-input>
     </el-form-item>
     <el-form-item prop="checkPass">
-      <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off" placeholder="密码"></el-input>
+      <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off" placeholder="密码1" @keyup.enter.native="handleSubmit2"></el-input>
     </el-form-item>
     <el-checkbox v-model="checked" checked class="remember">记住密码</el-checkbox>
     <el-form-item style="width:100%;">
@@ -41,7 +41,7 @@
       };
     },
     methods: {
-      handleReset2() {
+        handleReset2() {
         this.$refs.ruleForm2.resetFields();
       },
       handleSubmit2(ev) {
@@ -67,6 +67,7 @@
                 sessionStorage.setItem('user', JSON.stringify(nickname));
                 sessionStorage.setItem('token', JSON.stringify(token));
                 this.$router.push({ path: '/page6' });
+                location.reload()
               }
             });
           } else {
