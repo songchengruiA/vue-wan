@@ -151,7 +151,7 @@
     export default {
         data() {
             return {
-                myHeaders: {token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJwd2NuIiwiaWF0IjoxNTEzMzA1Mzg3fQ.HMGj4j8hZr0su2cWbaX1MfSDAqzLsjyLrcvVyCd9blM'},
+                myHeaders: {token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJwd2NuIiwiaWF0IjoxNTEyNzA1NDc4fQ.GNuIxMb_VxhvIeEynghoXsZNBj8Lcv5Q6WhzF7hiPvI'},
                 total: 0,
                 page: 1,
                 tpageSize: 10,
@@ -238,7 +238,7 @@
             teamsList() {
                 let params = {
                     gameType : this.gameType.id?this.gameType.id:2,
-                    offset : this.page*this.tpageSize-this.tpageSize,
+                    offset : this.page*this.tpageSize-(this.tpageSize-1),
                     limit : this.tpageSize
                 };
                 getTeams(params).then((res) => {

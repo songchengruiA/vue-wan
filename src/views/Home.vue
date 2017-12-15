@@ -20,7 +20,7 @@
 						<el-menu-item v-if="item.leaf&&item.children.length>0" :index="item.children[0].path"><i :class="item.iconCls"></i>{{item.children[0].name}}</el-menu-item>
 						<el-submenu :index="index+''" v-if="!item.leaf">
 							<template slot="title"><i :class="item.iconCls"></i>{{item.name}}</template>
-							<el-menu-item v-for="child in item.children" :index="child.path" :key="child.path" v-if="!child.hidden" class="item-child"><i :class="child.iconCls"></i>{{child.name}}</el-menu-item>
+							<el-menu-item v-for="child in item.children" :index="child.path" :key="child.path" v-if="!child.hidden">{{child.name}}</el-menu-item>
 						</el-submenu>
 					</template>
 				</el-menu>
@@ -103,7 +103,6 @@
 </script>
 
 <style scoped lang="scss">
-
 	.container {
 		font-family: "PingFangSC-Regular", "Microsoft YaHei", "sans-serif", "Arial Narrow";
 		position: absolute;
@@ -206,9 +205,8 @@
 			}
 			.el-menu-item:hover{
 				color: #fff;
-                background: #464b57;;
 			}
-            .el-menu-item {
+			.el-menu-item {
 				height: 90px;
 				color: #cfcfcf;
 				font-size: 16px;
@@ -219,9 +217,6 @@
 				padding-left: 32px!important;
 				font-weight: 600;
 				background: #454b5a;
-                &.item-child{
-                    padding-left: 70px!important;
-            }
 			}
 			.el-submenu__icon-arrow{
 				margin-top: -4px;

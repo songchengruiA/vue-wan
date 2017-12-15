@@ -22,21 +22,33 @@
   BASE
   screen.scss..........................................针对当前站点主页的样式修饰
  */
-@import "_icons";
-//@import "compass/layout/grid-background";
-//@import "normalize";
-////支持css3
-//@import "compass/css3";
-////默认支持的所有主流的浏览器
-//@import "compass/support";
-////对lins lists text 等的处理
-//@import "compass/typography";
-////辅助工具
-//@import "compass/utilities";
+@import "_variables","_mixin", "_icons","compass";
+@import "compass/layout/grid-background";
+@import "normalize";
+//支持css3
+@import "compass/css3";
+//默认支持的所有主流的浏览器
+@import "compass/support";
+//对lins lists text 等的处理
+@import "compass/typography";
+//辅助工具
+@import "compass/utilities";
 //指出最低支持ie8浏览器
 $browser-minimum-versions: ("ie": "8");
 ::-webkit-scrollbar {
   width: 0;
 }
+button,
+input,
+optgroup,
+select,
+textarea {
+  color: #000 !important;
+  font: inherit;
+  margin: 0;
+}
 //对火狐的支持
 $use-mozilla-ellipsis-binding:true;
+.box{
+  color:red;
+}
