@@ -47,12 +47,12 @@ body {
 }
 
 .el-submenu [class^=fa] {
-	vertical-align: baseline;
+	vertical-align: middle;
 	margin-right: 10px;
 }
 
 .el-menu-item [class^=fa] {
-	vertical-align: baseline;
+	vertical-align: middle;
 	margin-right: 10px;
 }
 

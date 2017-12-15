@@ -148,6 +148,7 @@
     import {getLeagues, searchLeagues, addLeagues, getLeaguesDetail, modifyLeagues, deleteLeagues } from '../../api/api';
     import {formatDate} from '../../api/date';
     import Clipboard from 'clipboard';
+    import '../../styles/stylesheets/screen.css';
     var tableData = require('../../api/table.json');
     export default {
         data() {

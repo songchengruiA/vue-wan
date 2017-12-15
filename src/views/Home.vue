@@ -20,7 +20,7 @@
 						<el-menu-item v-if="item.leaf&&item.children.length>0" :index="item.children[0].path"><i :class="item.iconCls"></i>{{item.children[0].name}}</el-menu-item>
 						<el-submenu :index="index+''" v-if="!item.leaf">
 							<template slot="title"><i :class="item.iconCls"></i>{{item.name}}</template>
-							<el-menu-item v-for="child in item.children" :index="child.path" :key="child.path" v-if="!child.hidden">{{child.name}}</el-menu-item>
+							<el-menu-item v-for="child in item.children" :index="child.path" :key="child.path" v-if="!child.hidden" style="padding-left: 60px !important;"><i :class="child.iconCls"></i>{{child.name}}</el-menu-item>
 						</el-submenu>
 					</template>
 				</el-menu>
@@ -103,7 +103,7 @@
 </script>
 
 <style scoped lang="scss">
-	.container {
+    .container {
 		font-family: "PingFangSC-Regular", "Microsoft YaHei", "sans-serif", "Arial Narrow";
 		position: absolute;
 		top: 0px;
