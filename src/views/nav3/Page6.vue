@@ -84,11 +84,11 @@
 		</div>
 		<div class="addguess-body">
 			<div class="no-data setguess ng-scope" v-if="pageList.length == 0"></div>
-			<a class="btn btn-default btn-lg addBtn" href="javascript:;" @click="addGame">创建预备竞猜</a>
+			<a class="btn btn-default btn-lg addBtn" href="javascript:;" @click="addGame()">创建预备竞猜</a>
 
 		</div>
 		<!--新增界面-->
-		<el-dialog v-model="dialogVisible" :close-on-click-modal="false" class="dialog-small">
+		<el-dialog v-model="dialogVisible" :close-on-click-modal="false" class="dialog-small" :show-close="false">
 			<el-form label-width="110px"  ref="addData" :model="addData" :rules="rules" @submit.prevent="onSubmit">
 				<el-form-item label="游戏类型">
 					<el-input v-model="addData.gameTypeName" auto-complete="off" disabled></el-input>
@@ -193,9 +193,10 @@
 							placeholder="下注项2赔率">
 					</el-input>
 				</el-form-item>
+
 				<div class="dialog-footer">
-					<el-button @click.native="dialogVisible = false">取消</el-button>
-					<el-button type="primary" @click.native="addSubmit('addData','teamA')">提交</el-button>
+					<el-button @click.native="cancel('addData')">取消</el-button>
+					<el-button type="primary" @click.native="addSubmit('addData')">提交</el-button>
 				</div>
 			</el-form>
 		</el-dialog>
@@ -209,6 +210,7 @@
     export default {
         data() {
             return {
+                mobil:'',
                 langueClass:false,
                 teamAClass:false,
                 teamBClass:false,
@@ -374,7 +376,7 @@
 
                 });
             },
-            addGame(addData) {
+            addGame() {
                 this.addData = {
 				},
 				this.league={
@@ -414,14 +416,15 @@
                 let leagueName = this.league.leagueName;
                 let	teamA = this.teamA.teamName;
                 let teamB = this.teamB.teamName;
-                this.$refs[addData].validate((valid) => {
-                    if (!valid) {
-                        console.log('error submit!!');
-                        return false;
-                    } else {
-                        if(leagueName){
-                            if(teamA){
-                                if(teamB){
+
+                if(leagueName){
+                    if(teamA){
+                        if(teamB){
+                            this.$refs[addData].validate((valid) => {
+                                if (!valid) {
+                                    console.log('error submit!!');
+                                    return false;
+                                } else {
                                     var name = this.map + this.selectName + this.selectType
                                     var nam = name.replace(/['0']/g,'')
                                     let saveData = {
@@ -443,26 +446,34 @@
                                     }
                                     creatGame(saveData).then(res =>{
                                         if (res.status === 1) {
+                                            this.$refs[addData].resetFields();
                                             this.dialogVisible = false;
+
                                             this.requestList()
                                         } else {
                                             alert(res.msg);
                                         }
                                     })
-                                }else {
-                                    this.teamBClass = true
                                 }
-                            }else {
-                                this.teamAClass = true
-                            }
+                            })
 
                         }else {
-                            this.langueClass = true
+                            this.teamBClass = true
                         }
+                    }else {
+                        this.teamAClass = true
                     }
-                })
+
+                }else {
+                    this.langueClass = true
+                }
+
 
             },
+            cancel(addData){
+                this.dialogVisible = false;
+                this.$refs[addData].resetFields()
+			},
             leagueName() {
                 this.langueClass = false
             },
