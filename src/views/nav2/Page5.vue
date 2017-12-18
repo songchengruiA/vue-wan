@@ -111,7 +111,7 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="战队介绍:" prop="name" class="textarea-box">
+                <el-form-item label="战队介绍:" prop="name" >
                     <el-input
                             :autosize="{ minRows: 2}"
                             type="textarea"
@@ -120,7 +120,7 @@
                             :disabled='isDisabled'>
                     </el-input>
                 </el-form-item>
-                <el-form-item label="别名组（多个用英文逗号隔开）" prop="name" id="textarea-box">
+                <el-form-item label="别名组（多个用英文逗号隔开）" prop="name" class="textarea-box">
                     <el-input
                             :autosize="{ minRows: 2}"
                             type="textarea"
@@ -380,7 +380,7 @@
     .el-form-item__label{
         display: block;
     }
-    #textarea-box{
+    .textarea-box{
         .el-form-item__label{
             display: block;
             width: 235px !important;

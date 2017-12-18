@@ -38,7 +38,7 @@ let routes = [
         path: '/',
         component: Home,
         name: '',
-        iconCls: 'fa fa-address-card',
+        iconCls: 'fa icons-icon-buld-guess',
         leaf: true,//只有一个节点
         children: [
             { path: '/page6', component: Page6, name: '创建预备竞猜' }
@@ -48,24 +48,23 @@ let routes = [
         path: '/',
         component: Home,
         name: '',
-        iconCls: 'fa fa-address-card',
+        iconCls: 'fa icons-icon-out-guess',
         leaf: true,//只有一个节点
         children: [
-            { path: '/page7', component: Page7,meta: {requireAuth: true}, name: '外部预备竞猜' }
+            { path: '/page7', component: Page7, name: '外部预备竞猜' }
         ]
     },
     {
         path: '/',
         component: Home,
         name: '',
-        iconCls: 'fa fa-address-card',
-
+        iconCls: 'fa icons-icon-edit-guess',
         leaf: true,//只有一个节点
         children: [
             { path: '/page8', component: Page, name: '编辑已上传竞猜',children:[
-                {path:'',meta: {requireAuth: true},component: Page8},
-                {path:'/page8/:id',meta: {requireAuth: true},component: Page12}
-                ]
+                {path:'',component: Page8},
+                {path:'/page8/:id',component: Page12}
+            ]
             }
         ]
     },
@@ -73,33 +72,33 @@ let routes = [
         path: '/',
         component: Home,
         name: '待添加赛事及战队',
-        iconCls: 'fa fa-id-card-o',
+        iconCls: 'fa icons-icon-wait-leagues',
         children: [
-            { path: '/page1',iconCls: 'fa fa-address-card', component: Page1,meta: {requireAuth: true}, name: '待添加赛事' },
-            { path: '/page2',iconCls: 'fa fa-address-card', component: Page2,meta: {requireAuth: true}, name: '待添加战队' }
+            { path: '/page1', iconCls: 'fa icons-icon-leagues', component: Page1, name: '待添加赛事' },
+            { path: '/page2', iconCls: 'fa icons-icon-wait-teams', component: Page2, name: '待添加战队' }
         ]
     },
     {
         path: '/',
         component: Home,
         name: '添加赛事及战队',
-        iconCls: 'fa fa-id-card-o',
+        iconCls: 'fa icons-icon-add-games',
         children: [
-            { path: '/page4', component: Page4,meta: {requireAuth: true}, name: '添加赛事' },
-            { path: '/page5', component: Page5,meta: {requireAuth: true}, name: '添加战队' }
+            { path: '/page4', iconCls: 'fa icons-icon-loading', component: Page4, name: '添加赛事' },
+            { path: '/page5', iconCls: 'fa icons-icon-teams', component: Page5, name: '添加战队' }
         ]
     },
     {
         path: '/',
         component: Home,
         name: '',
-        iconCls: 'fa fa-address-card',
+        iconCls: 'fa icons-icon-add-guess',
         leaf: true,//只有一个节点
         children: [
             { path: '/page10', component: Page, name: '创建冠军竞猜' ,children:[
-                {path:'',meta: {requireAuth: true},component: Page10},
-                {path:'/page10/add/',meta: {requireAuth: true},component: Page11},
-                {path:'/page10/add/:id',meta: {requireAuth: true},component: Page11}
+                {path:'',component: Page10},
+                {path:'/page10/add/',component: Page11},
+                {path:'/page10/add/:id',component: Page11}
             ]}
         ]
     },
