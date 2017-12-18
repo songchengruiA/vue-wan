@@ -131,7 +131,7 @@
                     </el-input>
                 </el-form-item>
                 <div class="dialog-footer">
-                    <el-button @click="resetForm('leaguesForm')" v-if='isDisabled1'>取消</el-button>
+                    <el-button @click="dialogVisible = false" v-if='isDisabled1'>取消</el-button>
                     <!--添加-->
                     <el-button type="primary" @click="addSubmit('leaguesForm')" v-if='isDisabled2'>提交</el-button>
                     <!--修改-->
@@ -304,6 +304,9 @@
                 this.leaguesForm.imageUrl = '';
                 this.isDisabled = false;
                 this.dialogVisible = true;
+                this.$nextTick(() => { //等待dom同步后打开模态框
+                    this.$refs['leaguesForm'].resetFields(); //此方法需要模态框加载完成后才可以执行
+                })
                 this.isDisabled1 = true;
                 this.isDisabled2 = true;
                 this.isDisabled3 = false;
@@ -323,7 +326,6 @@
                         params.leagueSource = this.leaguesForm.leagueSource;
                         params.division = this.leaguesForm.division;
                         addLeagues(params).then((res) => {
-                            this.$refs[formName].resetFields();
                             this.dialogVisible = false;
                             this.leaguesList();
                         });
@@ -333,11 +335,6 @@
                 });
             },
 
-//            重置
-            resetForm(formName) {
-                this.$refs[formName].resetFields();
-                this.dialogVisible = false;
-            },
 //          修改
             modifyLeaguesBtn(item) {
                 this.dialogVisible = true;
@@ -385,12 +382,15 @@
             },
 //          详情
             detailLeaguesBtn(item) {
-                this.modifyLeaguesBtn(item);
-                this.isDisabled = true;
-                this.isDisabled1 = false;
-                this.isDisabled2 = false;
-                this.isDisabled3 = false;
-                this.isDisabled4 = true;
+                this.$nextTick(() => { //等待dom同步后打开模态框
+                    this.modifyLeaguesBtn(item);
+                    this.isDisabled = true;
+                    this.isDisabled1 = false;
+                    this.isDisabled2 = false;
+                    this.isDisabled3 = false;
+                    this.isDisabled4 = true;
+                })
+
             },
 //          删除
             deleteLeaguesBtn(item) {
