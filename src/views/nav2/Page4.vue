@@ -63,11 +63,11 @@
         </el-col>
         <!--修改界面-->
         <el-dialog v-model="dialogVisible" :close-on-click-modal="false" class="dialog-small">
-            <el-form :model="leaguesForm.leaguesFormList" label-width="120px" ref="leaguesForm" >
+            <el-form :model="leaguesForm" label-width="120px" ref="leaguesForm" :rules="rules">
                 <el-form-item label="游戏类型:" prop="name">
                     <el-input v-model="leaguesForm.gameTypeName" auto-complete="off" disabled></el-input>
                 </el-form-item>
-                <el-form-item label="所属赛事:" prop="name">
+                <el-form-item label="所属赛事:" prop="leaguesFormList.leagueName">
                     <el-input v-model="leaguesForm.leaguesFormList.leagueName" auto-complete="off" placeholder="请输入赛事名称" :disabled='isDisabled'></el-input>
                 </el-form-item>
                 <el-form-item label="赛事等级:" prop="name">
@@ -101,7 +101,7 @@
                         <el-button size="small" type="primary" >点击上传</el-button>
                     </el-upload>
                 </el-form-item>
-                <el-form-item label="赛事来源:" prop="name">
+                <el-form-item label="赛事来源:" prop="leagueSource">
                     <el-select v-model="leaguesForm.leagueSource"  value-key="name"  filterable  placeholder="请选择赛事来源" :disabled='isDisabled'>
                         <el-option
                                 v-for="item in optionsB"
@@ -121,7 +121,7 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="别名组（多个用英文逗号隔开）" prop="name" class="textarea-box">
+                <el-form-item label="别名组（多个用英文逗号隔开）" prop="leaguesFormList.alias" class="textarea-box">
                     <el-input
                             :disabled='isDisabled'
                             :autosize="{ minRows: 2}"
@@ -197,6 +197,17 @@
                         {id: 3, name: '3: 3', payCeiling: 3000, riskFund: 30000}
                     ]
                 },
+                rules: {
+                    'leaguesFormList.leagueName': [
+                            { required: true, message: '请输入赛事名称', trigger: 'blur' }
+                        ],
+                    'leaguesFormList.alias': [
+                            { required: true, message: '请输入别名组', trigger: 'blur' }
+                        ],
+                    leagueSource: [
+                            { type: 'object', required: true, message: '请选择活动区域', trigger: 'change' }
+                        ]
+                    },
                 itemId: '',
                 fileData: {
                     mediaCategory: 1002
@@ -402,17 +413,6 @@
     .el-form-item__label {
         display: block;
     }
-
-    #textarea-box {
-        .el-form-item__label {
-            display: block;
-            width: 235px !important;
-        }
-        .el-form-item__content {
-            margin-left: 28px !important;
-        }
-    }
-
     .avatar-uploader .el-upload {
         border: 1px dashed #d9d9d9;
         border-radius: 6px;
