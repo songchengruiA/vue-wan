@@ -86,8 +86,8 @@
                 <el-form-item label="单注赔付上线:" prop="name">
                     <el-input v-model="leaguesForm.levels[leaguesForm.levelItem.id - 1].payCeiling" auto-complete="off" disabled></el-input>
                 </el-form-item>
-                <el-form-item label="赛事图片:" prop="name">
-                    <el-input v-model="imageUrl" auto-complete="off" :disabled='isDisabled'></el-input>
+                <el-form-item label="赛事图片:" prop="imageUrl">
+                    <el-input v-model="leaguesForm.imageUrl" auto-complete="off" :disabled='isDisabled'></el-input>
                     <el-upload
                             class="avatar-uploader"
                             action="http://47.93.223.69:8066/admin/media"
@@ -96,7 +96,7 @@
                             :show-file-list="false"
                             :on-success="handleAvatarSuccess"
                             :before-upload="beforeAvatarUpload">
-                        <img v-if="imageUrl" :src="imageUrl" class="avatar" style="margin-top: 6px;">
+                        <img v-if="leaguesForm.imageUrl" :src="leaguesForm.imageUrl" class="avatar" style="margin-top: 6px;">
                         <i v-else class="el-icon-plus avatar-uploader-icon" style="display: none"></i>
                         <el-button size="small" type="primary" >点击上传</el-button>
                     </el-upload>
@@ -107,17 +107,17 @@
                                 v-for="item in optionsB"
                                 :key="item.id"
                                 :label="item.name"
-                                :value="item" auto-complete="off">
+                                :value="item.id" auto-complete="off">
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="所属赛区:" prop="name">
+                <el-form-item label="所属赛区:" prop="division">
                     <el-select v-model="leaguesForm.division"  value-key="name"  filterable  placeholder="请选择所属赛区" :disabled='isDisabled'>
                         <el-option
                                 v-for="item in divisionJson"
                                 :key="item.id"
                                 :label="item.name"
-                                :value="item" auto-complete="off">
+                                :value="item.name" auto-complete="off">
                         </el-option>
                     </el-select>
                 </el-form-item>
@@ -130,16 +130,16 @@
                             v-model="leaguesForm.leaguesFormList.alias">
                     </el-input>
                 </el-form-item>
+                <div class="dialog-footer">
+                    <el-button @click="resetForm('leaguesForm')" v-if='isDisabled1'>取消</el-button>
+                    <!--添加-->
+                    <el-button type="primary" @click="addSubmit('leaguesForm')" v-if='isDisabled2'>提交</el-button>
+                    <!--修改-->
+                    <el-button type="primary" @click="modifySubmit('leaguesForm')" v-if='isDisabled3'>提交</el-button>
+                    <!--详情-->
+                    <el-button type="primary" @click="dialogVisible = false" v-if='isDisabled4'>关闭</el-button>
+                </div>
             </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false" v-if='isDisabled1'>取消</el-button>
-                <!--添加-->
-                <el-button type="primary" @click="addSubmit()" v-if='isDisabled2'>提交</el-button>
-                <!--修改-->
-                <el-button type="primary" @click="modifySubmit()" v-if='isDisabled3'>提交</el-button>
-                <!--详情-->
-                <el-button type="primary" @click="dialogVisible = false" v-if='isDisabled4'>关闭</el-button>
-            </div>
         </el-dialog>
     </div>
 </template>
@@ -156,7 +156,6 @@
                 myHeaders: {token:JSON.parse(sessionStorage.getItem("token")) ? JSON.parse(sessionStorage.getItem("token")) : ''},
                 total: 0,
                 page: 1,
-                imageUrl: '',
                 tpageSize: 5,
                 postsName: '',
                 gameType: 'LOL',
@@ -184,9 +183,10 @@
                 addForm: {},
                 leaguesForm: {
                     leaguesFormList: {},
-                    division: {},
-                    leagueSource: {},
+                    division: '',
+                    leagueSource: '',
                     gameTypeName: '',
+                    imageUrl: '',
                     levelItem: {
                         "id": '1',
                         "name": '1: 1'
@@ -205,7 +205,13 @@
                             { required: true, message: '请输入别名组', trigger: 'blur' }
                         ],
                     leagueSource: [
-                            { type: 'object', required: true, message: '请选择活动区域', trigger: 'change' }
+                            { type: 'number', required: true, message: '请选择赛事来源', trigger: 'change' }
+                        ],
+                    division: [
+                            { type: 'string', required: true, message: '请选择所属赛区', trigger: 'change' }
+                        ],
+                    imageUrl: [
+                            { type: 'string', required: true, message: '请上传图片', trigger: 'blur' }
                         ]
                     },
                 itemId: '',
@@ -271,7 +277,7 @@
             },
 //          图片上传
             handleAvatarSuccess(res) {
-                this.imageUrl = res.data.avatar;
+                this.leaguesForm.imageUrl = res.data.avatar;
             },
             beforeAvatarUpload(file) {
                 this.fileData.media = file;
@@ -295,7 +301,7 @@
                     ]
                 };
                 this.leaguesForm.leaguesFormList = {};
-                this.imageUrl = '';
+                this.leaguesForm.imageUrl = '';
                 this.isDisabled = false;
                 this.dialogVisible = true;
                 this.isDisabled1 = true;
@@ -305,19 +311,32 @@
                 this.leaguesForm.gameTypeName = this.gameType.name ? this.gameType.name : 'LOL';
             },
 //          点击提交按钮
-            addSubmit() {
-                var params = this.leaguesForm.leaguesFormList;
-                params.leagueImageUrl = this.imageUrl;
-                params.level = this.leaguesForm.levelItem.id;
-                params.riskFund = this.leaguesForm.levels[this.leaguesForm.levelItem.id - 1].riskFund;
-                params.payCeiling = this.leaguesForm.levels[this.leaguesForm.levelItem.id - 1].payCeiling;
-                params.gameType = this.gameType.id ? this.gameType.id : 2;
-                params.leagueSource = this.leaguesForm.leagueSource.id;
-                params.division = this.leaguesForm.division.name;
-                addLeagues(params).then((res) => {
-                    this.dialogVisible = false;
-                    this.leaguesList();
-                })
+            addSubmit(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        var params = this.leaguesForm.leaguesFormList;
+                        params.leagueImageUrl = this.leaguesForm.imageUrl;
+                        params.level = this.leaguesForm.levelItem.id;
+                        params.riskFund = this.leaguesForm.levels[this.leaguesForm.levelItem.id - 1].riskFund;
+                        params.payCeiling = this.leaguesForm.levels[this.leaguesForm.levelItem.id - 1].payCeiling;
+                        params.gameType = this.gameType.id ? this.gameType.id : 2;
+                        params.leagueSource = this.leaguesForm.leagueSource;
+                        params.division = this.leaguesForm.division;
+                        addLeagues(params).then((res) => {
+                            this.$refs[formName].resetFields();
+                            this.dialogVisible = false;
+                            this.leaguesList();
+                        });
+                    } else {
+                        return false;
+                    }
+                });
+            },
+
+//            重置
+            resetForm(formName) {
+                this.$refs[formName].resetFields();
+                this.dialogVisible = false;
             },
 //          修改
             modifyLeaguesBtn(item) {
@@ -327,36 +346,42 @@
                 this.isDisabled2 = false;
                 this.isDisabled3 = true;
                 this.isDisabled4 = false;
-                this.leaguesForm.leagueImageUrl = this.imageUrl;
+                this.leaguesForm.leagueImageUrl = this.leaguesForm.imageUrl;
                 this.leaguesForm.gameTypeName = this.gameType.name?this.gameType.name:'LOL';
                 var params = {
                     leaguesId: item._id
                 };
                 getLeaguesDetail(params).then((res) => {
                     this.leaguesForm.leaguesFormList = res.data.data.leagues;
-                    this.leaguesForm.leagueSource = this.optionsB[res.data.data.leagues.leagueSource - 1].name;
+                    this.leaguesForm.leagueSource =res.data.data.leagues.leagueSource;
                     this.leaguesForm.division = res.data.data.leagues.division;
                     this.itemId = res.data.data.leagues._id;
-                    this.imageUrl = res.data.data.leagues.leagueImageUrl;
+                    this.leaguesForm.imageUrl = res.data.data.leagues.leagueImageUrl;
                     this.leaguesForm.leaguesFormList.alias = res.data.data.leagues.alias.join(',')
                 })
             },
 //            点击提交按钮
-            modifySubmit() {
-                var params = this.leaguesForm.leaguesFormList;
-                params.leagueImageUrl = this.imageUrl;
-                params.level = this.leaguesForm.levelItem.id;
-                params.riskFund = this.leaguesForm.levels[this.leaguesForm.levelItem.id - 1].riskFund;
-                params.payCeiling = this.leaguesForm.levels[this.leaguesForm.levelItem.id - 1].payCeiling;
-                params.gameType = this.gameType.id ? this.gameType.id : 2;
-                params.leagueSource = this.leaguesForm.leagueSource.id;
-                params.division = this.leaguesForm.division.name;
-                params.leaguesId = this.leaguesForm.leaguesFormList._id;
-                modifyLeagues(params).then((res) => {
-                    this.dialogVisible = false;
-                    alert("修改成功");
-                    this.leaguesList();
-                })
+            modifySubmit(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        var params = this.leaguesForm.leaguesFormList;
+                        params.leagueImageUrl = this.leaguesForm.imageUrl;
+                        params.level = this.leaguesForm.levelItem.id;
+                        params.riskFund = this.leaguesForm.levels[this.leaguesForm.levelItem.id - 1].riskFund;
+                        params.payCeiling = this.leaguesForm.levels[this.leaguesForm.levelItem.id - 1].payCeiling;
+                        params.gameType = this.gameType.id ? this.gameType.id : 2;
+                        params.leagueSource = this.leaguesForm.leagueSource;
+                        params.division = this.leaguesForm.division;
+                        params.leaguesId = this.leaguesForm.leaguesFormList._id;
+                        modifyLeagues(params).then((res) => {
+                            this.dialogVisible = false;
+                            alert("修改成功");
+                            this.leaguesList();
+                        });
+                    } else {
+                        return false;
+                    }
+                });
             },
 //          详情
             detailLeaguesBtn(item) {
