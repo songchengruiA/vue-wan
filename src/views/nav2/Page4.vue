@@ -308,12 +308,13 @@
                 this.dialogVisible = true;
                 this.$nextTick(() => { //等待dom同步后打开模态框
                     this.$refs['leaguesForm'].resetFields(); //此方法需要模态框加载完成后才可以执行
-                })
+                });
                 this.isDisabled1 = true;
                 this.isDisabled2 = true;
                 this.isDisabled3 = false;
                 this.isDisabled4 = false;
                 this.leaguesForm.gameTypeName = this.gameType.name ? this.gameType.name : 'LOL';
+
             },
 //          点击提交按钮
             addSubmit(formName) {
@@ -339,7 +340,6 @@
 
 //          修改
             modifyLeaguesBtn(item) {
-
                 this.isDisabled = false;
                 this.isDisabled1 = true;
                 this.isDisabled2 = false;
@@ -356,7 +356,7 @@
                     this.leaguesForm.division = res.data.data.leagues.division;
                     this.itemId = res.data.data.leagues._id;
                     this.leaguesForm.imageUrl = res.data.data.leagues.leagueImageUrl;
-                    this.leaguesForm.leaguesFormList.alias = res.data.data.leagues.alias.join(',')
+                    this.leaguesForm.leaguesFormList.alias = res.data.data.leagues.alias.join(',');
                     this.dialogVisible = true;
                 })
             },
