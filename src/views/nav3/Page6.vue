@@ -293,8 +293,14 @@
                 para.startTime = this.time[0]?Date.parse(this.time[0]):null;
                 para.endTime = this.time[1]?Date.parse(this.time[1]):null;
                 getRequest(para).then((res) => {
-                    this.pageList =  res.data.data.list
-                    console.log(this.pageList)
+                    if (res.data.status === 1) {
+                        this.pageList =  res.data.data.list
+                    } else if(res.data.status ==300011){
+                        sessionStorage.clear();
+                        this.$router.push('/login');
+                    }else {
+                        alert(res.data.msg)
+                    }
                 });
 
             },

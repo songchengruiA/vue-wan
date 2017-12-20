@@ -109,6 +109,9 @@
                 if (res.data.status === 1) {
                     this.pageList =  res.data.data.list;
                     this.total = res.data.data.total-1;
+                } else if(res.data.status ==300011){
+                    sessionStorage.clear();
+                    this.$router.push('/login');
                 } else  {
                     alert(res.data.msg);
                 }

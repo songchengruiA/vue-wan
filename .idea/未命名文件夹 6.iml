@@ -6,8 +6,8 @@
     <option name="compassSupportEnabled" value="true" />
     <option name="importPaths">
       <list>
-        <option value="/usr/local/lib/ruby/gems/2.4.0/gems/compass-core-1.0.3/stylesheets" />
-        <option value="/usr/local/lib/ruby/gems/2.4.0/gems/compass-normalize-1.5/lib/../stylesheets" />
+        <option value="$USER_HOME$/.rvm/gems/ruby-2.4.1@global/gems/compass-core-1.0.3/stylesheets" />
+        <option value="$USER_HOME$/.rvm/gems/ruby-2.4.1/gems/compass-normalize-1.5/lib/../stylesheets" />
       </list>
     </option>
   </component>

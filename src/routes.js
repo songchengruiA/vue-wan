@@ -29,7 +29,6 @@ let routes = [
         component: NotFound,
         name: '',
         meta: {
-            aa:'1212',
             requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
         },
         hidden: true
@@ -41,7 +40,7 @@ let routes = [
         iconCls: 'fa icons-icon-buld-guess',
         leaf: true,//只有一个节点
         children: [
-            { path: '/page6', component: Page6, name: '创建预备竞猜' }
+            { path: '/page6', component: Page6,meta: {requireAuth: true,}, name: '创建预备竞猜' }
         ]
     },
     {
@@ -51,7 +50,7 @@ let routes = [
         iconCls: 'fa icons-icon-out-guess',
         leaf: true,//只有一个节点
         children: [
-            { path: '/page7', component: Page7, name: '外部预备竞猜' }
+            { path: '/page7', component: Page7,meta: {requireAuth: true,}, name: '外部预备竞猜' }
         ]
     },
     {
@@ -62,8 +61,8 @@ let routes = [
         leaf: true,//只有一个节点
         children: [
             { path: '/page8', component: Page, name: '编辑已上传竞猜',children:[
-                {path:'',component: Page8},
-                {path:'/page8/:id',component: Page12}
+                {path:'',meta: {requireAuth: true,},component: Page8},
+                {path:'/page8/:id',meta: {requireAuth: true,},component: Page12}
             ]
             }
         ]
@@ -74,8 +73,8 @@ let routes = [
         name: '待添加赛事及战队',
         iconCls: 'fa icons-icon-wait-leagues',
         children: [
-            { path: '/page1', iconCls: 'fa icons-icon-leagues', component: Page1, name: '待添加赛事' },
-            { path: '/page2', iconCls: 'fa icons-icon-wait-teams', component: Page2, name: '待添加战队' }
+            { path: '/page1', iconCls: 'fa icons-icon-leagues',meta: {requireAuth: true,}, component: Page1, name: '待添加赛事' },
+            { path: '/page2', iconCls: 'fa icons-icon-wait-teams',meta: {requireAuth: true,}, component: Page2, name: '待添加战队' }
         ]
     },
     {
@@ -84,8 +83,8 @@ let routes = [
         name: '添加赛事及战队',
         iconCls: 'fa icons-icon-add-games',
         children: [
-            { path: '/page4', iconCls: 'fa icons-icon-loading', component: Page4, name: '添加赛事' },
-            { path: '/page5', iconCls: 'fa icons-icon-teams', component: Page5, name: '添加战队' }
+            { path: '/page4', iconCls: 'fa icons-icon-loading',meta: {requireAuth: true,}, component: Page4, name: '添加赛事' },
+            { path: '/page5', iconCls: 'fa icons-icon-teams',meta: {requireAuth: true,}, component: Page5, name: '添加战队' }
         ]
     },
     {
@@ -97,8 +96,8 @@ let routes = [
         children: [
             { path: '/page10', component: Page, name: '创建冠军竞猜' ,children:[
                 {path:'',component: Page10},
-                {path:'/page10/add/',component: Page11},
-                {path:'/page10/add/:id',component: Page11}
+                {path:'/page10/add/',meta: {requireAuth: true,},component: Page11},
+                {path:'/page10/add/:id',meta: {requireAuth: true,},component: Page11}
             ]}
         ]
     },
@@ -113,14 +112,16 @@ const router = new VueRouter({
     routes
 });
 var token = JSON.parse(sessionStorage.getItem('token'));
+// 全局导航钩子
 router.beforeEach((to, from, next) => {
-    if(to.meta.requireAuth) {  // 判断该路由是否需要登录权限
+    if (to.meta.requireAuth) {  // 判断该路由是否需要登录权限
         if (token) {  // 通过vuex state获取当前的token是否存在
             next();
         }
         else {
             next({
-                path: '/login'
+                path: '/login',
+                query: {redirect: to.fullPath}  // 将跳转的路由path作为参数，登录成功后跳转到该路由
             })
         }
     }
@@ -128,5 +129,6 @@ router.beforeEach((to, from, next) => {
         next();
     }
 })
+
 
 export default router;

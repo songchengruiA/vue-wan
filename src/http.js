@@ -1,39 +1,36 @@
+/**
+ * http配置
+ */
+// 引入axios以及element ui中的loading和message组件
 import axios from 'axios'
-import router from './routes.js'
-var token = JSON.parse(sessionStorage.getItem('token'));
-// axios 配置
-axios.defaults.timeout = 5000;
-// http request 拦截器
-axios.interceptors.request.use(
-    config => {
-        if (token) {
-            config.headers.Authorization = token;
-        }
-        return config;
-    },
-    err => {
-        return Promise.reject(err);
-    });
+import { Loading, Message } from 'element-ui'
+// 超时时间
+axios.defaults.timeout = 5000
+// http请求拦截器
+var loadinginstace
+axios.interceptors.request.use(config => {
+    alert(2)
+    // element ui Loading方法
+    loadinginstace = Loading.service({ fullscreen: true })
+    return config
+}, error => {
+    loadinginstace.close()
+    Message.error({
+        message: '加载超时'
+    })
+    return Promise.reject(error)
+})
+// http响应拦截器
+axios.interceptors.response.use(data => {// 响应成功关闭loading
+    alert(21)
+    loadinginstace.close()
+    return data
+}, error => {
+    loadinginstace.close()
+    Message.error({
+        message: '加载失败'
+    })
+    return Promise.reject(error)
+})
 
-// http response 拦截器
-axios.interceptors.response.use(
-    response => {
-        alert(12)
-        return response;
-    },
-    error => {
-        if (error.response) {
-            switch (error.response.status) {
-                case 401:
-                    // 401 清除token信息并跳转到登录页面
-                    router.replace({
-                        path: 'login',
-                        query: {redirect: router.currentRoute.fullPath}
-                    })
-            }
-        }
-        // console.log(JSON.stringify(error));//console : Error: Request failed with status code 402
-        return Promise.reject(error.response.data)
-    });
-
-export default axios;
+export default axios

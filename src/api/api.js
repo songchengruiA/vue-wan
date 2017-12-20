@@ -1,7 +1,35 @@
 import axios from 'axios';
 var qs = require('qs');
 var tokenVal= JSON.parse(sessionStorage.getItem("token")) ? JSON.parse(sessionStorage.getItem("token")) : '';
-
+import { Loading, Message } from 'element-ui'
+// 超时时间
+axios.defaults.timeout = 5000
+// http请求拦截器
+var loadinginstace
+axios.interceptors.request.use(config => {
+    alert(2)
+    // element ui Loading方法
+    loadinginstace = Loading.service({ fullscreen: true })
+    return config
+}, error => {
+    loadinginstace.close()
+    Message.error({
+        message: '加载超时'
+    })
+    return Promise.reject(error)
+})
+// http响应拦截器
+axios.interceptors.response.use(data => {// 响应成功关闭loading
+    alert(21)
+    loadinginstace.close()
+    return data
+}, error => {
+    loadinginstace.close()
+    Message.error({
+        message: '加载失败'
+    })
+    return Promise.reject(error)
+})
 //  创建预备竞猜
 var instance = axios.create({
     headers: {'token': tokenVal}

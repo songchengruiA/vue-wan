@@ -97,7 +97,6 @@
                             :on-success="handleAvatarSuccess"
                             :before-upload="beforeAvatarUpload">
                         <img v-if="leaguesForm.imageUrl" :src="leaguesForm.imageUrl" class="avatar" style="margin-top: 6px;">
-                        <i v-else class="el-icon-plus avatar-uploader-icon" style="display: none"></i>
                         <el-button size="small" type="primary" >点击上传</el-button>
                     </el-upload>
                 </el-form-item>
@@ -269,8 +268,11 @@
                     if (res.data.status === 1) {
                         this.pageList = res.data.data.list;
                         this.total = res.data.data.total - 1;
-                    } else {
-                        alert(res.data.msg);
+                    } else if(res.data.status ==300011){
+                        sessionStorage.clear();
+                        this.$router.push('/login');
+                    }else {
+                        alert(res.data.msg)
                     }
 
                 })
@@ -337,7 +339,7 @@
 
 //          修改
             modifyLeaguesBtn(item) {
-                this.dialogVisible = true;
+
                 this.isDisabled = false;
                 this.isDisabled1 = true;
                 this.isDisabled2 = false;
@@ -355,6 +357,7 @@
                     this.itemId = res.data.data.leagues._id;
                     this.leaguesForm.imageUrl = res.data.data.leagues.leagueImageUrl;
                     this.leaguesForm.leaguesFormList.alias = res.data.data.leagues.alias.join(',')
+                    this.dialogVisible = true;
                 })
             },
 //            点击提交按钮
@@ -382,15 +385,12 @@
             },
 //          详情
             detailLeaguesBtn(item) {
-                this.$nextTick(() => { //等待dom同步后打开模态框
-                    this.modifyLeaguesBtn(item);
-                    this.isDisabled = true;
-                    this.isDisabled1 = false;
-                    this.isDisabled2 = false;
-                    this.isDisabled3 = false;
-                    this.isDisabled4 = true;
-                })
-
+                this.modifyLeaguesBtn(item);
+                this.isDisabled = true;
+                this.isDisabled1 = false;
+                this.isDisabled2 = false;
+                this.isDisabled3 = false;
+                this.isDisabled4 = true;
             },
 //          删除
             deleteLeaguesBtn(item) {

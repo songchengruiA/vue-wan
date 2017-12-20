@@ -159,8 +159,15 @@
                     gameType:this.gameType.id?this.gameType.id:2,
                 };
                 getSetGuess(para).then((res) => {
-                    this.pageList =  res.data.data.list
-                    console.log(this.pageList)
+
+                    if (res.data.status === 1) {
+                        this.pageList =  res.data.data.list
+                    }  else if(res.data.status ==300011){
+                        sessionStorage.clear();
+                        this.$router.push('/login');
+                    }else {
+                        alert(res.data.msg);
+                    }
                 });
 
             },
