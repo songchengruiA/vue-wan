@@ -85,21 +85,22 @@
                             :on-success="handleAvatarSuccess"
                             :before-upload="beforeAvatarUpload">
                         <img v-if="teamsForm.imageUrl" :src="teamsForm.imageUrl" class="avatar" style="margin-top: 6px;">
-                        <i v-else class="el-icon-plus avatar-uploader-icon" style="display: none"></i>
                         <el-button size="small" type="primary" v-if="showBtn">点击上传</el-button>
                     </el-upload>
                 </el-form-item>
-                <el-form-item label="所属国际:" prop="nationalityList.country">
-                    <el-select v-model="teamsForm.nationalityList"  value-key="country"  filterable  placeholder="请选择所属国际" :disabled='isDisabled'>
+                <el-form-item label="所属国家:" prop="country">
+                    <el-select v-model="nationalityList"  value-key="country"  filterable  placeholder="请选择所属国际" :disabled='isDisabled' @change="countryChange">
                         <el-option
                                 v-for="item in countryJson"
-                                :key="item.id"
+                                :key="item.country"
                                 :label="item.country"
                                 :value="item" auto-complete="off">
                         </el-option>
                     </el-select>
-                    <img :src="teamsLogoUrl+teamsForm.nationalityList.flag" style="position: absolute;right: 1%;width: 154px;height: 100px;"v-if="teamsForm.nationalityList.country">
-                    <img :src="logo" style="position: absolute;right: 1%;width: 154px;height: 100px;" v-if="!teamsForm.nationalityList.country && logo">
+                    <input type="hidden" v-model="teamsForm.country">
+
+                    <img :src="teamsLogoUrl+nationalityList.flag" style="position: absolute;right: 1%;width: 154px;height: 100px;"v-if="isDisabled2 && nationalityList.flag">
+                    <img :src="logo" style="position: absolute;right: 1%;width: 154px;height: 100px;" v-if="isDisabled3 && !isDisabled2">
                 </el-form-item>
                 <el-form-item label="所属赛区:" prop="divisionList">
                     <el-select v-model="teamsForm.divisionList"  value-key="name"  filterable  placeholder="请选择所属赛区" :disabled='isDisabled'>
@@ -134,7 +135,7 @@
                     <!--添加-->
                     <el-button type="primary" @click="addSubmit('teamsForm')" v-if='isDisabled2'>提交</el-button>
                     <!--修改-->
-                    <el-button type="primary" @click="modifySubmit" v-if='isDisabled3'>提交</el-button>
+                    <el-button type="primary" @click="modifySubmit('teamsForm')" v-if='isDisabled3'>提交</el-button>
                     <!--详情-->
                     <el-button type="primary" @click="dialogVisible = false" v-if='isDisabled4'>关闭</el-button>
                 </div>
@@ -162,6 +163,7 @@
                 pageList: [],
                 searchTitle: '',
                 logo: '',
+                showImg:false,
                 isDisabled: false,
                 isDisabled1: false,
                 isDisabled2: false,
@@ -179,15 +181,16 @@
                     {id: 2, name : "EGB"},
                     {id: 3, name : "平博"}
                 ],
+                nationalityList:{
+                    country:''
+                },
                 dialogVisible: false,
                 countryJson: tableData,
                 teamsForm:{
+                    country:'',
                     teamsFormList: {},
                     imageUrl: '',
                     divisionList:'',
-                    nationalityList:{
-                        country:''
-                    },
                     gameTypeName:'',
                 },
                 rules: {
@@ -220,8 +223,8 @@
                     'teamsFormList.alias': [
                         { required: true, message: '请输入战队胜率', trigger: 'blur' }
                     ],
-                    'nationalityList.country': [
-                        { required: true, message: '请选择所属国际', trigger: 'change' }
+                    'country': [
+                        { required: true, message: '请选择所属国家', trigger: 'change' }
                     ]
                 },
                 divisionJson: divisionData[0].codeJson,
@@ -303,26 +306,28 @@
 //            添加
             addLeaguesBtn() {
                 this.isDisabled = false;
-
-
                 this.isDisabled1 = true;
                 this.isDisabled2 = true;
                 this.isDisabled3 = false;
                 this.isDisabled4 = false;
                 this.showBtn = true;
+                this.nationalityList = {};
                 this.teamsForm.imageUrl = '';
                 this.logo = '';
-                this.teamsForm = {
-                    teamsFormList : {},
-                    divisionList : '',
-                    nationalityList : {}
-                };
+                this.nationalityList = {};
+                this.teamsForm.teamsFormList = {};
                 this.dialogVisible = true;
                 this.$nextTick(() => { //等待dom同步后打开模态框
                     this.$refs['teamsForm'].resetFields(); //此方法需要模态框加载完成后才可以执行
                 });
+
                 this.teamsForm.gameTypeName = this.gameType.name?this.gameType.name:'LOL';
 
+            },
+            countryChange(value){
+                this.teamsForm.country = value.country;
+                this.logo = this.teamsLogoUrl+value.flag;
+                this.showImg = true
             },
 //            点击提交按钮
             addSubmit(formName) {
@@ -330,10 +335,10 @@
                     if (valid) {
                         var params = this.teamsForm.teamsFormList;
                         params.teamLogoUrl = this.teamsForm.imageUrl;
-                        params.teamFlagUrl = this.teamsLogoUrl + this.teamsForm.nationalityList.flag
+                        params.teamFlagUrl = this.teamsLogoUrl + this.nationalityList.flag
                         params.gameType = this.gameType.id ? this.gameType.id:2;
                         params.division = this.teamsForm.divisionList;
-                        params.nationality = this.teamsForm.nationalityList.country;
+                        params.nationality = this.teamsForm.country;
                         addTeam(params).then((res) => {
                             this.dialogVisible = false;
                             this.teamsList();
@@ -358,13 +363,13 @@
                     var teamsData = res.data.data.teams;
                     this.teamsForm.teamsFormList = teamsData;
                     this.teamsForm.gameTypeName = this.gameType.name?this.gameType.name:'LOL';
-                    this.teamsForm.nationalityList = teamsData.nationality;
+                    this.teamsForm.country = teamsData.nationality;
+                    this.nationalityList.country = teamsData.nationality;
                     this.teamsForm.divisionList = teamsData.division;
                     this.teamsForm.imageUrl = teamsData.teamLogoUrl?teamsData.teamLogoUrl:'';
                     this.picUrl = teamsData.teamFlagUrl?teamsData.teamFlagUrl:'';
                     this.teamsForm.teamsFormList.alias = teamsData.alias.join(',');
                     this.logo = teamsData.teamFlagUrl;
-                    console.log(this.logo)
                     this.dialogVisible = true;
                 })
             },
@@ -372,10 +377,10 @@
             modifySubmit() {
                 var params = this.teamsForm.teamsFormList;
                 params.teamLogoUrl = this.teamsForm.imageUrl;
-                params.teamFlagUrl = this.teamsLogoUrl + this.teamsForm.nationalityList.flag
+                params.teamFlagUrl = this.teamsLogoUrl + this.nationalityList.flag
                 params.gameType = this.gameType.id?this.gameType.id:2;
                 params.division = this.teamsForm.divisionList;
-                params.nationality = this.teamsForm.nationalityList.country;
+                params.nationality = this.teamsForm.country;
                 params.teamId = this.teamsForm.teamsFormList._id;
                 modifyTeams(params).then((res) => {
                     this.dialogVisible = false;
