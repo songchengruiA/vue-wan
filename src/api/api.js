@@ -6,9 +6,9 @@ var tokenVal= JSON.parse(sessionStorage.getItem("token")) ? JSON.parse(sessionSt
 var instance = axios.create({
     headers: {'token': tokenVal}
 });
-var url = 'http://localhost:8066'
-/*var url = 'http://47.93.223.69:8066'*/
-//登录
+// var url = 'http://localhost:8066'
+var url = 'http://47.93.223.69:8066'
+// 登录
 export const requestLogin = params => { return instance.post(url+`/admin/login`, qs.stringify(params)).then(res => res.data); };
 //  请求赛事
 export const getRequest = params => { return instance.get(url+`/admin/source/gambles`, { params: params }); };
