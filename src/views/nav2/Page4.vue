@@ -97,6 +97,7 @@
                             :on-success="handleAvatarSuccess"
                             :before-upload="beforeAvatarUpload">
                         <img v-if="leaguesForm.imageUrl" :src="leaguesForm.imageUrl" class="avatar" style="margin-top: 6px;">
+                        <i v-else class="el-icon-plus avatar-uploader-icon" style="display: none"></i>
                         <el-button size="small" type="primary" >点击上传</el-button>
                     </el-upload>
                 </el-form-item>
@@ -268,11 +269,8 @@
                     if (res.data.status === 1) {
                         this.pageList = res.data.data.list;
                         this.total = res.data.data.total - 1;
-                    } else if(res.data.status ==300011){
-                        sessionStorage.clear();
-                        this.$router.push('/login');
-                    }else {
-                        alert(res.data.msg)
+                    } else {
+                        alert(res.data.msg);
                     }
 
                 })
@@ -291,7 +289,10 @@
             },
 //          添加
             addLeaguesBtn() {
+                this.dialogVisible = true;
                 this.leaguesForm = {
+                    leagueSource:'',
+                    division:'',
                     levelItem: {
                         "id": '1',
                         "name": '1: 1'
@@ -305,16 +306,15 @@
                 this.leaguesForm.leaguesFormList = {};
                 this.leaguesForm.imageUrl = '';
                 this.isDisabled = false;
-                this.dialogVisible = true;
+
                 this.$nextTick(() => { //等待dom同步后打开模态框
                     this.$refs['leaguesForm'].resetFields(); //此方法需要模态框加载完成后才可以执行
-                });
+                })
                 this.isDisabled1 = true;
                 this.isDisabled2 = true;
                 this.isDisabled3 = false;
                 this.isDisabled4 = false;
                 this.leaguesForm.gameTypeName = this.gameType.name ? this.gameType.name : 'LOL';
-
             },
 //          点击提交按钮
             addSubmit(formName) {
@@ -340,6 +340,7 @@
 
 //          修改
             modifyLeaguesBtn(item) {
+                this.dialogVisible = true;
                 this.isDisabled = false;
                 this.isDisabled1 = true;
                 this.isDisabled2 = false;
@@ -356,8 +357,7 @@
                     this.leaguesForm.division = res.data.data.leagues.division;
                     this.itemId = res.data.data.leagues._id;
                     this.leaguesForm.imageUrl = res.data.data.leagues.leagueImageUrl;
-                    this.leaguesForm.leaguesFormList.alias = res.data.data.leagues.alias.join(',');
-                    this.dialogVisible = true;
+                    this.leaguesForm.leaguesFormList.alias = res.data.data.leagues.alias.join(',')
                 })
             },
 //            点击提交按钮
@@ -385,12 +385,15 @@
             },
 //          详情
             detailLeaguesBtn(item) {
-                this.modifyLeaguesBtn(item);
-                this.isDisabled = true;
-                this.isDisabled1 = false;
-                this.isDisabled2 = false;
-                this.isDisabled3 = false;
-                this.isDisabled4 = true;
+                this.$nextTick(() => { //等待dom同步后打开模态框
+                    this.modifyLeaguesBtn(item);
+                    this.isDisabled = true;
+                    this.isDisabled1 = false;
+                    this.isDisabled2 = false;
+                    this.isDisabled3 = false;
+                    this.isDisabled4 = true;
+                })
+
             },
 //          删除
             deleteLeaguesBtn(item) {
