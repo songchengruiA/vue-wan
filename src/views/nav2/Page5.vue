@@ -98,7 +98,7 @@
                         </el-option>
                     </el-select>
                     <input type="hidden" v-model="teamsForm.country">
-                    <img :src="logo" style="position: absolute;right: 1%;width: 154px;height: 100px;" v-if="isDisabled3 && logo">
+                    <img :src="logo" style="position: absolute;right: 1%;width: 154px;height: 100px;" v-if="(isDisabled3 && logo) || isDisabled4 ">
                     <img :src="teamsLogoUrl+teamsForm.nationality+'.png'" style="position: absolute;right: 1%;width: 154px;height: 100px;"v-if=" teamsForm.nationality && isDisabled2">
                 </el-form-item>
                 <el-form-item label="所属赛区:" prop="division">
@@ -132,7 +132,7 @@
                 <div class="dialog-footer">
                     <el-button @click="cancel" v-if='isDisabled1'>取消</el-button>
                     <!--添加-->
-                    <el-button type="primary" @click="addSubmit('teamsForm')" v-if='isDisabled2'>提交1</el-button>
+                    <el-button type="primary" @click="addSubmit('teamsForm')" v-if='isDisabled2'>提交</el-button>
                     <!--修改-->
                     <el-button type="primary" @click="modifySubmit('teamsForm')" v-if='isDisabled3'>提交</el-button>
                     <!--详情-->
@@ -311,9 +311,9 @@
                         teamFlagUrl:''
                     };
                     this.logo = '';
+                    this.teamsForm.gameTypeName = this.gameType.name?this.gameType.name:'LOL';
                     this.$refs['teamsForm'].resetFields(); //此方法需要模态框加载完成后才可以执行
                 });
-                this.teamsForm.gameTypeName = this.gameType.name?this.gameType.name:'LOL';
                 return false;
             },
 

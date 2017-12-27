@@ -8,13 +8,13 @@ import Page1 from './views/nav6/Page1.vue'
 import Page2 from './views/nav6/Page2.vue'
 import Page4 from './views/nav2/Page4.vue'
 import Page5 from './views/nav2/Page5.vue'
-import Page6 from './views/nav3/Page6.vue'
-import Page7 from './views/nav4/Page7.vue'
-import Page from './views/nav5/Page.vue'
-import Page8 from './views/nav5/Page8.vue'
-import Page12 from './views/nav5/page12.vue'
-import Page10 from './views/nav7/page10.vue'
-import Page11 from './views/nav7/page11.vue'
+import Page6 from './views/addguess/addguess.vue'
+import Page7 from './views/exditguess/exditguess.vue'
+import Page from './views/editguess/Page.vue'
+import Page8 from './views/editguess/editguess.vue'
+import Page12 from './views/editguess/editdetail.vue'
+import Page10 from './views/setguess/setguess.vue'
+import Page11 from './views/setguess/setguessdetail.vue'
 
 Vue.use(VueRouter)
 let routes = [
@@ -40,7 +40,7 @@ let routes = [
         iconCls: 'fa icons-icon-buld-guess',
         leaf: true,//只有一个节点
         children: [
-            { path: '/page6', component: Page6,meta: {requireAuth: true,}, name: '创建预备竞猜' }
+            { path: '/page6', component: Page6, name: '创建预备竞猜' }
         ]
     },
     {
@@ -120,7 +120,6 @@ router.beforeEach((to, from, next) => {
         }
         else {
             next({
-                path: '/login',
                 query: {redirect: to.fullPath}  // 将跳转的路由path作为参数，登录成功后跳转到该路由
             })
         }
