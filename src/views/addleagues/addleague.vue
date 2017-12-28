@@ -21,8 +21,8 @@
         </form>
         <!-- 添加按钮 -->
         <div class="text-right" style="padding-bottom:10px;margin-top: 10px;">
-            <button class="btn btn-success" type="button">
-                <span class="glyphicon glyphicon-plus" aria-hidden="true" @click="addLeaguesBtn">添加</span>
+            <button class="btn btn-success" type="button" @click="addLeaguesBtn">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true">添加</span>
             </button>
         </div>
         <!-- 赛事列表 -->
@@ -407,7 +407,7 @@
                         if (res.status === 1) {
                             this.leaguesList();
                         } else {
-                            alert(res.data.msg);
+                            alert(res.msg);
                         }
                     })
                 }).catch(() => {
