@@ -128,11 +128,11 @@
                 level : item.level
             };
             chanLevel(leagueId,para).then(res => {
-                if (res.data.status === 1) {
+                if (res.status === 1) {
                     this.waitLeaguesList();
-                    alert('修改成功');
+                    alert(res.data);
                 } else {
-                    alert(res.data.msg);
+                    alert(res.msg);
                 }
             });
         },
@@ -145,10 +145,10 @@
                 //type: 'warning'
             }).then(() => {
                 saveLeagues(para).then(res => {
-                    if (res.data.status === 1) {
+                    if (res.status === 1) {
                         this.waitLeaguesList();
                     } else {
-                        alert(res.data.msg);
+                        alert(res.data);
                     }
                 })
             }).catch(() => {

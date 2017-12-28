@@ -114,10 +114,10 @@
                     //type: 'warning'
                 }).then(() => {
                     addTeams(para).then(res => {
-                        if (res.data.status === 1) {
+                        if (res.status === 1) {
                             this.waitTeamsList();
                         } else {
-                            alert(res.data.msg)
+                            alert(res.msg)
                         }
                     })
                 }).catch(() => {
