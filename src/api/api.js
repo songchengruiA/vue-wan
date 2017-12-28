@@ -5,8 +5,8 @@ var tokenVal= JSON.parse(sessionStorage.getItem("token")) ? JSON.parse(sessionSt
 var instance = axios.create({
     headers: {'token': tokenVal}
 });
- // var url = 'http://localhost:8066'
-var url = 'http://47.93.223.69:8066'
+var url = 'http://localhost:8066'
+//var url = 'http://47.93.223.69:8066'
 // 登录
 export const requestLogin = params => { return instance.post(url+`/admin/login`, qs.stringify(params)).then(res => res.data); };
 //  请求赛事
@@ -23,6 +23,8 @@ export const getGameName= params => { return instance.get(url+'/admin/pwcn/leagu
 export const getTeamName= params => { return instance.get(url+'/admin/pwcn/teams', { params: params }); };
 //创建预备竞猜
 export const  creatGame = params => { return instance.post(url+'/admin/source/gambles', qs.stringify(params) ).then(res => res.data); };
+//上传外部竞猜
+export const  creatGameA = params => { return instance.post(url+'/admin/pwcn/gambles', qs.stringify(params) ).then(res => res.data); };
 //编辑已上传竞猜
 export const getGameGuess = params => { return instance.get(url+'/admin/matches', { params: params }); };
 //赛制

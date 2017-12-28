@@ -162,7 +162,7 @@
 					<el-date-picker
 							v-model="addData.date"
 							type="datetime"
-							placeholder="选择日期时间">
+							placeholder="选择日期时间" :picker-options="pickerOptions0">
 					</el-date-picker>
 				</el-form-item>
 				<el-form-item label="下注项1名称" prop="optionA">
@@ -209,6 +209,16 @@
     var tableData = require('../../api/table.json');
     export default {
         data() {
+            var validatePass = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请选择赛事名称'));
+                } else {
+                    if (this.addData.optionB ==this.addData.optionA) {
+                        callback(new Error('赛事名称不能一样'));
+                    }
+                    callback();
+                }
+            };
             return {
                 mobil:'',
                 langueClass:false,
@@ -251,21 +261,38 @@
                 selectName:'',
                 selectType:'独赢',
                 types:[],
+
                 rules: {
                     date: [{ type: 'date', required: true, message: '请选择时间', trigger: 'change' }],
                     optionA: [
-                        { required: true, message: '请选择赛事名称', trigger: 'blur' }
+                        { required: true,  message: '请选择赛事名称', trigger: 'blur' }
                     ],
                     oddsA: [
-                        { required: true, message: '请选择赛事名称', trigger: 'blur' }
+                        { required: true, message: '请选择赛事赔率', trigger: 'blur' },
+                        {
+                            pattern: /(^[1-9](\d+)?(\.\d{1,2})?$)|(^(0){1}$)|(^\d\.\d{1,2}?$)/,
+                            message: '请输入正确的赔率'
+                        }
                     ],
                     optionB: [
-                        { required: true, message: '请选择赛事名称', trigger: 'blur' }
+                        { required: true,validator: validatePass,  trigger: 'blur' }
                     ],
                     oddsB: [
-                        { required: true, message: '请选择赛事名称', trigger: 'blur' }
+                        { required: true, message: '请选择赛事赔率', trigger: 'blur' },
+                        {
+                            pattern: /(^[1-9](\d+)?(\.\d{1,2})?$)|(^(0){1}$)|(^\d\.\d{1,2}?$)/,
+                            message: '请输入正确的赔率'
+                        }
                     ],
-                }
+
+                },
+                pickerOptions0: {
+                    disabledDate(time) {
+                        // 最多只能选择一年的
+                        let ayearAgo = Date.now() - 86400000
+                        return time.getTime() <= ayearAgo
+                    }
+                },
             }
         },
         mounted() {
@@ -366,6 +393,7 @@
 
                 });
             },
+			//时间校验
             delGuess(item) {
                 let _id = item._id
                 this.$confirm('确认删除吗?', '提示', {
