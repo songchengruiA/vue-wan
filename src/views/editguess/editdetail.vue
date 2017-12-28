@@ -2,7 +2,7 @@
     <div>
         <div class="form-group width shut" style="margin-right: 50px;float: right;">
             <div class="button-submit">
-                <router-link :to="{path:'/page8'}" class="btn btn-sm btn-danger btn-submit">关闭</router-link>
+                <router-link :to="{path:'/editguess'}" class="btn btn-sm btn-danger btn-submit">关闭</router-link>
             </div>
         </div>
         <div class="edit-guess-list guess-table">

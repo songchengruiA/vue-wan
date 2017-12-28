@@ -66,7 +66,7 @@
               } else {
                 sessionStorage.setItem('user', JSON.stringify(nickname));
                 sessionStorage.setItem('token', JSON.stringify(token));
-                this.$router.push({ path: '/page6' });
+                this.$router.push({ path: '/addguess' });
                 location.reload()
               }
             });

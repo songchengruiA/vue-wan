@@ -64,8 +64,8 @@
                         </div>
                     </td>
                     <td class="guess-btn" style="width: 120px; padding-left: 15px">
-                        <router-link :to="{path:'/page10/add/'+item._id}" class="btn btn-sm btn-info">详情</router-link>
-                        <router-link :to="{path:'/page10/add/'+item._id, query:{edite:true}}" class="btn btn-sm btn-info" v-if="item.betStatus == 1">修改</router-link>
+                        <router-link :to="{path:'/setguess/add/'+item._id}" class="btn btn-sm btn-info">详情</router-link>
+                        <router-link :to="{path:'/setguess/add/'+item._id, query:{edite:true}}" class="btn btn-sm btn-info" v-if="item.betStatus == 1">修改</router-link>
                         <button class="btn btn-sm btn-danger" v-if="item.betStatus == 1" @click="setGuessStop(item)" style="margin-top: 15px;">停止</button>
                         <button class="btn btn-sm btn-warning" v-if="item.betStatus == 2" @click="settlement(item)">结算</button>
                     </td>
@@ -74,7 +74,7 @@
         </div>
         <div class="addguess-body">
             <div class="no-data setguess ng-scope" v-if="pageList.length == 0"></div>
-            <router-link :to="{path:'/page10/add'}" class="btn btn-default btn-lg addBtn">创建趣味竞猜</router-link>
+            <router-link :to="{path:'/setguess/add'}" class="btn btn-default btn-lg addBtn">创建趣味竞猜</router-link>
         </div>
         <!-- 图片放大 -->
         <el-dialog  v-model="bigImg" center>
