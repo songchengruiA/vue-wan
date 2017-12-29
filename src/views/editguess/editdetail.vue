@@ -203,8 +203,8 @@
             </div>
         </el-dialog>
         <!--添加界面-->
-        <el-dialog title="添加竞猜" v-model="dialogAdd" :close-on-click-modal="false" class="dialog-small add-dialog"  center>
-            <el-form :model="formData" label-width="100px" ref="addForm" >
+        <el-dialog v-model="dialogAdd" :close-on-click-modal=    "false" class="dialog-small add-dialog"  center>
+            <el-form :model="formData" label-width="102px" ref="formData" :rules="rules">
                 <el-form-item label="竞猜名称" prop="name"  class="max-w">
                     <el-select v-model="map"   filterable clearable  placeholder="选填">
                         <el-option
@@ -227,46 +227,46 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="下注项1名称">
+                <el-form-item label="下注项1名称" prop="gambleOptionA">
                     <el-input
                             v-model="formData.gambleOptionA"
                             type="datetime"
                             placeholder="下注项1名称">
                     </el-input>
                 </el-form-item>
-                <el-form-item label="下注项1赔率">
+                <el-form-item label="下注项1赔率" prop="optionAOdds">
                     <el-input
                             v-model="formData.optionAOdds"
                             type="datetime"
                             placeholder="下注项1赔率">
                     </el-input>
                 </el-form-item>
-                <el-form-item label="下注项2名称">
+                <el-form-item label="下注项2名称" prop="gambleOptionB">
                     <el-input
                             v-model="formData.gambleOptionB"
                             type="datetime"
                             placeholder="下注项2名称">
                     </el-input>
                 </el-form-item>
-                <el-form-item label="下注项2赔率">
+                <el-form-item label="下注项2赔率" prop="optionBOdds">
                     <el-input
                             v-model="formData.optionBOdds"
                             type="datetime"
                             placeholder="下注项2赔率">
                     </el-input>
                 </el-form-item>
-                <el-form-item label="截止时间" class="addGame-input">
+                <el-form-item label="截止时间" class="addGame-input" prop="date">
                     <el-date-picker
                             v-model="formData.date"
                             type="datetime"
-                            placeholder="选择日期时间">
+                            placeholder="选择日期时间" :picker-options="pickerOptions0">
                     </el-date-picker>
                 </el-form-item>
 
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogAdd = false">取 消</el-button>
-                <el-button type="primary" @click="submit">确 定</el-button>
+                <el-button type="primary" @click="submit('formData')">提 交</el-button>
             </span>
         </el-dialog>
         <div class="addguess-body">
@@ -281,6 +281,16 @@
     var tableData = require('../../api/table.json')
     export default {
         data() {
+            var validatePass = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请选择赛事名称'));
+                } else {
+                    if (this.formData.gambleOptionA ==this.formData.gambleOptionB) {
+                        callback(new Error('赛事名称不能一样'));
+                    }
+                    callback();
+                }
+            };
             return {
                 pageTitle:{
                     teamA:[],
@@ -298,9 +308,37 @@
                 map:'',
                 selectType:'独赢',
                 types:[],
-                selectName:''
-
-
+                selectName:'',
+                rules: {
+                    date: [{ type: 'date', required: true, message: '请选择时间', trigger: 'change' }],
+                    gambleOptionA: [
+                        { required: true,  message: '请选择赛事名称', trigger: 'blur' }
+                    ],
+                    optionAOdds: [
+                        { required: true, message: '请选择赛事赔率', trigger: 'blur' },
+                        {
+                            pattern: /(^[1-9](\d+)?(\.\d{1,2})?$)|(^(0){1}$)|(^\d\.\d{1,2}?$)/,
+                            message: '战队积分必须为数字值且最多可输入两位小数'
+                        }
+                    ],
+                    gambleOptionB: [
+                        { required: true,validator: validatePass,  trigger: 'blur' }
+                    ],
+                    optionBOdds: [
+                        { required: true, message: '请选择赛事赔率', trigger: 'blur' },
+                        {
+                            pattern: /(^[1-9](\d+)?(\.\d{1,2})?$)|(^(0){1}$)|(^\d\.\d{1,2}?$)/,
+                            message: '战队积分必须为数字值且最多可输入两位小数'
+                        }
+                    ],
+                },
+                pickerOptions0: {
+                    disabledDate(time) {
+                        // 最多只能选择一年的
+                        let ayearAgo = Date.now() - 86400000
+                        return time.getTime() <= ayearAgo
+                    }
+                }
             }
         },
         mounted() {
@@ -441,27 +479,37 @@
             //添加竞猜
             addGuess() {
                 this.dialogAdd = true;
+                this.formData = {};
                 let gameType = this.titleData.gameType;
                 this.maps = (gameType!==4)?tableData[0].MapOne:tableData[0].MapTwo;
                 this.types = (gameType == 2)?tableData[0].LOL:((gameType== 3)?tableData[0].Dota2:((gameType == 1)?tableData[0].CSGO:((gameType == 4)?tableData[0].Wangzhe:'独赢')));
+                this.$nextTick(() => { //等待dom同步后打开模态框
+                    this.$refs['formData'].resetFields(); //此方法需要模态框加载完成后才可以执行
+                });
             },
-            submit() {
-                var name = this.map + this.selectName + this.selectType;
-                var nam = name.replace(/['0']/g,'');
-                this.formData.gambleName = nam;
-                this.formData.match = this.$route.params.id;
-                this.formData.endTime =  Date.parse(this.formData.date)
-                addGame(this.formData).then(res =>{
-                    if (res.data.status === 1) {
-                        this.dialogAdd = false
-                        this.requestList();
-                    } else {
-                        alert(res.data.msg);
-                    }
-                })
-            }
-        },
 
+            submit(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        var name = this.map + this.selectName + this.selectType;
+                        var nam = name.replace(/['0']/g,'');
+                        this.formData.gambleName = nam;
+                        this.formData.match = this.$route.params.id;
+                        this.formData.endTime =  Date.parse(this.formData.date)
+                        addGame(this.formData).then(res =>{
+                            if (res.data.status === 1) {
+                                this.dialogAdd = false
+                                this.requestList();
+                            } else {
+                                alert(res.data.msg);
+                            }
+                        })
+                    } else {
+                        return false;
+                    }
+                });
+            }
+        }
     }
 </script>
 <style lang="scss">
