@@ -488,6 +488,9 @@
             //添加竞猜
             addGuess() {
                 this.dialogAdd = true;
+                this.$nextTick(() => { //等待dom同步后打开模态框
+                    this.$refs['formData'].resetFields(); //此方法需要模态框加载完成后才可以执行
+                })
                 let gameType = this.titleData.gameType;
                 this.maps = (gameType!==4)?tableData[0].MapOne:tableData[0].MapTwo;
                 this.types = (gameType == 2)?tableData[0].LOL:((gameType== 3)?tableData[0].Dota2:((gameType == 1)?tableData[0].CSGO:((gameType == 4)?tableData[0].Wangzhe:'独赢')));

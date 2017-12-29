@@ -291,7 +291,7 @@
                         let ayearAgo = Date.now() - 86400000
                         return time.getTime() <= ayearAgo
                     }
-                },
+                }
             }
         },
         mounted() {
