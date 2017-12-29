@@ -86,12 +86,12 @@
                         <div class="border">
                             <div class="middle title text-left">
                                 <p>
-                                    <input :disabled="!item.edite" :class="{ 'edite-input': !item.edite}"
+                                    <input :disabled="!item.edite" :class="{ 'edite-input': !item.edite ,'red': item.gambleOptionA==''}"
                                             type="text"
                                             v-model="item.gambleOptionA">
                                 </p>
                                 <p>
-                                    <input :disabled="!item.edite" :class="{ 'edite-input': !item.edite}"
+                                    <input :disabled="!item.edite" :class="{ 'edite-input': !item.edite ,'red': item.optionBOdds==''  || !/^[0-9]+(.[0-9]{1,2})?$/.test(item.optionBOdds)}"
                                             type="text"
                                             v-model="item.optionBOdds">
                                 </p>
@@ -124,14 +124,14 @@
                         <div class="border">
                             <div class="middle title text-right">
                                 <p>
-                                    <input :disabled="!item.edite" :class="{ 'edite-input': !item.edite}"
+                                    <input :disabled="!item.edite" :class="{ 'edite-input': !item.edite ,'red': item.gambleOptionB==''|| item.gambleOptionB ==item.gambleOptionA}"
                                             type="text"
-                                            v-model="item.gambleOptionB">
+                                            v-model="item.gambleOptionB" required>
                                 </p>
                                 <p>
-                                    <input :disabled="!item.edite" :class="{ 'edite-input': !item.edite}"
+                                    <input :disabled="!item.edite" :class="{ 'edite-input': !item.edite ,'red': item.optionAOdds=='' || !/^[0-9]+(.[0-9]{1,2})?$/.test(item.optionAOdds)}"
                                             type="text"
-                                            v-model="item.optionAOdds">
+                                            v-model="item.optionAOdds" required>
                                 </p>
                             </div>
                         </div>
@@ -204,7 +204,7 @@
         </el-dialog>
         <!--添加界面-->
         <el-dialog title="添加竞猜" v-model="dialogAdd" :close-on-click-modal="false" class="dialog-small add-dialog"  center>
-            <el-form :model="formData" label-width="100px" ref="addForm" >
+            <el-form :model="formData" label-width="102px"  ref="formData"  :rules="rules" @submit.prevent="onSubmit" >
                 <el-form-item label="竞猜名称" prop="name"  class="max-w">
                     <el-select v-model="map"   filterable clearable  placeholder="选填">
                         <el-option
@@ -227,46 +227,46 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="下注项1名称">
+                <el-form-item label="下注项1名称" prop="gambleOptionA">
                     <el-input
                             v-model="formData.gambleOptionA"
                             type="datetime"
                             placeholder="下注项1名称">
                     </el-input>
                 </el-form-item>
-                <el-form-item label="下注项1赔率">
+                <el-form-item label="下注项1赔率"  prop="optionAOdds">
                     <el-input
                             v-model="formData.optionAOdds"
                             type="datetime"
                             placeholder="下注项1赔率">
                     </el-input>
                 </el-form-item>
-                <el-form-item label="下注项2名称">
+                <el-form-item label="下注项2名称" prop="gambleOptionB">
                     <el-input
                             v-model="formData.gambleOptionB"
                             type="datetime"
                             placeholder="下注项2名称">
                     </el-input>
                 </el-form-item>
-                <el-form-item label="下注项2赔率">
+                <el-form-item label="下注项2赔率" prop="optionBOdds">
                     <el-input
                             v-model="formData.optionBOdds"
                             type="datetime"
                             placeholder="下注项2赔率">
                     </el-input>
                 </el-form-item>
-                <el-form-item label="截止时间" class="addGame-input">
+                <el-form-item label="截止时间" class="addGame-input"  prop="date">
                     <el-date-picker
                             v-model="formData.date"
                             type="datetime"
-                            placeholder="选择日期时间">
+                            placeholder="选择日期时间" :picker-options="pickerOptions0">
                     </el-date-picker>
                 </el-form-item>
 
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogAdd = false">取 消</el-button>
-                <el-button type="primary" @click="submit">确 定</el-button>
+                <el-button type="primary" @click="submit('formData')">确 定</el-button>
             </span>
         </el-dialog>
         <div class="addguess-body">
@@ -281,6 +281,16 @@
     var tableData = require('../../api/table.json')
     export default {
         data() {
+            var validatePass = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请选择赛事名称'));
+                } else {
+                    if (this.formData.gambleOptionA ==this.formData.gambleOptionB) {
+                        callback(new Error('赛事名称不能一样'));
+                    }
+                    callback();
+                }
+            };
             return {
                 pageTitle:{
                     teamA:[],
@@ -298,8 +308,37 @@
                 map:'',
                 selectType:'独赢',
                 types:[],
-                selectName:''
+                selectName:'',
+                pickerOptions0: {
+                    disabledDate(time) {
+                        let ayearAgo = Date.now() - 86400000
+                        return time.getTime() <= ayearAgo
+                    }
+                },
+                rules: {
+                    date: [{ type: 'date', required: true, message: '请选择时间', trigger: 'change' }],
+                    gambleOptionA: [
+                        { required: true,  message: '请选择赛事名称', trigger: 'blur' }
+                    ],
+                    optionAOdds: [
+                        { required: true, message: '请选择赛事赔率', trigger: 'blur' },
+                        {
+                            pattern: /(^[1-9](\d+)?(\.\d{1,2})?$)|(^(0){1}$)|(^\d\.\d{1,2}?$)/,
+                            message: '只能输入数字且最多保留两位'
+                        }
+                    ],
+                    gambleOptionB: [
+                        { required: true,validator: validatePass,  trigger: 'blur' }
+                    ],
+                    optionBOdds: [
+                        { required: true, message: '请选择赛事赔率', trigger: 'blur' },
+                        {
+                            pattern: /(^[1-9](\d+)?(\.\d{1,2})?$)|(^(0){1}$)|(^\d\.\d{1,2}?$)/,
+                            message: '只能输入数字且最多保留两位'
+                        }
+                    ],
 
+                }
 
             }
         },
@@ -311,6 +350,14 @@
                 let date = new Date(time)
                 return formatDate(date, 'yyyy-MM-dd hh:mm')
             },
+        },
+        watch: {
+            value:function(val){
+                if(!val) return
+                if(!/^\d*\.?\d{0,2}$/.test(val)){
+                    return ''
+                }
+            }
         },
         methods: {
             requestList() {
@@ -445,26 +492,40 @@
                 this.maps = (gameType!==4)?tableData[0].MapOne:tableData[0].MapTwo;
                 this.types = (gameType == 2)?tableData[0].LOL:((gameType== 3)?tableData[0].Dota2:((gameType == 1)?tableData[0].CSGO:((gameType == 4)?tableData[0].Wangzhe:'独赢')));
             },
-            submit() {
-                var name = this.map + this.selectName + this.selectType;
-                var nam = name.replace(/['0']/g,'');
-                this.formData.gambleName = nam;
-                this.formData.match = this.$route.params.id;
-                this.formData.endTime =  Date.parse(this.formData.date)
-                addGame(this.formData).then(res =>{
-                    if (res.data.status === 1) {
-                        this.dialogAdd = false
-                        this.requestList();
+            submit(formData) {
+                this.$refs[formData].validate((valid) => {
+                    if (!valid) {
+                        console.log('error submit!!');
+                        return false;
                     } else {
-                        alert(res.data.msg);
+                        var name = this.map + this.selectName + this.selectType;
+                        var nam = name.replace(/['0']/g,'');
+                        this.formData.gambleName = nam;
+                        this.formData.match = this.$route.params.id;
+                        this.formData.endTime =  Date.parse(this.formData.date)
+                        addGame(this.formData).then(res =>{
+                            if (res.data.status === 1) {
+                                this.dialogAdd = false
+                                this.requestList();
+                            } else {
+                                alert(res.data.msg);
+                            }
+                        })
                     }
                 })
+
             }
         },
 
     }
 </script>
 <style lang="scss">
+    .red{
+        border:1px solid red!important;
+    }
+    .red:focus{
+        border:1px solid red!important;
+    }
     .btn-delete ,.btn-delete:hover{
         background: #df0059;
         border: 1px solid #df0059;

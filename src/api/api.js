@@ -25,6 +25,8 @@ export const getTeamName= params => { return instance.get(url+'/admin/pwcn/teams
 export const  creatGame = params => { return instance.post(url+'/admin/source/gambles', qs.stringify(params) ).then(res => res.data); };
 //上传外部竞猜
 export const  creatGameA = params => { return instance.post(url+'/admin/pwcn/gambles', qs.stringify(params) ).then(res => res.data); };
+//赛程
+export const getSchedule = params => { return instance.get(url+'/admin/source/matches', { params: params }); };
 //编辑已上传竞猜
 export const getGameGuess = params => { return instance.get(url+'/admin/matches', { params: params }); };
 //赛制

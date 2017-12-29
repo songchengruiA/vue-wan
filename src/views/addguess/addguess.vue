@@ -14,7 +14,7 @@
 			</div>
 			<div class="form-group">
 				<label class="size-set pull-left">选择赛事来源:</label>
-				<el-select v-model="gameSource" value-key="name" class="selected-guess" filterable placeholder="">
+				<el-select v-model="gameSource" value-key="name" class="selected-guess" filterable placeholder=""  @change="gameChange">
 					<el-option
 							v-for="item in optionsB"
 							:key="item.id"
@@ -271,7 +271,7 @@
                         { required: true, message: '请选择赛事赔率', trigger: 'blur' },
                         {
                             pattern: /(^[1-9](\d+)?(\.\d{1,2})?$)|(^(0){1}$)|(^\d\.\d{1,2}?$)/,
-                            message: '请输入正确的赔率'
+                            message: '只能输入数字且最多保留两位'
                         }
                     ],
                     optionB: [
@@ -281,14 +281,13 @@
                         { required: true, message: '请选择赛事赔率', trigger: 'blur' },
                         {
                             pattern: /(^[1-9](\d+)?(\.\d{1,2})?$)|(^(0){1}$)|(^\d\.\d{1,2}?$)/,
-                            message: '请输入正确的赔率'
+                            message: '只能输入数字且最多保留两位'
                         }
                     ],
 
                 },
                 pickerOptions0: {
                     disabledDate(time) {
-                        // 最多只能选择一年的
                         let ayearAgo = Date.now() - 86400000
                         return time.getTime() <= ayearAgo
                     }
@@ -314,7 +313,7 @@
             },
             requestList() {
                 let para = {
-                    gambleSource:1,
+                    gambleSource:this.gameSource.id?this.gameSource.id:1,
                     gameType:this.gameType.id?this.gameType.id:2,
                 };
                 para.startTime = this.time[0]?Date.parse(this.time[0]):null;
@@ -393,7 +392,6 @@
 
                 });
             },
-			//时间校验
             delGuess(item) {
                 let _id = item._id
                 this.$confirm('确认删除吗?', '提示', {

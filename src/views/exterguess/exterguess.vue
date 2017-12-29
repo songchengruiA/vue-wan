@@ -25,8 +25,13 @@
 			</div>
 			<div class="form-group">
 				<label class="size-set pull-left">选择赛程:</label>
-				<el-select v-model="gameSchedule" class="selected-guess" filterable placeholder="" >
+				<el-select v-model="gameSchedule" class="selected-guess" filterable placeholder=""  @change="gameChangeA">
 					<el-option value="全部赛程">全部赛程
+					</el-option>
+					<el-option
+							v-for="item in matches"
+							:label="item.matchName"
+							:value="item.matchName">
 					</el-option>
 				</el-select>
 			</div>
@@ -86,7 +91,7 @@
 			</table>
 		</div>
 		<!--工具条-->
-		<el-col :span="24" class="toolbar" v-if="pageList.length != 0">
+		<el-col :span="24" class="toolbar" v-if="pageList.length != 0 && pageList.length != 1">
 			<el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="tpageSize"
 						   :total="total">
 			</el-pagination>
@@ -102,7 +107,7 @@
 						<table class="table add-guess-table" style="color:#666;">
 							<tr>
 								<td width="50%">
-									<div class="col-md-12">
+									<div class="col-md-12 line-height-35">
 										<div class="pull-left input-title text-right">
 											<label class="text-right">所属赛事：</label>
 										</div>
@@ -112,7 +117,7 @@
 									</div>
 								</td>
 								<td width="50%">
-									<div class="col-md-12">
+									<div class="col-md-12 line-height-35">
 										<div class="pull-left input-title text-right">
 											<label class="text-right">所属比赛：</label>
 										</div>
@@ -124,17 +129,17 @@
 							</tr>
 							<tr>
 								<td width="50%">
-									<div class="col-md-12">
+									<div class="col-md-12 line-height-35">
 										<div class="pull-left input-title text-right">
 											<label class="text-right">截止时间：</label>
 										</div>
 										<div class="pull-left text-left">
-											<label class="text-right">{{itemData.endTime}}</label>
+											<label class="text-right">{{itemData.endTime | formatDate}}</label>
 										</div>
 									</div>
 								</td>
 								<td width="50%">
-									<div class="col-md-12">
+									<div class="col-md-12 line-height-35">
 										<div class="pull-left input-title text-right">
 											<label class="text-right">竞猜名称：</label>
 										</div>
@@ -146,7 +151,7 @@
 							</tr>
 							<tr>
 								<td width="50%">
-									<div class="col-md-12">
+									<div class="col-md-12 line-height-35">
 										<div class="pull-left input-title text-right">
 											<label class="text-right">下注项1名称：</label>
 										</div>
@@ -156,7 +161,7 @@
 									</div>
 								</td>
 								<td width="50%">
-									<div class="col-md-12">
+									<div class="col-md-12 line-height-35">
 										<div class="pull-left input-title text-right">
 											<label class="text-right">下注项2名称：</label>
 										</div>
@@ -168,7 +173,7 @@
 							</tr>
 							<tr>
 								<td width="50%">
-									<div class="col-md-12">
+									<div class="col-md-12 line-height-35">
 										<div class="pull-left input-title text-right">
 											<label class="text-right">下注项1赔率：</label>
 										</div>
@@ -178,7 +183,7 @@
 									</div>
 								</td>
 								<td width="50%">
-									<div class="col-md-12">
+									<div class="col-md-12 line-height-35">
 										<div class="pull-left input-title text-right">
 											<label class="text-right">下注项2赔率：</label>
 										</div>
@@ -190,7 +195,7 @@
 							</tr>
 							<tr>
 								<td width="50%">
-									<div class="col-md-12">
+									<div class="col-md-12 line-height-35">
 										<div class="pull-left input-title text-right">
 											<label class="text-right">下注项1的赔付上限：</label>
 										</div>
@@ -200,7 +205,7 @@
 									</div>
 								</td>
 								<td width="50%">
-									<div class="col-md-12">
+									<div class="col-md-12 line-height-35">
 										<div class="pull-left input-title text-right">
 											<label class="text-right">下注项2的赔付上限：</label>
 										</div>
@@ -212,7 +217,7 @@
 							</tr>
 							<tr>
 								<td width="50%">
-									<div class="col-md-12">
+									<div class="col-md-12 line-height-35">
 										<div class="pull-left input-title text-right">
 											<label class="text-right">下注项1的风险金：</label>
 										</div>
@@ -222,7 +227,7 @@
 									</div>
 								</td>
 								<td width="50%">
-									<div class="col-md-12">
+									<div class="col-md-12 line-height-35">
 										<div class="pull-left input-title text-right">
 											<label class="text-right">下注项2的风险金：</label>
 										</div>
@@ -248,7 +253,7 @@
 </template>
 
 <script>
-    import { getRequest ,renew,upload, delGaming,creatGameA} from '../../api/api';
+    import { getRequest ,renew,upload, delGaming,creatGameA,getSchedule} from '../../api/api';
     import { formatDate } from '../../api/date';
     export default {
         data() {
@@ -279,11 +284,13 @@
                     league:{},
                     optionA:{},
                     optionB:{}
-				}
+				},
+                matches:[]
             }
         },
         mounted() {
             this.requestList();
+            this.scheduleChange();
         },
         filters: {
             formatDate (time) {
@@ -303,6 +310,7 @@
                 let para = {
                     gambleSource:this.gameSource.id?this.gameSource.id:2,
                     gameType:this.gameType.id?this.gameType.id:2,
+                    matchName:this.gameSchedule != '全部赛程'?this.gameSchedule:null,
                     offset: this.page * this.tpageSize - this.tpageSize,
                     limit: this.tpageSize
                 };
@@ -324,11 +332,32 @@
 
             },
             gameChange() {
-                this.requestList()
+                this.requestList();
+                this.scheduleChange()
+            },
+            gameChangeA() {
+                this.requestList();
             },
             search() {
-                this.requestList()
+                this.requestList();
             },
+			//赛程
+            scheduleChange() {
+                let data = {
+                    gambleSource:this.gameSource.id?this.gameSource.id:2,
+                    gameType:this.gameType.id?this.gameType.id:null,
+				}
+                getSchedule(data).then((res) => {
+                    if (res.data.status === 1) {
+                        this.matches =res.data.data.matches
+						console.log(this.matches)
+                    }else {
+                        alert(res.data.msg)
+                    }
+
+                });
+
+			},
             upData(item) {
                 let data ={
                     gambleId : item._id,
@@ -402,6 +431,9 @@
     }
 </script>
 <style lang="scss">
+	.line-height-35{
+		line-height: 35px;
+	}
 	.el-select-dropdown__item {
 		padding: 4px 10px!important;
 		height: 27px!important;
