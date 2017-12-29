@@ -14,7 +14,7 @@
 			</div>
 			<div class="form-group">
 				<label class="size-set pull-left">选择竞猜状态:</label>
-				<el-select v-model="gameStatus" value-key="id" class="selected-guess" filterable placeholder=""  @change="gameChange">
+				<el-select v-model="matchStatus" value-key="id" class="selected-guess" filterable placeholder=""  @change="gameChange">
 					<el-option
 							v-for="item in optionsB"
 							:key="item.id"
@@ -126,7 +126,7 @@
                 ],
                 dialogVisible: false,
                 gameType: 'LOL',
-                gameStatus: '全部',
+                matchStatus: '全部',
                 time: '12',
                 pageList: []
             }
@@ -150,7 +150,7 @@
             },
             requestList() {
                 let para = {
-                    gameStatus:this.gameStatus.id?this.gameStatus.id:'',
+                    matchStatus:this.matchStatus.id?this.matchStatus.id:'',
                     gameType:this.gameType.id?this.gameType.id:2,
                 };
                 para.startTime = this.time[0]?Date.parse(this.time[0]):null;
