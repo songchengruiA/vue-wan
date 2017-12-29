@@ -57,11 +57,7 @@
 					<td class="td-font-size td-bg-t col-sm-1 col-xs-1">单注赔付上限</td>
 					<td class="td-font-size td-bg-t col-sm-1 col-xs-1">风险金</td>
 					<td rowspan="4" class="add-td col-sm-1 col-xs-1" v-if=" (new Date().getTime()) <= item.endTime">
-						<a @click="addGuess(item)">上传竞猜</a><br><br>
-						<a @click="delGuess(item)">删除竞猜</a>
-					</td>
-					<td rowspan="4" class="add-td col-sm-1 col-xs-1 td-disabled" v-if=" (new Date().getTime()) > item.endTime">
-						<a href="javascript:;">上传竞猜</a>
+						<a @click="addGuess(item)">上传竞猜</a>
 					</td>
 				</tr>
 				<tr>
@@ -89,18 +85,177 @@
 				</tr>
 			</table>
 		</div>
+		<!--工具条-->
+		<el-col :span="24" class="toolbar" v-if="pageList.length != 0">
+			<el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="tpageSize"
+						   :total="total">
+			</el-pagination>
+		</el-col>
 		<div class="addguess-body">
 			<div class="no-data setguess ng-scope" v-if="pageList.length == 0"></div>
 		</div>
+		<!--详情上传界面-->
+		<el-dialog v-model="dialogVisible" :close-on-click-modal="false" class="dialog-small" :show-close="false">
+			<form name="add_form" novalidate ng-submit="submit()">
+				<div class="content" style="padding-left: 70px;">
+					<div class="add-guess-creat">
+						<table class="table add-guess-table" style="color:#666;">
+							<tr>
+								<td width="50%">
+									<div class="col-md-12">
+										<div class="pull-left input-title text-right">
+											<label class="text-right">所属赛事：</label>
+										</div>
+										<div class="pull-left text-left">
+											<label class="text-right">{{itemData.league.leagueName}}</label>
+										</div>
+									</div>
+								</td>
+								<td width="50%">
+									<div class="col-md-12">
+										<div class="pull-left input-title text-right">
+											<label class="text-right">所属比赛：</label>
+										</div>
+										<div class="pull-left text-left">
+											<label class="text-right">{{itemData.match}}</label>
+										</div>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td width="50%">
+									<div class="col-md-12">
+										<div class="pull-left input-title text-right">
+											<label class="text-right">截止时间：</label>
+										</div>
+										<div class="pull-left text-left">
+											<label class="text-right">{{itemData.endTime}}</label>
+										</div>
+									</div>
+								</td>
+								<td width="50%">
+									<div class="col-md-12">
+										<div class="pull-left input-title text-right">
+											<label class="text-right">竞猜名称：</label>
+										</div>
+										<div class="pull-left text-left">
+											<label class="text-right" style="color:#169bd5;">{{itemData.gambleName}}</label>
+										</div>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td width="50%">
+									<div class="col-md-12">
+										<div class="pull-left input-title text-right">
+											<label class="text-right">下注项1名称：</label>
+										</div>
+										<div class="pull-left text-left">
+											<label class="text-right">{{itemData.optionA.name}}</label>
+										</div>
+									</div>
+								</td>
+								<td width="50%">
+									<div class="col-md-12">
+										<div class="pull-left input-title text-right">
+											<label class="text-right">下注项2名称：</label>
+										</div>
+										<div class="pull-left text-left">
+											<label class="text-right">{{itemData.optionB.name}}</label>
+										</div>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td width="50%">
+									<div class="col-md-12">
+										<div class="pull-left input-title text-right">
+											<label class="text-right">下注项1赔率：</label>
+										</div>
+										<div class="pull-left text-left">
+											<label class="text-right">{{itemData.optionA.odds}}</label>
+										</div>
+									</div>
+								</td>
+								<td width="50%">
+									<div class="col-md-12">
+										<div class="pull-left input-title text-right">
+											<label class="text-right">下注项2赔率：</label>
+										</div>
+										<div class="pull-left text-left">
+											<label class="text-right">{{itemData.optionB.odds}}</label>
+										</div>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td width="50%">
+									<div class="col-md-12">
+										<div class="pull-left input-title text-right">
+											<label class="text-right">下注项1的赔付上限：</label>
+										</div>
+										<div class="pull-left text-left">
+											<label class="text-right">{{itemData.optionA.payCeiling}}</label>
+										</div>
+									</div>
+								</td>
+								<td width="50%">
+									<div class="col-md-12">
+										<div class="pull-left input-title text-right">
+											<label class="text-right">下注项2的赔付上限：</label>
+										</div>
+										<div class="pull-left text-left">
+											<label class="text-right">{{itemData.optionB.payCeiling}}</label>
+										</div>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td width="50%">
+									<div class="col-md-12">
+										<div class="pull-left input-title text-right">
+											<label class="text-right">下注项1的风险金：</label>
+										</div>
+										<div class="pull-left text-left">
+											<label class="text-right">{{itemData.optionA.riskFund}}</label>
+										</div>
+									</div>
+								</td>
+								<td width="50%">
+									<div class="col-md-12">
+										<div class="pull-left input-title text-right">
+											<label class="text-right">下注项2的风险金：</label>
+										</div>
+										<div class="pull-left text-left">
+											<label class="text-right">{{itemData.optionB.riskFund}}</label>
+										</div>
+									</div>
+								</td>
+							</tr>
+						</table>
+
+					</div>
+				</div>
+				<div class="dialog-footer">
+					<el-button @click.native="dialogVisible = false">取消</el-button>
+					<el-button type="primary" @click.native="addSubmit(itemData)">提交</el-button>
+				</div>
+			</form>
+
+		</el-dialog>
+
 	</div>
 </template>
 
 <script>
-    import { getRequest ,renew,upload, delGaming} from '../../api/api';
+    import { getRequest ,renew,upload, delGaming,creatGameA} from '../../api/api';
     import { formatDate } from '../../api/date';
     export default {
         data() {
             return {
+                total: 0,
+                page: 1,
+                tpageSize: 5,
                 optionsA: [
                     {id: 2, label: 'LOL'},
                     {id: 3, label: 'DOTA2'},
@@ -114,12 +269,17 @@
                 ],
                 dialogVisible: false,
                 gameType: 'LOL',
-                gameSource: '后台',
+                gameSource: 'EGB',
                 gameSchedule:'全部赛程',
                 time: '',
                 pageList: [],
                 leagueList:[],
                 teamList: [],
+                itemData:{
+                    league:{},
+                    optionA:{},
+                    optionB:{}
+				}
             }
         },
         mounted() {
@@ -143,12 +303,16 @@
                 let para = {
                     gambleSource:this.gameSource.id?this.gameSource.id:2,
                     gameType:this.gameType.id?this.gameType.id:2,
+                    offset: this.page * this.tpageSize - this.tpageSize,
+                    limit: this.tpageSize
                 };
                 para.startTime = this.time[0]?Date.parse(this.time[0]):null;
                 para.endTime = this.time[1]?Date.parse(this.time[1]):null;
                 getRequest(para).then((res) => {
                     if (res.data.status === 1) {
                         this.pageList =  res.data.data.list
+                        this.total = res.data.data.total - 1;
+                        console.log(res.data.data.total)
                     } else if(res.data.status ==300011){
                         sessionStorage.clear();
                         this.$router.push('/login');
@@ -164,7 +328,74 @@
             },
             search() {
                 this.requestList()
-            }
+            },
+            upData(item) {
+                let data ={
+                    gambleId : item._id,
+                    optionA: {
+                        riskFund: item.optionA.riskFund,
+                        payCeiling: item.optionA.payCeiling
+                    },
+                    optionB: {
+                        riskFund: item.optionB.riskFund,
+                        payCeiling: item.optionB.payCeiling
+                    }
+                };
+                renew(data).then(res => {
+                    if (res.status === 1) {
+                        alert('修改成功');
+                    } else {
+                        alert('请求失败');
+                    }
+                });
+            },
+            //分页
+			handleCurrentChange(val) {
+				this.page = val;
+				this.leaguesList();
+			},
+			//上传
+            addGuess(item) {
+                this.dialogVisible = true;
+                this.itemData = item
+			},
+            addSubmit(itemDate) {
+                var saveData = {
+                    leagueId : itemDate._id,
+                    leagueName: itemDate.leagueName,
+                    gambleName : itemDate.gambleName,
+                    gameType : itemDate.gameType,
+                    gambleType : itemDate.gambleType,
+                    gambleSource : itemDate.gambleSource,
+                    gambleSourceId : itemDate.gambleSourceId,
+                    endTime : itemDate.endTime,
+                    gambleStatus : itemDate.gambleStatus,
+                    teamA : itemDate.optionA.teamA,
+                    teamB : itemDate.optionB.teamB,
+                    optionA : itemDate.optionA.name,
+                    optionB : itemDate.optionB.name,
+                    oddsA : itemDate.optionA.odds,
+                    oddsB : itemDate.optionB.odds,
+                    optionARiskFund : itemDate.optionA.riskFund,
+                    optionBRiskFund : itemDate.optionB.riskFund,
+                    optionAPayCeiling : itemDate.optionA.payCeiling,
+                    optionBPayCeiling : itemDate.optionB.payCeiling
+                }
+                this.$confirm('确认上传吗?', '提示', {
+                }).then(() => {
+                    creatGameA(saveData).then(res =>{
+                        if (res.status === 1) {
+                            this.dialogVisible = false;
+                            this.requestList()
+                        } else {
+                            alert(res.msg);
+                        }
+                    })
+                }).catch(() => {
+
+                });
+
+			}
 
         },
 

@@ -127,7 +127,7 @@
                 dialogVisible: false,
                 gameType: 'LOL',
                 matchStatus: '全部',
-                time: '12',
+                time: '',
                 pageList: []
             }
         },
