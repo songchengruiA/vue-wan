@@ -46,7 +46,7 @@
                         </div>
                         <div style="padding-top:5px">
                             <button class="btn btn-primary" type="button" @click="modifyTeamsBtn(item)">修改</button>
-                            <button class="btn btn-default bb" type="button" :data-clipboard-text='item._id'>
+                            <button class="btn btn-default copy" type="button" :data-clipboard-text='item._id'>
                                 <span class="glyphicon glyphicon-copy">复制战队 ID</span>
                             </button>
                         </div>
@@ -69,7 +69,7 @@
                     <el-input v-model="teamsForm.teamName" auto-complete="off" placeholder="请输入赛事名称" :disabled='isDisabled'></el-input>
                 </el-form-item>
                 <el-form-item label="战队积分:" prop="teamIntegral">
-                    <el-input type="number" v-model.number="teamsForm.teamIntegral" auto-complete="off" placeholder="请输入战队积分" :disabled='isDisabled'></el-input>
+                    <el-input v-model.number="teamsForm.teamIntegral" auto-complete="off" placeholder="请输入战队积分" :disabled='isDisabled'></el-input>
                 </el-form-item>
                 <el-form-item label="战队胜率:" prop="teamWinningPr">
                     <el-input v-model.number="teamsForm.teamWinningPr" auto-complete="off" placeholder="请输入战队胜率" :disabled='isDisabled'></el-input>
@@ -223,6 +223,7 @@
             }
         },
         mounted() {
+            const clipboard = new Clipboard('.copy');
             this.teamsList();
         },
         //时间过滤器
@@ -283,7 +284,6 @@
 //           图片上传
             handleAvatarSuccess(res) {
                 this.teamsForm.imageUrl = res.data.avatar;
-                console.log(this.teamsForm.imageUrl)
             },
             beforeAvatarUpload(file) {
                 this.fileData.media = file;
@@ -326,7 +326,7 @@
                         params.teamLogoUrl = this.teamsForm.imageUrl;
                         params.gameType = this.gameType.id ? this.gameType.id:2;
                         addTeam(params).then((res) => {
-                            console.log(params)
+                            alert('添加成功');
                             this.dialogVisible = false;
                             this.teamsList();
                         })

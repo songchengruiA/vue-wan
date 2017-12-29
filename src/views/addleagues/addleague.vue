@@ -47,7 +47,7 @@
                         </div>
                         <div style="padding-top:5px">
                             <button class="btn btn-primary" type="button" @click="modifyLeaguesBtn(item)">修改</button>
-                            <button class="btn btn-default bb" type="button" :data-clipboard-text='item._id'>
+                            <button class="btn btn-default copy" type="button" :data-clipboard-text='item._id'>
                                 <span class="glyphicon glyphicon-copy">复制战队 ID</span>
                             </button>
                         </div>
@@ -98,7 +98,7 @@
                             :before-upload="beforeAvatarUpload">
                         <img v-if="leaguesForm.imageUrl" :src="leaguesForm.imageUrl" class="avatar" style="margin-top: 6px;">
                         <i v-else class="el-icon-plus avatar-uploader-icon" style="display: none"></i>
-                        <el-button size="small" type="primary" >点击上传</el-button>
+                        <el-button size="small" type="primary" v-if="showBtn">点击上传</el-button>
                     </el-upload>
                 </el-form-item>
                 <el-form-item label="赛事来源:" prop="leagueSource">
@@ -167,6 +167,7 @@
                 isDisabled2: false,
                 isDisabled3: false,
                 isDisabled4: false,
+                showBtn: false,
                 optionsA: [
                     {id: 2, name: 'LOL'},
                     {id: 3, name: 'DOTA2'},
@@ -183,10 +184,10 @@
                 addForm: {},
                 leaguesForm: {
                     leaguesFormList: {},
+                    imageUrl: '',
                     division: '',
                     leagueSource: '',
                     gameTypeName: '',
-                    imageUrl: '',
                     levelItem: {
                         "id": '1',
                         "name": '1: 1'
@@ -221,6 +222,7 @@
             }
         },
         mounted() {
+            const clipboard = new Clipboard('.copy');
             this.leaguesList();
         },
         filters: {
@@ -278,6 +280,7 @@
 //          图片上传
             handleAvatarSuccess(res) {
                 this.leaguesForm.imageUrl = res.data.avatar;
+                console.log(leaguesForm.imageUrl)
             },
             beforeAvatarUpload(file) {
                 this.fileData.media = file;
@@ -290,7 +293,9 @@
 //          添加
             addLeaguesBtn() {
                 this.dialogVisible = true;
+                this.showBtn = true;
                 this.leaguesForm = {
+                    imageUrl : '',
                     leagueSource:'',
                     division:'',
                     levelItem: {
@@ -304,7 +309,6 @@
                     ]
                 };
                 this.leaguesForm.leaguesFormList = {};
-                this.leaguesForm.imageUrl = '';
                 this.isDisabled = false;
 
                 this.$nextTick(() => { //等待dom同步后打开模态框
@@ -329,6 +333,7 @@
                         params.leagueSource = this.leaguesForm.leagueSource;
                         params.division = this.leaguesForm.division;
                         addLeagues(params).then((res) => {
+                            alert('添加成功');
                             this.dialogVisible = false;
                             this.leaguesList();
                         });
@@ -346,6 +351,7 @@
                 this.isDisabled2 = false;
                 this.isDisabled3 = true;
                 this.isDisabled4 = false;
+                this.showBtn = true;
                 this.leaguesForm.leagueImageUrl = this.leaguesForm.imageUrl;
                 this.leaguesForm.gameTypeName = this.gameType.name?this.gameType.name:'LOL';
                 var params = {
@@ -392,8 +398,8 @@
                     this.isDisabled2 = false;
                     this.isDisabled3 = false;
                     this.isDisabled4 = true;
+                    this.showBtn = false;
                 })
-
             },
 //          删除
             deleteLeaguesBtn(item) {
