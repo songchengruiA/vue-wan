@@ -523,6 +523,7 @@
 <style lang="scss">
 	.is-active{
 		color: #fff!important;
+        background: #3e424d!important;
 	}
 	.dialog-small{
 		.el-dialog{
