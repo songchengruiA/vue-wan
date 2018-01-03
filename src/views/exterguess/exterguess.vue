@@ -484,7 +484,7 @@
 	.addguess-body{
 		text-align: center;
 		.no-data {
-			background: url(../../images/icon-no-data.png) no-repeat;
+			background: url(../../../resource/img/icon-no-data.png) no-repeat;
 			width: 240px;
 			height: 200px;
 			margin: auto;

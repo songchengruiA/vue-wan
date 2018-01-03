@@ -142,7 +142,7 @@
 				width: 250px;
 				height: 90px;
 				background: #fc3938;
-				background-image: url(../images/logo.jpg);
+				background-image: url(../../resource/img/logo.jpg);
 				background-repeat: no-repeat;
 				background-position-x: 38px;
 				background-position-y: 21px;

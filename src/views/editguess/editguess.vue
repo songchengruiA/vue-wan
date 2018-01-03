@@ -46,7 +46,7 @@
 						<div class="border first" style="border-left: 1px solid #d7d7d7;">
 							<div>
 								<div class="original" v-show="item.match.matchSource == 1">
-									<img src="../../images/original.png" alt="">
+									<img src="../../../resource/img/original.png" alt="">
 								</div>
 							</div>
 						</div>

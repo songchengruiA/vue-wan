@@ -68,16 +68,16 @@
                         <div class="border first " style="border-left: 1px solid #d7d7d7;">
                             <div class="middle">
                                 <div class="original position-left" v-show="item.gambleSource == 1">
-                                    <img src="../../images/original.png" alt="">
+                                    <img src="../../../resource/img/original.png" alt="">
                                 </div>
                                 <div class="hidden-icon position-left-a" v-show="item.isDelete == true">
-                                    <img src="../../images/editguess-hidden.png" alt="">
+                                    <img src="../../../resource/img/editguess-hidden.png" alt="">
                                 </div>
                                 <div class="win " v-show="item.gambleStatus == 3  && item.optionAWin">
-                                    <img src="../../images/win.png" alt="">
+                                    <img src="../../../resource/img/win.png" alt="">
                                 </div>
                                 <div class="win " v-show="item.gambleStatus == 4">
-                                    <img src="../../images/fail.png" alt="">
+                                    <img src="../../../resource/img/fail.png" alt="">
                                 </div>
                             </div>
                         </div>
@@ -140,10 +140,10 @@
                         <div class="border">
                             <div class="middle title padding-left-40" style="border-right: 1px solid #d7d7d7;">
                                 <div class="team-logo pull-left" v-if="item.gambleStatus == 3  && item.optionBWin">
-                                    <img src="../../images/win.png" alt="">
+                                    <img src="../../../resource/img/win.png" alt="">
                                 </div>
                                 <div class="team-logo pull-left" v-if="item.gambleStatus == 4">
-                                    <img src="../../images/fail.png" alt="">
+                                    <img src="../../../resource/img/fail.png" alt="">
                                 </div>
                             </div>
                         </div>
