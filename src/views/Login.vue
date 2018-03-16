@@ -25,7 +25,7 @@
         logining: false,
         ruleForm2: {
           account: 'song',
-          checkPass: '123song'
+          checkPass: '123456'
         },
         rules2: {
           account: [
