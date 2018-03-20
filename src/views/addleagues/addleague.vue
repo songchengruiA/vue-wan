@@ -240,8 +240,7 @@
             searchPosts() {
                 if (this.searchTitle == '') {
                     this.leaguesList();
-                }
-                ;
+                };
                 let params = {
                     gameType: this.gameType.id ? this.gameType.id : 2,
                     leagueName: this.postsName
@@ -274,13 +273,11 @@
                     } else {
                         alert(res.data.msg);
                     }
-
                 })
             },
 //          图片上传
             handleAvatarSuccess(res) {
                 this.leaguesForm.imageUrl = res.data.avatar;
-                console.log(leaguesForm.imageUrl)
             },
             beforeAvatarUpload(file) {
                 this.fileData.media = file;
@@ -313,7 +310,7 @@
 
                 this.$nextTick(() => { //等待dom同步后打开模态框
                     this.$refs['leaguesForm'].resetFields(); //此方法需要模态框加载完成后才可以执行
-                })
+                });
                 this.isDisabled1 = true;
                 this.isDisabled2 = true;
                 this.isDisabled3 = false;

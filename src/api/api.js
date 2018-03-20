@@ -79,4 +79,22 @@ export const getSetGuess = params => { return instance.get(url+'/admin/funbets',
 // 添加 结算趣味竞猜列表
 export const postSetGuess = params => { return instance.post(url+'/admin/funbets',params); };
 //编辑趣味竞猜详情
-export const editeGameGuess = query => { return instance.get(url+'/admin/funbets/'+query); };
+export const editeGameGuess = query => { return instance.get(url+'/admin/funbets/'+ query); };
+
+//话题
+//话题Banner列表
+export const getTopicBanner = params => { return instance.get(url+'/admin/banners', { params: params }); };
+//添加话题Banner
+export const addTopicBanner = params => { return instance.post(url+'/admin/banners',params); };
+//获取话题Banner详情
+export const getTopicBannerDetail = query => { return instance.get(url+'/admin/banners/' + query); };
+//修改话题Banner
+export const modifyTopicBanner = (query, params) => { return instance.put(url+'/admin/banners/'+ query, qs.stringify(params)).then(res => res.data); };
+//向上向下排序
+export const setTopicBanner = params => { return instance.post(url+'/admin/banners/setbannersort',params); };
+//删除
+export const deleteTopicBanner = (query) => { return instance.delete(url+'/admin/banners/'+ query); };
+
+
+
+

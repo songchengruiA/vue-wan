@@ -15,6 +15,10 @@ import editGuess from './views/editguess/editguess.vue'
 import editDetail from './views/editguess/editdetail.vue'
 import setGuess from './views/setguess/setguess.vue'
 import setGuessDetail from './views/setguess/setguessdetail.vue'
+import topicBanner from './views/topics/topicbanner.vue'
+import topicGather from './views/topics/topicgather.vue'
+import allTopic from './views/topics/alltopic.vue'
+import hotTopic from './views/topics/hottopic.vue'
 
 Vue.use(VueRouter)
 let routes = [
@@ -99,6 +103,18 @@ let routes = [
                 {path:'/setguess/add/',meta: {requireAuth: true,},component: setGuessDetail},
                 {path:'/setguess/add/:id',meta: {requireAuth: true,},component: setGuessDetail}
             ]}
+        ]
+    },
+    {
+        path: '/',
+        component: Home,
+        name: '话题',
+        iconCls: 'fa icons-icon-add-games',
+        children: [
+            { path: '/topicbanner', iconCls: 'fa icons-icon-loading',meta: {requireAuth: true,}, component: topicBanner, name: '话题Banner' },
+            { path: '/topicgather', iconCls: 'fa icons-icon-teams',meta: {requireAuth: true,}, component: topicGather, name: '话题集合' },
+            { path: '/alltopic', iconCls: 'fa icons-icon-loading',meta: {requireAuth: true,}, component: allTopic, name: '全部话题' },
+            { path: '/hottopic', iconCls: 'fa icons-icon-teams',meta: {requireAuth: true,}, component: hotTopic, name: '热门话题' }
         ]
     },
     {

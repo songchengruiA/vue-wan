@@ -85,8 +85,7 @@
 		<div class="addguess-body">
 			<div class="no-data setguess ng-scope" v-if="pageList.length == 0"></div>
 			<a class="btn btn-default btn-lg addBtn" href="javascript:;" @click="addGame()">创建预备竞猜</a>
-
-		</div>
+        </div>
 		<!--新增界面-->
 		<el-dialog v-model="dialogVisible" :close-on-click-modal="false" class="dialog-small" :show-close="false">
 			<el-form label-width="110px"  ref="addData" :model="addData" :rules="rules" @submit.prevent="onSubmit">
