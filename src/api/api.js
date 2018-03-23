@@ -95,6 +95,37 @@ export const setTopicBanner = params => { return instance.post(url+'/admin/banne
 //删除
 export const deleteTopicBanner = (query) => { return instance.delete(url+'/admin/banners/'+ query); };
 
+//话题集合列表
+export const getTopicGather = params => { return instance.get(url+'/admin/tags', { params: params }); };
+//获取未添加话题列表
+export const getNoTopicGather = params => { return instance.get(url+'/admin/tags/topics/noaddtopics', { params: params }); };
+//添加话题集合
+export const addTopicGather = params => { return instance.post(url+'/admin/tags',params); };
+//获取话题集合详情
+export const getTopicGatherDetail = query => { return instance.get(url+'/admin/tags/' + query); };
+//修改话题集合
+export const modifyTopicGather = (query, params) => { return instance.put(url+'/admin/tags/'+ query, qs.stringify(params)).then(res => res.data); };
+//删除话题集合下的某个话题（支持批量）
+export const deleteTopicGatherItem = (query1, query2) => { return instance.delete(url+'/admin/tags/'+ query1 + '/' +query2); };
+//删除
+export const deleteTopicGather = (query) => { return instance.delete(url+'/admin/tags/'+ query); };
 
+//全部话题
+export const getAllTopic = params => { return instance.get(url+'/admin/topics', { params: params }); };
+//获取抓去平台中未添加的列表
+export const getNoAddAllTopic = params => { return instance.get(url+'/admin/topics/pick/pickkeyword', { params: params }); };
+//删除
+export const deleteAllTopic = (query) => { return instance.delete(url+'/admin/topics/'+ query + '/2'); };
+
+//热门话题
+export const getHotTopic = params => { return instance.get(url+'/admin/topics', { params: params }); };
+//获取未添加热门话题列表
+export const getNoHotTopic = params => { return instance.get(url+'/admin/topics/getNoAddHotTopicList', { params: params }); };
+//获取热门话题已经添加的列表
+export const getHotTopicDetail = params => { return instance.get(url+'/admin/topics', { params: params }); };
+//点击提交按钮
+export const addHotTopic = params => { return instance.post(url+'/admin/topics/setHotTopic',params); };
+//删除
+export const deleteHotTopic = (query) => { return instance.delete(url+'/admin/topics/'+ query + '/1'); };
 
 

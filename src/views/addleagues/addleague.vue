@@ -48,7 +48,7 @@
                         <div style="padding-top:5px">
                             <button class="btn btn-primary" type="button" @click="modifyLeaguesBtn(item)">修改</button>
                             <button class="btn btn-default copy" type="button" :data-clipboard-text='item._id'>
-                                <span class="glyphicon glyphicon-copy">复制战队 ID</span>
+                                <span class="glyphicon glyphicon-copy">复制赛事 ID</span>
                             </button>
                         </div>
                     </div>
@@ -416,13 +416,13 @@
                 }).catch(() => {
 
                 });
-            },
-//          复制赛事ID
-            copyId(item) {
-                console.log(item._id)
-                item.select();
-                document.execCommand("Copy");
             }
+//          复制赛事ID
+//            copyId(item) {
+//                console.log(item._id)
+//                item.select();
+//                document.execCommand("Copy");
+//            }
         }
     }
 

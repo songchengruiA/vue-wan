@@ -28,7 +28,7 @@
                     <div class="col-xs-3">
                         <div class="rectangle-container" style="margin-right: 10px;">
                             <!--<span style="position: absolute;top:20px;">{{index+1}}</span>-->
-                            <img style="width: 120px;height: 80px;margin-left: 10px;cursor: pointer" v-bind:src="item.coverImageUrl" @click="showPicture(item)" class="imageslib-thumb-image absolute-position img-thumbnail" alt="无缩略图">
+                            <img style="width: 120px;height: 60px;margin-left: 10px;cursor: pointer" :src="item.coverImageUrl" @click="showPicture(item)" class="imageslib-thumb-image absolute-position img-thumbnail" alt="无缩略图">
                         </div>
                     </div>
                     <div class="col-xs-7">
@@ -57,14 +57,14 @@
         </el-col>
         <!--添加界面-->
         <el-dialog v-model="dialogVisible" :close-on-click-modal="false" class="dialog-small">
-            <el-form :model="topicBannerForm" label-width="120px" ref="leaguesForm" :rules="rules">
-                <el-form-item label="banner类型:" prop="name">
+            <el-form :model="topicBannerForm" label-width="120px" ref="topicBannerForm" :rules="rules">
+                <el-form-item label="Banner类型:" prop="name">
                     <el-input v-model="topicBannerForm.bannerTypeName" auto-complete="off" disabled></el-input>
                 </el-form-item>
-                <el-form-item label="banner图片名称:" prop="bannerFormList.title">
+                <el-form-item label="Banner名称:" prop="bannerFormList.title">
                     <el-input v-model="topicBannerForm.bannerFormList.title" auto-complete="off" placeholder="请输入Banner图片名称" :disabled='isDisabled'></el-input>
                 </el-form-item>
-                <el-form-item label="赛事图片:" prop="imageUrl">
+                <el-form-item label="Banner图片:" prop="imageUrl">
                     <el-input v-model="topicBannerForm.imageUrl" auto-complete="off" :disabled='isDisabled'></el-input>
                     <el-upload
                             class="avatar-uploader"
@@ -103,7 +103,7 @@
                 myHeaders: {token:JSON.parse(sessionStorage.getItem("token")) ? JSON.parse(sessionStorage.getItem("token")) : ''},
                 total: 0,
                 page: 1,
-                tpageSize: 5,
+                tpageSize: 10,
                 pageList: [],
                 bannerType: '话题集合Banner',
                 isDisabled: false,
@@ -137,13 +137,13 @@
                 }
             }
         },
-        created() {
+        mounted() {
             this.requestList();
         },
         filters: {
             formatDate (time) {
                 let date = new Date(time);
-                return formatDate(date, 'yyyy-MM-dd')
+                return formatDate(date, 'yyyy-MM-dd hh:mm:ss')
             },
         },
         methods: {
@@ -231,9 +231,9 @@
                 })
             },
 //            点击提交按钮
-            modifySubmit() {
-//                this.$refs[formName].validate((valid) => {
-//                    if (valid) {
+            modifySubmit(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
                         let params = this.topicBannerForm.bannerFormList;
                         params.coverImageUrl = this.topicBannerForm.imageUrl;
                         params.bannerType = this.bannerType.id ? this.bannerType.id : 6;
@@ -244,10 +244,10 @@
                             alert("修改成功");
                             this.requestList();
                         });
-//                    } else {
-//                        return false;
-//                    }
-//                });
+                    } else {
+                        return false;
+                    }
+                });
             },
 //          向上
             topicBannerUp(item,index) {
