@@ -434,7 +434,9 @@
     .textarea-box{
         .el-form-item__label{
             display: block;
-            width: 235px !important;
+            width: 100% !important;
+            text-align: left;
+            padding-left: 29px;
         }
         .el-form-item__content{
             margin-left: 28px !important;

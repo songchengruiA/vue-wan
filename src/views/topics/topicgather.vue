@@ -49,7 +49,7 @@
         <!--添加界面-->
         <el-dialog v-model="dialogVisible" :close-on-click-modal="false" class="dialog-small">
             <el-form :model="topicGatherForm" label-width="120px">
-                <el-form-item label="话题集合Banner图片:" >
+                <el-form-item label="话题集合Banner图片:" class="textarea-box">
                     <el-input v-model="topicGatherForm.imageUrl" auto-complete="off" :disabled='isDisabled'></el-input>
                     <el-upload
                             class="avatar-uploader"
@@ -64,12 +64,12 @@
                         <el-button size="small" type="primary" v-if="showBtn">点击上传</el-button>
                     </el-upload>
                 </el-form-item>
-                <el-form-item label="话题名称:">
+                <el-form-item label="话题名称:" class="textarea-box">
                     <el-input v-model="topicGatherForm.gatherFormList.title" auto-complete="off" placeholder="请输入话题名称" :disabled='isDisabled'></el-input>
                 </el-form-item>
-                <el-form-item label="相关的话题名称(ID):">
+                <el-form-item label="相关的话题名称(ID):" class="textarea-box">
                     <el-input placeholder="添加相关的话题名称(ID)" auto-complete="off" v-model="relevantTitle" @change="searchChange()" v-on:click.native="searchAll"></el-input>
-                    <ul class="list-group" style="overflow:auto;margin-bottom: 0;height: 300px;font-size: 13px;" v-show="searchShow">
+                    <ul class="list-group" style="overflow:auto;margin:10px 0 0 0;height: 300px;font-size: 13px;" v-show="searchShow">
                         <li class="list-group-item"v-for="(item, index) in noTopicGatherList" >
                             <div class="row" style="padding: 0 10px;">
                                 <div class="col-xs-2">
@@ -94,7 +94,7 @@
                             </div>
                         </li>
                     </ul>
-                    <ul class="list-group" style="overflow:auto">
+                    <ul class="list-group" style="overflow:auto;margin:10px 0 0 0;box-shadow: 0px 0px 22px #5d5b5b;"">
                         <li class="list-group-item" style="margin-bottom: 5px;" v-for="(item, index) in topicGatherList">
                             <div class="row" style="padding: 0 10px;">
                                 <div class="col-xs-2">
@@ -119,7 +119,7 @@
                         </li>
                     </ul>
                 </el-form-item>
-                <el-form-item label="话题集合简介"  class="textarea-box">
+                <el-form-item label="话题集合简介:"  class="textarea-box">
                     <el-input
                             :disabled='isDisabled'
                             :autosize="{ minRows: 2}"
@@ -129,7 +129,7 @@
                     </el-input>
                 </el-form-item>
                 <div class="dialog-footer">
-                    <el-button @click="dialogVisible = false" v-if='isDisabled1'>取消</el-button>
+                    <el-button @click="dialogVisible = false">取消</el-button>
                     <!--添加-->
                     <el-button type="primary" @click="addSubmit()" v-if='isDisabled2'>提交</el-button>
                     <!--修改-->
@@ -160,7 +160,6 @@
                 relevantTitle:'',
                 searchShow: false,
                 isDisabled: false,
-                isDisabled1: false,
                 isDisabled2: false,
                 isDisabled3: false,
                 showBtn: false,
@@ -282,7 +281,6 @@
 //                this.$nextTick(() => { //等待dom同步后打开模态框
 //                    this.$refs['topicBannerForm'].resetFields(); //此方法需要模态框加载完成后才可以执行
 //                });
-                this.isDisabled1 = true;
                 this.isDisabled2 = true;
                 this.isDisabled3 = false;
             },
@@ -310,7 +308,6 @@
             modifyTopicGatherBtn(item) {
                 this.dialogVisible = true;
                 this.isDisabled = false;
-                this.isDisabled1 = true;
                 this.isDisabled2 = false;
                 this.isDisabled3 = true;
                 this.showBtn = true;
@@ -323,6 +320,7 @@
                     } else {
                         alert(res.data.msg);
                     }
+
                 })
             },
 //          点击提交按钮

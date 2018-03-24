@@ -114,6 +114,12 @@ export const deleteTopicGather = (query) => { return instance.delete(url+'/admin
 export const getAllTopic = params => { return instance.get(url+'/admin/topics', { params: params }); };
 //获取抓去平台中未添加的列表
 export const getNoAddAllTopic = params => { return instance.get(url+'/admin/topics/pick/pickkeyword', { params: params }); };
+//点击提交按钮
+export const addAllTopic = params => { return instance.post(url+'/admin/topics',params); };
+//获取全部话题详情
+export const getAllTopicDetail = query => { return instance.get(url+'/admin/topics/' + query); };
+//修改全部集合
+export const modifyAllTopic = (query, params) => { return instance.put(url+'/admin/topics/'+ query, qs.stringify(params)).then(res => res.data); };
 //删除
 export const deleteAllTopic = (query) => { return instance.delete(url+'/admin/topics/'+ query + '/2'); };
 

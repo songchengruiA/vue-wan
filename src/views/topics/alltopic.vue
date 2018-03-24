@@ -48,7 +48,7 @@
                             </button>
                         </div>
                         <div style="padding-top:5px">
-                            <button class="btn btn-primary btn-my" type="button">编辑</button>
+                            <button class="btn btn-primary btn-my" type="button" @click="modifyAllTopicBtn(item)">编辑</button>
                             <button class="btn btn-danger btn-my" type="button" @click="deleteAllTopicBtn(item)">删除</button>
                         </div>
                     </div>
@@ -63,13 +63,13 @@
         </el-col>
         <!--添加界面-->
         <!--第一个界面-->
-        <el-dialog v-model="dialogVisible1" :close-on-click-modal="false" class="dialog-small">
-            <el-form :model="allTopicForm" label-width="120px">
+        <el-dialog v-model="dialogVisible" :close-on-click-modal="false" class="dialog-small">
+            <el-form :model="allTopicForm" label-width="120px" v-show="ShowModal ==1">
                 <el-form-item label="话题名称:">
-                    <el-input v-model="allTopicForm.allTopicFormList.title" auto-complete="off" placeholder="请输入话题名称" :disabled='isDisabled'></el-input>
+                    <el-input v-model="allTopicForm.allTopicFormList.title" auto-complete="off" placeholder="请输入话题名称"></el-input>
                 </el-form-item>
                 <el-form-item label="话题头像:" >
-                    <el-input v-model="allTopicForm.imageUrl" auto-complete="off" :disabled='isDisabled'></el-input>
+                    <el-input v-model="allTopicForm.topicIcon" auto-complete="off"></el-input>
                     <el-upload
                             class="avatar-uploader"
                             action="http://47.93.223.69:8066/admin/media"
@@ -78,13 +78,13 @@
                             :show-file-list="false"
                             :on-success="handleAvatarSuccess"
                             :before-upload="beforeAvatarUpload">
-                        <img v-if="allTopicForm.imageUrl" :src="allTopicForm.imageUrl" class="avatar" style="margin-top: 6px;">
+                        <img v-if="allTopicForm.topicIcon" :src="allTopicForm.topicIcon" class="avatar" style="margin-top: 6px;">
                         <i v-else class="el-icon-plus avatar-uploader-icon" style="display: none"></i>
                         <el-button size="small" type="primary" v-if="showBtn">点击上传</el-button>
                     </el-upload>
                 </el-form-item>
                 <el-form-item label="话题类型:">
-                    <el-select v-model="allTopicForm.topicType"  value-key="name"  filterable  placeholder="请选择话题类型" :disabled='isDisabled'>
+                    <el-select v-model="allTopicForm.topicType"  value-key="name"  filterable  placeholder="请选择话题类型">
                         <el-option
                                 v-for="item in optionsA"
                                 :key="item.id"
@@ -95,7 +95,6 @@
                 </el-form-item>
                 <el-form-item label="话题简介:"  class="textarea-box">
                     <el-input
-                            :disabled='isDisabled'
                             :autosize="{ minRows: 2}"
                             type="textarea"
                             placeholder="请输入话题简介"
@@ -103,16 +102,14 @@
                     </el-input>
                 </el-form-item>
                 <div class="dialog-footer">
-                    <el-button @click="dialogVisible1 = false">取消</el-button>
+                    <el-button @click="dialogVisible = false">取消</el-button>
                     <el-button type="primary" @click="nextStep()">下一步</el-button>
                 </div>
             </el-form>
-        </el-dialog>
-        <!--第二个界面-->
-        <el-dialog v-model="dialogVisible2" :close-on-click-modal="false" class="dialog-small">
-            <el-form :model="allTopicForm" label-width="120px">
-                <el-form-item label="选择抓去平台:">
-                    <el-select v-model="allTopicForm.pickWebsite"  value-key="name"  filterable  placeholder="请选择抓去平台" :disabled='isDisabled'>
+            <!--第二个界面-->
+            <el-form :model="allTopicForm" label-width="30px" v-show="ShowModal ==2">
+                <el-form-item label="选择抓去平台:" class="textarea-box">
+                    <el-select v-model="allTopicForm.pickWebsite"  value-key="name"  filterable  placeholder="请选择抓去平台">
                         <el-option
                                 v-for="item in optionsB"
                                 :key="item.id"
@@ -122,13 +119,13 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item>
-                    <span class="tab-span" @click="nameSearchBtn()" :class="{activeSearch:!nameSearch}">按名称搜索</span>
-                    <span class="tab-span" @click="linkSearchBtn()"  :class="{activeSearch:nameSearch}">按网址搜索</span>
-                    <div class="search-box" style="margin:5px 0 15px 0;display: flex;" v-show="!nameSearch">
+                    <span class="tab-span" @click="nameSearchBtn()" :class="{activeSearch:nameSearch}">按名称搜索</span>
+                    <span class="tab-span" @click="linkSearchBtn()"  :class="{activeSearch:!nameSearch}">按网址搜索</span>
+                    <div class="search-box" style="margin:5px 0 15px 0;display: flex;" v-show="nameSearch">
                         <input class="form-control" placeholder="请输入搜索名称" v-model="allTopicForm.pickKeyword"  style="width: 90%;margin-right: 10px;">
                         <button class="btn btn-success" @click="searchNamePosts()">搜索</button>
                     </div>
-                    <div class="search-box" style="margin:5px 0 15px 0;display: flex;" v-show="nameSearch">
+                    <div class="search-box" style="margin:5px 0 15px 0;display: flex;" v-show="!nameSearch">
                         <input class="form-control" placeholder="请输入搜索网址" v-model="allTopicForm.pickKeyword"  style="width: 90%;margin-right: 10px;">
                         <button class="btn btn-success" @click="searchLinkPosts()">搜索</button>
                     </div>
@@ -156,15 +153,13 @@
                                 </div>
                             </div>
                         </li>
-
                         <!--分页-->
                         <div v-show="noAddTopicLength > 20">
-                            <div @click="moreData()"  class="more-list" v-show="!listShow">更多...</div>
-                            <div  class="more-list" v-show="moreNum > noAddTopicLength">已经是最后一页了</div>
+                            <div @click="moreData()"  class="more-list" v-show="moreNum < noAddTopicLength">更多...</div>
+                            <div v-show="noAddTopicLength == 0 ">最后一页</div>
                         </div>
-
                     </ul>
-                    <!--<li v-if="noAddTopicLength ==0">暂无数据</li>-->
+                    <!--<div class="more-list" v-show="noAddTopicLength == 0 ">暂无更多数据</div>-->
                     <ul class="list-group" style="overflow:auto;max-height: 320px;box-shadow: 0px 0px 22px #5d5b5b;">
                         <li class="list-group-item" style="margin-bottom: 5px;" v-for="(item, index) in allTopicForm.grabKeywords">
                             <div class="row" style="padding: 0 10px;">
@@ -196,33 +191,38 @@
                     </ul>
                 </el-form-item>
                 <div class="dialog-footer">
-                    <el-button @click="dialogVisible2 = false">取消</el-button>
+                    <el-button @click="dialogVisible = false">取消</el-button>
                     <el-button type="primary" @click="lastStep()">上一步</el-button>
                     <el-button type="primary" @click="nextStepTwo()">下一步</el-button>
                 </div>
             </el-form>
-        </el-dialog>
-        <!--第三个界面-->
-        <el-dialog v-model="dialogVisible3" :close-on-click-modal="false" class="dialog-small">
-            <el-form :model="allTopicForm" label-width="120px">
-                <h3>设置筛选条件</h3>
-                <div>可以只抓取包括特定词语的微博</div>
-                <el-form-item label="请输入博主经常提到的特定词汇（限1个，可不填）">
-                    <el-input v-model="allTopicForm.allTopicFormList.title" auto-complete="off" placeholder="请输入话题名称" :disabled='isDisabled'></el-input>
+            <!--第三个界面-->
+            <el-form :model="allTopicForm" label-width="120px" v-show="ShowModal ==3">
+                <h3 style="width: 100%;text-align: left;padding-left: 27px;">设置筛选条件</h3>
+                <div style="width: 100%;text-align: left;font-weight: bolder;padding-left: 27px;margin-bottom:15px;">可以只抓取包括特定词语的微博</div>
+                <el-form-item label="请输入博主经常提到的特定词汇（限1个，可不填)" class="textarea-box">
+                    <el-input v-model="grabKeyword" auto-complete="off" placeholder="请输入话题名称"></el-input>
                 </el-form-item>
-                <el-form-item label="话题简介:"  class="textarea-box">
-                    <el-input
-                            :disabled='isDisabled'
-                            :autosize="{ minRows: 2}"
-                            type="textarea"
-                            placeholder="请输入话题简介"
-                            v-model="allTopicForm.allTopicFormList.content">
-                    </el-input>
+                <el-form-item class="textarea-box">
+                    <div class="form-group" style="padding: 20px 0 5px 0;">
+                        <div style="margin-bottom: 6px;font-weight: bolder;">是否只看原创微博：</div>
+                        <label :class="{'checked':isOriginal=='0'}" class="unchecked"><input v-model="isOriginal" type="radio" name="micro-blog" value="0" style="display: none" >否</label>
+                        <label :class="{'checked':isOriginal=='1'}" class="unchecked"><input v-model="isOriginal" type="radio" name="micro-blog" value="1" style="display: none" >是</label>
+                    </div>
+                    <div class="form-group" style="border-bottom:1px solid #ccc;padding-bottom:5px;">
+                        <div style="margin-bottom: 10px;font-weight: bolder;">其他内容筛选：</div>
+                        <label :class="{'checked':cardType=='3'}" class="unchecked"><input v-model="cardType" type="radio" name="micro-blog" value="3" style="display: none" >所有类型</label>
+                        <label :class="{'checked':cardType=='1'}" class="unchecked"><input v-model="cardType" type="radio" name="micro-blog" value="1" style="display: none" >仅图片</label>
+                        <label :class="{'checked':cardType=='2'}" class="unchecked"><input v-model="cardType" type="radio" name="micro-blog" value="2" style="display: none" >仅视频</label>
+                    </div>
                 </el-form-item>
                 <div class="dialog-footer">
-                    <el-button @click="dialogVisible3 = false">取消</el-button>
+                    <el-button @click="dialogVisible = false">取消</el-button>
                     <el-button type="primary" @click="lastStepTwo()">上一步</el-button>
-                    <el-button type="primary" @click="addSubmit()">提交</el-button>
+                    <!--添加-->
+                    <el-button type="primary" @click="addSubmit()" v-if='isDisabled1'>提交</el-button>
+                    <!--修改-->
+                    <el-button type="primary" @click="modifySubmit()" v-if='isDisabled2'>提交</el-button>
                 </div>
             </el-form>
         </el-dialog>
@@ -230,7 +230,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-    import {getAllTopic, getNoAddAllTopic, deleteAllTopic} from '../../api/api';
+    import {getAllTopic, getNoAddAllTopic, addAllTopic, getAllTopicDetail, modifyAllTopic, deleteAllTopic} from '../../api/api';
     import { formatDate } from '../../api/date';
     import Clipboard from 'clipboard';
     export default {
@@ -244,19 +244,23 @@
                 noAddAllTopicList:[],
                 noAddTopicLength:'',
                 moreNum: 0,
+                isOriginal: 0,
+                cardType: 3,
                 grabKeywordLists:[],
+                delList:[],
                 searchTitle: '',
-                isDisabled: false,
+                ShowModal: '',
+                grabKeyword:'',
                 showBtn: false,
                 nameSearch: false,
                 listShow: false,
-                dialogVisible1: false,
-                dialogVisible2: false,
-                dialogVisible3: false,
+                dialogVisible: false,
+                isDisabled1: false,
+                isDisabled2: false,
                 allTopicForm:{
                     allTopicFormList:{},
-                    imageUrl: '',
-                    topicType:'',
+                    topicIcon: '',
+                    topicType:1,
                     pickWebsite:1,
                     pickKeyword:'',
                     grabKeywords:[]
@@ -268,6 +272,14 @@
                     {id: 1, name: '微博'},
                     {id: 2, name: 'B站'}
                 ],
+                data1:{
+                    '1':'仅图片',
+                    '2':'仅视频'
+                },
+                data2:{
+                    '1':'原创',
+                    '0':'非原创'
+                },
 //                rules: {
 //                    'allTopicFormList.title': [
 //                        { required: true, message: '请输入Banner图片名称', trigger: 'blur' }
@@ -275,7 +287,7 @@
 //                    'allTopicFormList.postId': [
 //                        { required: true, message: '请输入Id', trigger: 'blur' }
 //                    ],
-//                    imageUrl: [
+//                    topicIcon: [
 //                        { type: 'string', required: true, message: '请上传图片', trigger: 'blur' }
 //                    ]
 //                },
@@ -314,6 +326,7 @@
             },
 //          获取抓去平台中未添加的列表
             noRequestList(offset, searchType){
+
                 let params = {
                     offset: offset,
                     limit: 20,
@@ -323,16 +336,45 @@
                 };
                 getNoAddAllTopic(params).then((res) => {
                     if (res.data.status === 1) {
-                        this.noAddAllTopicList = res.data.data.userlist;
+                        res.data.data.userlist.forEach((item) => {
+                            this.noAddAllTopicList.push(item);
+                        });
                         this.noAddTopicLength = res.data.data.total;
+                        if (this.noAddTopicLength > 0) {
+                            this.listShow = true;
+                        } else {
+                            this.listShow = false;
+                        }
                     } else {
                         alert(res.data.msg);
                     }
                 })
             },
+            //添加
+            addAllTopicBtn() {
+                this.noAddAllTopicList = [];
+                this.dialogVisible = true;
+                this.ShowModal = 1;
+                this.showBtn = true;
+                this.isDisabled1 = true;
+                this.isDisabled2 = false;
+                this.nameSearch = false;
+                this.allTopicForm = {
+                    allTopicFormList:{},
+                    topicIcon: '',
+                    topicType:'',
+                    pickWebsite:1,
+                    pickKeyword:'',
+                    grabKeywords:[]
+                };
+                this.nameSearchBtn()
+        //                this.$nextTick(() => { //等待dom同步后打开模态框
+        //                    this.$refs['topicBannerForm'].resetFields(); //此方法需要模态框加载完成后才可以执行
+        //                });
+            },
 //          图片上传
             handleAvatarSuccess(res) {
-                this.allTopicForm.imageUrl = res.data.avatar;
+                this.allTopicForm.topicIcon = res.data.avatar;
             },
             beforeAvatarUpload(file) {
                 this.fileData.media = file;
@@ -345,27 +387,19 @@
 
 //          第一个弹框的下一步
             nextStep(){
-                this.dialogVisible1 = false;
-                this.dialogVisible2 = true;
-                this.dialogVisible3 = false;
+                this.ShowModal = 2;
             },
 //          第二个弹框的上一步
             lastStep(){
-                this.dialogVisible1 = true;
-                this.dialogVisible2 = false;
-                this.dialogVisible3 = false;
+                this.ShowModal = 1;
             },
 //          第二个弹框的下一步
             nextStepTwo(){
-                this.dialogVisible1 = false;
-                this.dialogVisible2 = false;
-                this.dialogVisible3 = true;
+                this.ShowModal = 3;
             },
 //          第三个弹框的上一步
             lastStepTwo(){
-                this.dialogVisible1 = false;
-                this.dialogVisible2 = true;
-                this.dialogVisible3 = false;
+                this.ShowModal = 2;
             },
 //          点击按名称按钮
             nameSearchBtn() {
@@ -383,34 +417,39 @@
             },
 //          点击按名称搜索按钮
             searchNamePosts() {
+                if(this.moreNum != 0){
+                    this.moreNum = 0
+                }
                 this.noAddAllTopicList = [];
-                this.noRequestList(0, 1)
+                this.noRequestList(0, 1);
+                return this.moreNum;
             },
 //          点击按网址搜索按钮
             searchLinkPosts() {
+                if(this.moreNum != 0){
+                    this.moreNum = 0
+                }
                 this.noAddAllTopicList = [];
-                this.noRequestList(0, 2)
+                this.noRequestList(0, 2);
+                return this.moreNum;
             },
 //          在待添加的数据中点击更多
             moreData() {
-                this.moreNum = 0;
                 this.moreNum += 20;
                 let num = 2;
                 if(!this.nameSearch){
                     num = 1;
                 }
                 this.noRequestList(this.moreNum,num);
-                if(this.moreNum>this.noAddTopicLength){
-                    this.listShow =true
-                }
+                return this.moreNum;
             },
-//          点击添加按钮
+//          点击带添加列表中的添加按钮
             addTopic(item) {
-                this.allTopicForm.grabKeywords = [];
                 item.show = true;
-                this.allTopicForm.grabKeywords.push(item)
+                this.allTopicForm.grabKeywords.push(item);
+                console.log(this.allTopicForm.grabKeywords)
             },
-//          点击未添加按钮
+//          点击待添加列表中的未添加按钮
             delTopic(item) {
                 item.show = false;
                 let itemTitle ='';
@@ -428,36 +467,85 @@
 //             往删除的列表中push数据的ID
                 this.delList.push(item._id);
             },
-
-//          添加
-            addAllTopicBtn() {
-                this.dialogVisible1 = true;
-                this.dialogVisible2 = false;
-                this.dialogVisible3 = false;
-                this.showBtn = true;
-                this.allTopicForm = {
-                    allTopicFormList:{},
-                    imageUrl: ''
-                };
-//                this.$nextTick(() => { //等待dom同步后打开模态框
-//                    this.$refs['topicBannerForm'].resetFields(); //此方法需要模态框加载完成后才可以执行
-//                });
-                this.isDisabled1 = true;
-                this.isDisabled2 = true;
-                this.isDisabled3 = false;
-            },
+//          添加时点击提交按钮
             addSubmit() {
 //                this.$refs[formName].validate((valid) => {
 //                    if (valid) {
-                let params = this.allTopicForm.allTopicFormList;
-                params.tagIcon = this.allTopicForm.imageUrl;
-                params.topicIds = this.delIdList.join(";");
+                this.allTopicForm.grabKeywords.forEach((item,index) => {
+                    this.allTopicForm.grabKeywords[index].grabKeyword=this.grabKeyword?this.grabKeyword:'';
+                    this.allTopicForm.grabKeywords[index].cardType=this.cardType;
+                    this.allTopicForm.grabKeywords[index].isOriginal=this.isOriginal;
+                });
+                let params = this.allTopicForm;
+                params.title = this.allTopicForm.allTopicFormList.title;
+                params.content = this.allTopicForm.allTopicFormList.content;
                 addAllTopic(params).then(res => {
                     alert('添加成功');
                     this.dialogVisible = false;
                     this.requestList();
                 });
 
+//                    } else {
+//                        return false;
+//                    }
+//                });
+            },
+//          点击修改按钮
+            modifyAllTopicBtn(item) {
+                this.noAddAllTopicList = [];
+                this.dialogVisible = true;
+                this.ShowModal = 1;
+                this.showBtn = true;
+                this.isDisabled1 = false;
+                this.isDisabled2 = true;
+                this.nameSearch = true;
+                let tagId = item._id;
+                getAllTopicDetail(tagId).then((res) => {
+                    if (res.data.status === 1) {
+                        this.allTopicForm.allTopicFormList = res.data.data;
+                        this.allTopicForm.topicIcon = res.data.data.topicIcon;
+                        this.grabKeywordLists = this.allTopicForm.grabKeywords;
+                        this.allTopicForm.pickWebsite = 1;
+                        this.grabKeyword = '';
+                        this.cardType = 3;
+                        this.isOriginal = 0;
+                    } else {
+                        alert(res.data.msg);
+                    }
+                })
+            },
+//          点击提交按钮
+            modifySubmit() {
+//                this.$refs[formName].validate((valid) => {
+//                    if (valid) {
+//                if(this.delList.length>0){
+//                    let tagId = this.allTopicForm.allTopicFormList._id;
+//                    let topicIds = this.delList.join(";");
+//                    deleteHotTopicItem(tagId, topicIds).then((res) => {
+//                        if (res.data.status === 1) {
+//                            this.requestList();
+//                        } else {
+//                            alert(res.data.msg);
+//                        }
+//                    });
+//                }
+//                for(let i = 0; i < this.topicGatherList.length; i++ ){
+//                    this.delIdList.push(this.topicGatherList[i]._id)
+//                }
+                this.allTopicForm.grabKeywords.forEach((item,index) => {
+                    this.allTopicForm.grabKeywords[index].grabKeyword=this.grabKeyword?this.grabKeyword:'';
+                    this.allTopicForm.grabKeywords[index].cardType=this.cardType;
+                    this.allTopicForm.grabKeywords[index].isOriginal=this.isOriginal;
+                });
+                let params = this.allTopicForm;
+                params.title = this.allTopicForm.allTopicFormList.title;
+                params.content = this.allTopicForm.allTopicFormList.content;
+                let tagId = this.allTopicForm.allTopicFormList._id;
+                modifyAllTopic(tagId, params).then((res) => {
+                    this.dialogVisible = false;
+                    alert("修改成功");
+                    this.requestList();
+                });
 //                    } else {
 //                        return false;
 //                    }
@@ -512,7 +600,15 @@
         right: -8px;
     }
     .activeSearch{
-        background: red;
+        background: red !important;
+    }
+    .tab-span {
+        font-weight: bolder;
+        background: #bdb2b2;
+        border-radius: 3px;
+        color: #fff;
+        padding: 1px 4px;
+        cursor: pointer;
     }
     .filterSpan{
         cursor:pointer;
@@ -521,5 +617,24 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+    }
+    .more-list{
+        text-align: center;
+        border: 1px solid #ddd;
+        height: 23px;
+        line-height: 21px;
+        cursor: pointer!important;
+        color: grey;
+    }
+    .checked{
+        background: #1491cf;
+        color: #fff;
+    }
+    .unchecked{
+        width: 70px;
+        height: 30px;
+        border-radius: 15px;
+        text-align: center;
+        line-height: 30px;
     }
 </style>
