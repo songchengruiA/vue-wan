@@ -39,7 +39,7 @@
                     </div>
                     <div class="text-right col-xs-2" style="padding-top:6px">
                         <div>
-                            <button style="background: #24b60b;" class="btn btn-info btn-my" type="button" >预览</button>
+                            <router-link :to="{path:'/alltopic/' + item._id +'/'+ detailType + '/' + 2, query:{topicName:item.title}}" class="btn btn-sm btn-info">预览</router-link>
                             <button class="btn btn-default copy" type="button" :data-clipboard-text='item._id'>
                                 <span class="glyphicon glyphicon-copy">复制话题集合 ID</span>
                             </button>

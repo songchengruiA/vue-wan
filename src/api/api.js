@@ -118,10 +118,20 @@ export const getNoAddAllTopic = params => { return instance.get(url+'/admin/topi
 export const addAllTopic = params => { return instance.post(url+'/admin/topics',params); };
 //获取全部话题详情
 export const getAllTopicDetail = query => { return instance.get(url+'/admin/topics/' + query); };
-//修改全部集合
+//修改全部话题
 export const modifyAllTopic = (query, params) => { return instance.put(url+'/admin/topics/'+ query, qs.stringify(params)).then(res => res.data); };
+//获取咨询／动态列表
+export const getInformationList = (query, params) => { return instance.get(url+'/admin/topics/' + query , { params: params }); };
+//删除资讯
+export const deleteConsult = (query) => { return instance.delete(url+'/admin/card/'+ query ); };
+//删除动态
+export const deleteDynamic = (query) => { return instance.delete(url+'/admin/dynamic/'+ query ); };
+//获取评论列表
+export const getCommentList = (query, params) => { return instance.get(url+'/admin/comment/' + query , { params: params }); };
+//删除评论
+export const deleteComment = (query) => { return instance.delete(url+'/admin/comment/'+ query ); };
 //删除
-export const deleteAllTopic = (query) => { return instance.delete(url+'/admin/topics/'+ query + '/2'); };
+export const deleteAllTopic = (query) => { return instance.delete(url+'/admin/topics/'+ query ); };
 
 //热门话题
 export const getHotTopic = params => { return instance.get(url+'/admin/topics', { params: params }); };

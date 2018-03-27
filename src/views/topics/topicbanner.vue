@@ -144,7 +144,7 @@
             formatDate (time) {
                 let date = new Date(time);
                 return formatDate(date, 'yyyy-MM-dd hh:mm:ss')
-            },
+            }
         },
         methods: {
 //          改变游戏类型

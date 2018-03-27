@@ -42,7 +42,7 @@
                     </div>
                     <div class="text-right col-xs-2" style="padding-top:6px">
                         <div>
-                            <button style="background: #24b60b;" class="btn btn-info btn-my" type="button">预览</button>
+                            <router-link :to="{path:'/alltopic/' + item._id +'/'+ detailType + '/'+ 1, query:{topicName:item.title}}" class="btn btn-sm btn-info">预览</router-link>
                             <button class="btn btn-default copy" type="button" :data-clipboard-text='item._id'>
                                 <span class="glyphicon glyphicon-copy">复制话题集合 ID</span>
                             </button>
@@ -240,6 +240,7 @@
                 total: 0,
                 page: 1,
                 tpageSize: 10,
+                detailType: 'consult',
                 pageList: [],
                 noAddAllTopicList:[],
                 noAddTopicLength:'',
@@ -318,7 +319,7 @@
                 getAllTopic(params).then((res) => {
                     if (res.data.status === 1) {
                         this.pageList = res.data.data.list;
-                        this.total = res.data.data.total-1;
+                        this.total = res.data.data.total - 1;
                     } else {
                         alert(res.data.msg);
                     }
@@ -479,6 +480,7 @@
                 let params = this.allTopicForm;
                 params.title = this.allTopicForm.allTopicFormList.title;
                 params.content = this.allTopicForm.allTopicFormList.content;
+                params.isHot = 2;
                 addAllTopic(params).then(res => {
                     alert('添加成功');
                     this.dialogVisible = false;
@@ -493,6 +495,7 @@
 //          点击修改按钮
             modifyAllTopicBtn(item) {
                 this.noAddAllTopicList = [];
+                this.allTopicForm.pickKeyword = '';
                 this.dialogVisible = true;
                 this.ShowModal = 1;
                 this.showBtn = true;
@@ -502,9 +505,11 @@
                 let tagId = item._id;
                 getAllTopicDetail(tagId).then((res) => {
                     if (res.data.status === 1) {
+                        console.log(res)
                         this.allTopicForm.allTopicFormList = res.data.data;
                         this.allTopicForm.topicIcon = res.data.data.topicIcon;
-                        this.grabKeywordLists = this.allTopicForm.grabKeywords;
+                        this.allTopicForm.grabKeywords = res.data.data.grabKeywords;
+                        this.grabKeywordLists = res.data.data.grabKeywords;
                         this.allTopicForm.pickWebsite = 1;
                         this.grabKeyword = '';
                         this.cardType = 3;
@@ -518,20 +523,6 @@
             modifySubmit() {
 //                this.$refs[formName].validate((valid) => {
 //                    if (valid) {
-//                if(this.delList.length>0){
-//                    let tagId = this.allTopicForm.allTopicFormList._id;
-//                    let topicIds = this.delList.join(";");
-//                    deleteHotTopicItem(tagId, topicIds).then((res) => {
-//                        if (res.data.status === 1) {
-//                            this.requestList();
-//                        } else {
-//                            alert(res.data.msg);
-//                        }
-//                    });
-//                }
-//                for(let i = 0; i < this.topicGatherList.length; i++ ){
-//                    this.delIdList.push(this.topicGatherList[i]._id)
-//                }
                 this.allTopicForm.grabKeywords.forEach((item,index) => {
                     this.allTopicForm.grabKeywords[index].grabKeyword=this.grabKeyword?this.grabKeyword:'';
                     this.allTopicForm.grabKeywords[index].cardType=this.cardType;
@@ -540,6 +531,7 @@
                 let params = this.allTopicForm;
                 params.title = this.allTopicForm.allTopicFormList.title;
                 params.content = this.allTopicForm.allTopicFormList.content;
+                params.isHot = 2;
                 let tagId = this.allTopicForm.allTopicFormList._id;
                 modifyAllTopic(tagId, params).then((res) => {
                     this.dialogVisible = false;
