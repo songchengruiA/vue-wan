@@ -27,7 +27,7 @@
                 <div class="row" style="padding: 0 10px;">
                     <div class="col-xs-3">
                         <div class="rectangle-container" style="margin-right: 10px;">
-                            <!--<span style="position: absolute;top:20px;">{{index+1}}</span>-->
+                            <span>{{(index+1) + tpageSize*(page-1)}}</span>
                             <img style="width: 120px;height: 60px;margin-left: 10px;cursor: pointer" :src="item.coverImageUrl" @click="showPicture(item)" class="imageslib-thumb-image absolute-position img-thumbnail" alt="无缩略图">
                         </div>
                     </div>

@@ -20,7 +20,7 @@
                     <div class="col-xs-10" style="min-width: 610px;">
                         <div class="col-xs-1" style="min-width: 90px;">
                             <div class="rectangle-container">
-                                <!--<span>{{($index+1) + allTopicsPagination.topicsLimit*(allTopicsPagination.currPage-1)}}</span>-->
+                                <span>{{(index+1) + tpageSize*(page-1)}}</span>
                                 <div style="position: relative;width: 60px;height: 60px;display: inline-block">
                                     <img style="cursor: pointer" :src="item.topicIcon" class="smallImg imageslib-thumb-image absolute-position img-thumbnail" alt="无缩略图">
                                     <div class="hotWord" v-show="item.isHot == true">热</div>
@@ -37,7 +37,12 @@
                         </div>
                         <div class="col-xs-3" style="min-width: 180px;">
                             <p style="margin-bottom: 2px;"><span>资讯数：{{item.cardNum}}</span> &nbsp;&nbsp;&nbsp;&nbsp;<span>动态数：{{item.dynamicNum}}</span></p>
-                            <div style="cursor: pointer" class="ellipsis2">简介：{{item.content}}</div>
+                            <el-popover  trigger="hover" placement="top">
+                                <p>{{item.content}}</p>
+                                <div slot="reference" class="name-wrapper" style="cursor: pointer">
+                                    <span class="crud--overflow ellipsis2">简介：{{item.content}}</span>
+                                </div>
+                            </el-popover>
                         </div>
                     </div>
                     <div class="text-right col-xs-2" style="padding-top:6px">
@@ -239,7 +244,7 @@
                 myHeaders: {token:JSON.parse(sessionStorage.getItem("token")) ? JSON.parse(sessionStorage.getItem("token")) : ''},
                 total: 0,
                 page: 1,
-                tpageSize: 10,
+                tpageSize: 20,
                 detailType: 'consult',
                 pageList: [],
                 noAddAllTopicList:[],

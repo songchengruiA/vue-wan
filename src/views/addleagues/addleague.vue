@@ -27,26 +27,27 @@
         </div>
         <!-- 赛事列表 -->
         <ul class="list-group" style="overflow:auto">
-            <li class="list-group-item leaguesList" v-for="item in pageList">
+            <li class="list-group-item leaguesList" v-for="(item, index) in pageList">
                 <div class="row">
                     <div class="col-xs-2">
                         <div class="rectangle-container">
-                            <img class="imageslib-thumb-image absolute-position img-thumbnail" alt="无缩略图"
+                            <span>{{(index+1) + tpageSize * (page-1)}}</span>
+                            <img class="smallImg imageslib-thumb-image absolute-position img-thumbnail" alt="无缩略图"
                                  :src="item.leagueImageUrl">
                         </div>
                     </div>
-                    <div class="col-xs-7" style="padding-top:8px">
+                    <div class="col-xs-7" >
                         <label>{{item.leagueName}}</label>
-                        <p>{{item.createdAt | formatDate}}</p>
+                        <p style="margin-bottom: 0px;">{{item.createdAt | formatDate}}</p>
                         <small>{{item.leagueImageUrl}}</small>
                     </div>
-                    <div class="text-right col-xs-3" style="padding-top:30px">
+                    <div class="text-right col-xs-3" >
                         <div>
-                            <button class="btn btn-info" type="button" @click="detailLeaguesBtn(item)">详情</button>
-                            <button class="btn btn-danger" type="button" @click="deleteLeaguesBtn(item)">删除</button>
+                            <button class="btn btn-info btn-my" type="button" @click="detailLeaguesBtn(item)">详情</button>
+                            <button class="btn btn-danger btn-my" type="button" @click="deleteLeaguesBtn(item)">删除</button>
                         </div>
                         <div style="padding-top:5px">
-                            <button class="btn btn-primary" type="button" @click="modifyLeaguesBtn(item)">修改</button>
+                            <button class="btn btn-primary btn-my" type="button" @click="modifyLeaguesBtn(item)">修改</button>
                             <button class="btn btn-default copy" type="button" :data-clipboard-text='item._id'>
                                 <span class="glyphicon glyphicon-copy">复制赛事 ID</span>
                             </button>
@@ -156,7 +157,7 @@
                 myHeaders: {token:JSON.parse(sessionStorage.getItem("token")) ? JSON.parse(sessionStorage.getItem("token")) : ''},
                 total: 0,
                 page: 1,
-                tpageSize: 5,
+                tpageSize: 10,
                 postsName: '',
                 gameType: 'LOL',
                 pageList: [],
@@ -227,8 +228,8 @@
         },
         filters: {
             formatDate (time) {
-                let date = new Date(time)
-                return formatDate(date, 'yyyy-MM-dd')
+                let date = new Date(time);
+                return formatDate(date, 'yyyy-MM-dd');
             },
         },
         methods: {
@@ -484,11 +485,18 @@
         max-height: 184px;
     }
 
-    /*.glyphicon{*/
-    /*font-weight: bolder;*/
-    /*}*/
-    /*.btn {*/
-    /*border: 0;*/
-    /*font-weight: bolder;*/
-    /*}*/
+    //添加弹框中的图片
+    .smallImg{
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+    }
+    .btn-my{
+        color: #fff;
+        padding: 0;
+        width: 46px;
+        text-align: center;
+        line-height: 22px;
+        font-size: 12px;
+    }
 </style>

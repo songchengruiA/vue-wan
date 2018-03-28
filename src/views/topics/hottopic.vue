@@ -20,7 +20,7 @@
                     <div class="col-xs-10" style="min-width: 610px;">
                         <div class="col-xs-1" style="min-width: 90px;">
                             <div class="rectangle-container">
-                                <span>{{index+1}}</span>
+                                <span>{{(index+1) + tpageSize*(page-1)}}</span>
                                 <img style="cursor: pointer" :src="item.topicIcon" class="smallImg imageslib-thumb-image absolute-position img-thumbnail" alt="无缩略图">
                             </div>
                         </div>
@@ -34,7 +34,12 @@
                         </div>
                         <div class="col-xs-3" style="min-width: 180px;">
                             <p style="margin-bottom: 2px;"><span>资讯数：{{item.cardNum}}</span> &nbsp;&nbsp;&nbsp;&nbsp;<span>动态数：{{item.dynamicNum}}</span></p>
-                            <div style="cursor: pointer" class="ellipsis2">简介：{{item.content}}</div>
+                            <el-popover  trigger="hover" placement="top">
+                                <p>{{item.content}}</p>
+                                <div slot="reference" class="name-wrapper" style="cursor: pointer">
+                                    <span class="crud--overflow ellipsis2">简介：{{item.content}}</span>
+                                </div>
+                            </el-popover>
                         </div>
                     </div>
                     <div class="text-right col-xs-2" style="padding-top:6px">
@@ -76,9 +81,7 @@
                                     <p>{{item.createdAt | formatDate}}</p>
                                 </div>
                                 <div class="col-xs-6" style="padding-top: 3px;">
-                                    <div :class="{true:'ellipsis2'}[item.content.length >= 60 && !item.contentLenght]">内容：{{item.content}}</div>
-                                    <!--<div class="easy-btn" ng-show="item.content.length >= 60 && !item.contentLenght" ng-click="easyBtn1(item)">全文</div>-->
-                                    <!--<div class="easy-btn" ng-show="item.content.length >= 60 && item.contentLenght" ng-click="easyBtn2(item)">收起</div>-->
+                                    <div>内容：{{item.content}}</div>
                                 </div>
                                 <div class="col-xs-1">
                                     <button @click="addTopic(item)" v-show="!item.show" style="background: #169bd5;line-height: 19px;margin-top: 20px;" class="deleteBtn">添加</button>
@@ -101,12 +104,9 @@
                                     <p>{{item.createdAt | formatDate}}</p>
                                 </div>
                                 <div class="col-xs-5" style="padding-top: 9px;">
-                                    <div :class="{true:'ellipsis2'}[item.content.length >= 60 && !item.contentLenght]">内容：{{item.content}}</div>
-                                    <!--<div class="easy-btn" ng-show="item.content.length >= 60 && !item.contentLenght" ng-click="easyBtn1(item)">全文</div>-->
-                                    <!--<div class="easy-btn" ng-show="item.content.length >= 60 && item.contentLenght" ng-click="easyBtn2(item)">收起</div>-->
+                                    <div>内容：{{item.content}}</div>
                                 </div>
                                 <div class="col-xs-2">
-                                    <!--<button ng-click="delTopic(item,$index)" style="margin-top: 19px;line-height: 19px;" class="deleteBtn">删除</button>-->
                                     <button @click="dropClick(item,index); $event.stopPropagation();" style="margin-left:42px;margin-top: 10px;background: #169bd5;line-height: 19px;" class="deleteBtn">调序</button>
                                     <button @click="hotTopicUp(item,index)" style="margin-top: 19px;position: relative;top: -10px;background: #24b60b;line-height: 19px;"  class="deleteBtn">向上</button>
                                     <button @click="hotTopicDown(item,index)" style="margin-top: 19px;position: relative;top: -10px;background: #24b60b;line-height: 19px;" class="deleteBtn">向下</button>
@@ -355,4 +355,12 @@
         height: 60px;
         object-fit: cover;
     }
+    .ellipsis2{
+        overflow:hidden;
+        text-overflow:ellipsis;
+        display:-webkit-box;
+        -webkit-box-orient:vertical;
+        -webkit-line-clamp:2;
+    }
+
 </style>

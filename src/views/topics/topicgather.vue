@@ -19,7 +19,7 @@
                 <div class="row" style="padding: 0 10px;">
                     <div class="col-xs-3">
                         <div class="rectangle-container" style="margin-right: 10px;">
-                            <!--<span style="position: absolute;top:20px;">{{($index+1) + topicGatherPagination.topicGatherLimit*(topicGatherPagination.currPage-1)}}</span>-->
+                            <span>{{(index+1) + tpageSize*(page-1)}}</span>
                             <img style="width: 120px;height: 60px;margin-left: 10px;cursor: pointer;" :src="item.tagIcon" class="imageslib-thumb-image absolute-position img-thumbnail" alt="无缩略图">
                         </div>
                     </div>
@@ -79,22 +79,25 @@
                                     </div>
                                 </div>
                                 <div class="col-xs-3">
-                                    <p style="line-height: 2">名称：{{item.title}}</p>
+                                    <p  class="ellipsis1">用户名：{{item.title}}</p>
                                     <p style="line-height: 1">{{item.createdAt | formatDate}}</p>
                                 </div>
                                 <div class="col-xs-6">
-                                    <div :class="{true:'ellipsis2'}[item.content.length >= 60 && !item.contentLenght]" style="line-height: 2">内容：{{item.content}}</div>
-                                    <!--<div class="easy-btn" v-show="item.content.length >= 60 && !item.contentLenght" @click="easyBtn1(item)">全文</div>-->
-                                    <!--<div class="easy-btn" v-show="item.content.length >= 60 && item.contentLenght" @click="easyBtn2(item)">收起</div>-->
+                                    <el-popover  trigger="hover" placement="top">
+                                        <p>{{item.content}}</p>
+                                        <div slot="reference" class="name-wrapper" style="cursor: pointer">
+                                            <span class="crud--overflow ellipsis2">简介：{{item.content}}</span>
+                                        </div>
+                                    </el-popover>
                                 </div>
                                 <div class="col-xs-1" style="padding-top: 10px">
                                     <button @click="addTopic(item)" style="background:#169bd5;margin-top: 0;line-height: 20px;" class="deleteBtn" v-show="!item.show">添加</button>
-                                    <button @click="delTopic(item)" class="deleteBtn" style="width:50px;background: grey;color: #fff;margin-top: 0;line-height: 20px;" v-show="item.show">已添加</button>
+                                    <button @click="delTopic(item)" class="deleteBtn" style="width:55px;background: grey;color: #fff;margin-top: 0;line-height: 20px;" v-show="item.show">已添加</button>
                                 </div>
                             </div>
                         </li>
                     </ul>
-                    <ul class="list-group" style="overflow:auto;margin:10px 0 0 0;box-shadow: 0px 0px 22px #5d5b5b;"">
+                    <ul class="list-group" style="overflow:auto;margin:10px 0 0 0;box-shadow: 0px 0px 22px #5d5b5b;">
                         <li class="list-group-item" style="margin-bottom: 5px;" v-for="(item, index) in topicGatherList">
                             <div class="row" style="padding: 0 10px;">
                                 <div class="col-xs-2">
@@ -104,16 +107,19 @@
                                     </div>
                                 </div>
                                 <div class="col-xs-3">
-                                    <p>用户名：{{item.title}}</p>
+                                    <p class="ellipsis1" style="margin-bottom: 0">用户名：{{item.title}}</p>
                                     <p>{{item.createdAt | formatDate}}</p>
                                 </div>
                                 <div class="col-xs-6">
-                                    <div :class="{true:'ellipsis2'}[item.content.length >= 60 && !item.contentLenght]" style="padding-top: 5px">内容：{{item.content}}</div>
-                                    <!--<div class="easy-btn" ng-show="item.content.length >= 60 && !item.contentLenght" ng-click="easyBtn1(item)">全文</div>-->
-                                    <!--<div class="easy-btn" ng-show="item.content.length >= 60 && item.contentLenght" ng-click="easyBtn2(item)">收起</div>-->
+                                    <el-popover  trigger="hover" placement="top">
+                                        <p>{{item.content}}</p>
+                                        <div slot="reference" class="name-wrapper" style="cursor: pointer">
+                                            <span class="crud--overflow ellipsis2">简介：{{item.content}}</span>
+                                        </div>
+                                    </el-popover>
                                 </div>
-                                <div class="col-xs-1" style="padding-top: 8px">
-                                    <button @click="delTopicBtn(item,index)" class="deleteBtn" style="margin-top: 10px;line-height: 20px;">删除</button>
+                                <div class="col-xs-1" style="padding-top: 14px">
+                                    <button @click="delTopicBtn(item,index)" class="deleteBtn" style="margin-top: 10px;line-height: 20px;background: red;color: #fff;">删除</button>
                                 </div>
                             </div>
                         </li>
@@ -388,5 +394,10 @@
         width: 60px;
         height: 60px;
         object-fit: cover;
+    }
+    .ellipsis1{
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space: nowrap;
     }
 </style>

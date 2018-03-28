@@ -30,7 +30,7 @@
             <tbody>
                 <tr v-for="(item, index) in pageList" class="trList">
                     <td>
-                        {{index+1}}
+                        {{(index+1) + tpageSize * (page-1)}}
                     </td>
                     <td>
                         {{item.leagueName}}
@@ -49,7 +49,7 @@
                         {{item.payCeiling}}
                     </td>
                     <td class="operation" @click = "saveLeaguesBtn(item)">
-                        保存
+                        <button class="btn btn-primary btn-my" type="button">保存</button>
                     </td>
                 </tr>
             </tbody>

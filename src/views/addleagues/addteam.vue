@@ -30,22 +30,22 @@
                 <div class="row">
                     <div class="col-xs-2">
                         <div class="rectangle-container">
-                            <img class="imageslib-thumb-image absolute-position img-thumbnail" alt="无缩略图" :src="item.teamLogoUrl">
+                            <img class="smallImg imageslib-thumb-image absolute-position img-thumbnail" alt="无缩略图" :src="item.teamLogoUrl">
                         </div>
                     </div>
 
-                    <div class="col-xs-7" style="padding-top:8px">
+                    <div class="col-xs-7">
                         <label>{{item.teamName}}</label>
-                        <p>{{item.createdAt | formatDate}}</p>
+                        <p style="margin-bottom: 0px;">{{item.createdAt | formatDate}}</p>
                         <small>{{item.teamLogoUrl}}</small>
                     </div>
-                    <div class="text-right col-xs-3" style="padding-top:30px">
+                    <div class="text-right col-xs-3">
                         <div>
-                            <button class="btn btn-info" type="button" @click="detailTeamsBtn(item)">详情</button>
-                            <button class="btn btn-danger" type="button" @click="deleteTeamsBtn(item)">删除</button>
+                            <button class="btn btn-info btn-my" type="button" @click="detailTeamsBtn(item)">详情</button>
+                            <button class="btn btn-danger btn-my" type="button" @click="deleteTeamsBtn(item)">删除</button>
                         </div>
                         <div style="padding-top:5px">
-                            <button class="btn btn-primary" type="button" @click="modifyTeamsBtn(item)">修改</button>
+                            <button class="btn btn-primary btn-my" type="button" @click="modifyTeamsBtn(item)">修改</button>
                             <button class="btn btn-default copy" type="button" :data-clipboard-text='item._id'>
                                 <span class="glyphicon glyphicon-copy">复制战队 ID</span>
                             </button>

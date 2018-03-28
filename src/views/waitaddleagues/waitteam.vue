@@ -28,7 +28,7 @@
             <tbody>
             <tr v-for="(item, index) in pageList" class="trList">
                 <td>
-                    {{index+1}}
+                    {{(index+1) + tpageSize * (page-1)}}
                 </td>
                 <td>
                     {{item.teamName}}
@@ -37,7 +37,7 @@
                     {{item.gameType}}
                 </td>
                 <td class="operation" @click="addTeamsBtn(item)">
-                    队伍已添加
+                    <button class="btn btn-primary btn-my" type="button">队伍已添加</button>
                 </td>
             </tr>
             </tbody>

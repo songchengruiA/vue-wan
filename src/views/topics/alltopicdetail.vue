@@ -48,7 +48,7 @@
                     </div>
                     <!--资讯-->
                     <div class="col-xs-11" v-if="contentType === 1">
-                        <div style="cursor: pointer" class="ellipsis2">内容：{{item.mblog.content}}</div>
+                        <div style="cursor: pointer" class="ellipsis1">内容：{{item.mblog.content}}</div>
                         <div style="padding-top: 5px">
                             <span>评论数：{{item.commentNum}}个</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             <span>时间：{{item.createdAt | formatDate}}</span>
