@@ -48,8 +48,8 @@
         </el-col>
         <!--添加界面-->
         <el-dialog v-model="dialogVisible" :close-on-click-modal="false" class="dialog-small">
-            <el-form :model="topicGatherForm" label-width="120px">
-                <el-form-item label="话题集合Banner图片:" class="textarea-box">
+            <el-form :model="topicGatherForm" label-width="120px" ref="topicGatherForm" :rules="rules">
+                <el-form-item label="话题集合Banner图片:" class="textarea-box" prop="imageUrl">
                     <el-input v-model="topicGatherForm.imageUrl" auto-complete="off" :disabled='isDisabled'></el-input>
                     <el-upload
                             class="avatar-uploader"
@@ -64,7 +64,7 @@
                         <el-button size="small" type="primary" v-if="showBtn">点击上传</el-button>
                     </el-upload>
                 </el-form-item>
-                <el-form-item label="话题名称:" class="textarea-box">
+                <el-form-item label="话题名称:" class="textarea-box" prop="gatherFormList.title">
                     <el-input v-model="topicGatherForm.gatherFormList.title" auto-complete="off" placeholder="请输入话题名称" :disabled='isDisabled'></el-input>
                 </el-form-item>
                 <el-form-item label="相关的话题名称(ID):" class="textarea-box">
@@ -125,7 +125,7 @@
                         </li>
                     </ul>
                 </el-form-item>
-                <el-form-item label="话题集合简介:"  class="textarea-box">
+                <el-form-item label="话题集合简介:" class="textarea-box" prop="gatherFormList.content">
                     <el-input
                             :disabled='isDisabled'
                             :autosize="{ minRows: 2}"
@@ -137,9 +137,9 @@
                 <div class="dialog-footer">
                     <el-button @click="dialogVisible = false">取消</el-button>
                     <!--添加-->
-                    <el-button type="primary" @click="addSubmit()" v-if='isDisabled2'>提交</el-button>
+                    <el-button type="primary" @click="addSubmit('topicGatherForm')" v-if='isDisabled2'>提交</el-button>
                     <!--修改-->
-                    <el-button type="primary" @click="modifySubmit()" v-if='isDisabled3'>提交</el-button>
+                    <el-button type="primary" @click="modifySubmit('topicGatherForm')" v-if='isDisabled3'>提交</el-button>
                 </div>
             </el-form>
         </el-dialog>
@@ -174,17 +174,17 @@
                     gatherFormList:{},
                     imageUrl: ''
                 },
-//                rules: {
-//                    'gatherFormList.title': [
-//                        { required: true, message: '请输入Banner图片名称', trigger: 'blur' }
-//                    ],
-//                    'gatherFormList.content': [
-//                        { required: true, message: '请输入话题集合简介', trigger: 'blur' }
-//                    ],
-//                    imageUrl: [
-//                        { type: 'string', required: true, message: '请上传图片', trigger: 'blur' }
-//                    ]
-//                },
+                rules: {
+                    'gatherFormList.title': [
+                        { required: true, message: '请输入Banner图片名称', trigger: 'blur' }
+                    ],
+                    'gatherFormList.content': [
+                        { required: true, message: '请输入话题集合简介', trigger: 'blur' }
+                    ],
+                    imageUrl: [
+                        { type: 'string', required: true, message: '请上传图片', trigger: 'blur' }
+                    ]
+                },
                 fileData: {
                     mediaCategory: 1002
                 }
@@ -284,15 +284,15 @@
                     gatherFormList:{},
                     imageUrl: ''
                 };
-//                this.$nextTick(() => { //等待dom同步后打开模态框
-//                    this.$refs['topicBannerForm'].resetFields(); //此方法需要模态框加载完成后才可以执行
-//                });
+                this.$nextTick(() => { //等待dom同步后打开模态框
+                    this.$refs['topicGatherForm'].resetFields(); //此方法需要模态框加载完成后才可以执行
+                });
                 this.isDisabled2 = true;
                 this.isDisabled3 = false;
             },
-            addSubmit() {
-//                this.$refs[formName].validate((valid) => {
-//                    if (valid) {
+            addSubmit(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
                         for(var i = 0; i < this.topicGatherList.length; i++ ){
                             this.delIdList.push(this.topicGatherList[i]._id)
                         }
@@ -305,10 +305,10 @@
                             this.requestList();
                         });
 
-//                    } else {
-//                        return false;
-//                    }
-//                });
+                    } else {
+                        return false;
+                    }
+                });
             },
 //          修改
             modifyTopicGatherBtn(item) {
@@ -330,9 +330,9 @@
                 })
             },
 //          点击提交按钮
-            modifySubmit() {
-//                this.$refs[formName].validate((valid) => {
-//                    if (valid) {
+            modifySubmit(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
                         if(this.delList.length>0){
                             let tagId = this.topicGatherForm.gatherFormList._id;
                             let topicIds = this.delList.join(";");
@@ -357,10 +357,10 @@
                             alert("修改成功");
                             this.requestList();
                         });
-//                    } else {
-//                        return false;
-//                    }
-//                });
+                    } else {
+                        return false;
+                    }
+                });
             },
 //          删除
             deleteTopicGatherBtn(item) {

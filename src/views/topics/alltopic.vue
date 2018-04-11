@@ -69,11 +69,11 @@
         <!--添加界面-->
         <!--第一个界面-->
         <el-dialog v-model="dialogVisible" :close-on-click-modal="false" class="dialog-small">
-            <el-form :model="allTopicForm" label-width="120px" v-show="ShowModal ==1">
-                <el-form-item label="话题名称:">
+            <el-form :model="allTopicForm" label-width="120px" v-show="ShowModal ==1" ref="allTopicForm" :rules="rules">
+                <el-form-item label="话题名称:" prop="allTopicFormList.title">
                     <el-input v-model="allTopicForm.allTopicFormList.title" auto-complete="off" placeholder="请输入话题名称"></el-input>
                 </el-form-item>
-                <el-form-item label="话题头像:" >
+                <el-form-item label="话题头像:"  prop="topicIcon">
                     <el-input v-model="allTopicForm.topicIcon" auto-complete="off"></el-input>
                     <el-upload
                             class="avatar-uploader"
@@ -88,7 +88,7 @@
                         <el-button size="small" type="primary" v-if="showBtn">点击上传</el-button>
                     </el-upload>
                 </el-form-item>
-                <el-form-item label="话题类型:">
+                <el-form-item label="话题类型:" prop="topicType">
                     <el-select v-model="allTopicForm.topicType"  value-key="name"  filterable  placeholder="请选择话题类型">
                         <el-option
                                 v-for="item in optionsA"
@@ -98,7 +98,7 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="话题简介:"  class="textarea-box">
+                <el-form-item label="话题简介:"  class="textarea-box" prop="allTopicFormList.content">
                     <el-input
                             :autosize="{ minRows: 2}"
                             type="textarea"
@@ -148,9 +148,12 @@
                                     <small v-show="allTopicForm.pickWebsite == 1">关注人数：{{item.fansNum}}</small>
                                 </div>
                                 <div class="col-xs-6">
-                                    <div :class="{true:'ellipsis2'}[item.desc.length >= 60 && !item.contentLenght]" style="padding-top: 8px">内容：{{item.desc}}</div>
-                                    <!--<div class="easy-btn" ng-show="item.desc.length >= 60 && !item.contentLenght" ng-click="easyBtn1(item)">全文</div>-->
-                                    <!--<div class="easy-btn" ng-show="item.desc.length >= 60 && item.contentLenght" ng-click="easyBtn2(item)">收起</div>-->
+                                    <el-popover  trigger="hover" placement="top">
+                                        <p>{{item.desc}}</p>
+                                        <div slot="reference" class="name-wrapper" style="cursor: pointer">
+                                            <span class="crud--overflow ellipsis2">简介：{{item.desc}}</span>
+                                        </div>
+                                    </el-popover>
                                 </div>
                                 <div class="col-xs-1" style="padding-top: 10px">
                                     <button @click="addTopic(item)" style="background:#169bd5;margin-top: 0;line-height: 20px;" class="deleteBtn" v-show="!item.show">添加</button>
@@ -179,9 +182,12 @@
                                     <small v-show="allTopicForm.pickWebsite == 1">关注人数：{{item.fansNum}}</small>
                                 </div>
                                 <div class="col-xs-6">
-                                    <div :class="{true:'ellipsis2'}[item.desc.length >= 60 && !item.contentLenght]" style="padding-top: 8px">内容：{{item.desc}}</div>
-                                    <!--<div class="easy-btn" ng-show="item.desc.length >= 60 && !item.contentLenght" ng-click="easyBtn1(item)">全文</div>-->
-                                    <!--<div class="easy-btn" ng-show="item.desc.length >= 60 && item.contentLenght" ng-click="easyBtn2(item)">收起</div>-->
+                                    <el-popover  trigger="hover" placement="top">
+                                        <p>{{item.desc}}</p>
+                                        <div slot="reference" class="name-wrapper" style="cursor: pointer">
+                                            <span class="crud--overflow ellipsis2">简介：{{item.desc}}</span>
+                                        </div>
+                                    </el-popover>
                                     <div>筛选条件：
                                         <span v-if="item.grabKeyword" class="topic-type filterSpan"><small>{{item.grabKeyword}}</small></span>
                                         <span v-if="item.cardType && item.cardType !=3" class="topic-type"><small>{{data1[item.cardType]}}</small></span>
@@ -225,9 +231,9 @@
                     <el-button @click="dialogVisible = false">取消</el-button>
                     <el-button type="primary" @click="lastStepTwo()">上一步</el-button>
                     <!--添加-->
-                    <el-button type="primary" @click="addSubmit()" v-if='isDisabled1'>提交</el-button>
+                    <el-button type="primary" @click="addSubmit('allTopicForm')" v-if='isDisabled1'>提交</el-button>
                     <!--修改-->
-                    <el-button type="primary" @click="modifySubmit()" v-if='isDisabled2'>提交</el-button>
+                    <el-button type="primary" @click="modifySubmit('allTopicForm')" v-if='isDisabled2'>提交</el-button>
                 </div>
             </el-form>
         </el-dialog>
@@ -286,17 +292,17 @@
                     '1':'原创',
                     '0':'非原创'
                 },
-//                rules: {
-//                    'allTopicFormList.title': [
-//                        { required: true, message: '请输入Banner图片名称', trigger: 'blur' }
-//                    ],
-//                    'allTopicFormList.postId': [
-//                        { required: true, message: '请输入Id', trigger: 'blur' }
-//                    ],
-//                    topicIcon: [
-//                        { type: 'string', required: true, message: '请上传图片', trigger: 'blur' }
-//                    ]
-//                },
+                rules: {
+                    'allTopicFormList.title': [
+                        { required: true, message: '请输入话题名称', trigger: 'blur' }
+                    ],
+                    topicIcon: [
+                        { type: 'string', required: true, message: '请上传图片', trigger: 'blur' }
+                    ],
+                    'allTopicFormList.content': [
+                        { required: true, message: '请输入话题简介', trigger: 'blur' }
+                    ]
+                },
                 fileData: {
                     mediaCategory: 1002
                 }
@@ -368,7 +374,7 @@
                 this.allTopicForm = {
                     allTopicFormList:{},
                     topicIcon: '',
-                    topicType:'',
+                    topicType:1,
                     pickWebsite:1,
                     pickKeyword:'',
                     grabKeywords:[]
@@ -474,9 +480,9 @@
                 this.delList.push(item._id);
             },
 //          添加时点击提交按钮
-            addSubmit() {
-//                this.$refs[formName].validate((valid) => {
-//                    if (valid) {
+            addSubmit(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
                 this.allTopicForm.grabKeywords.forEach((item,index) => {
                     this.allTopicForm.grabKeywords[index].grabKeyword=this.grabKeyword?this.grabKeyword:'';
                     this.allTopicForm.grabKeywords[index].cardType=this.cardType;
@@ -492,10 +498,10 @@
                     this.requestList();
                 });
 
-//                    } else {
-//                        return false;
-//                    }
-//                });
+                    } else {
+                       return false;
+                    }
+                });
             },
 //          点击修改按钮
             modifyAllTopicBtn(item) {
@@ -525,9 +531,9 @@
                 })
             },
 //          点击提交按钮
-            modifySubmit() {
-//                this.$refs[formName].validate((valid) => {
-//                    if (valid) {
+            modifySubmit(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
                 this.allTopicForm.grabKeywords.forEach((item,index) => {
                     this.allTopicForm.grabKeywords[index].grabKeyword=this.grabKeyword?this.grabKeyword:'';
                     this.allTopicForm.grabKeywords[index].cardType=this.cardType;
@@ -543,10 +549,10 @@
                     alert("修改成功");
                     this.requestList();
                 });
-//                    } else {
-//                        return false;
-//                    }
-//                });
+                    } else {
+                        return false;
+                    }
+                });
             },
 //          删除
             deleteAllTopicBtn(item) {
