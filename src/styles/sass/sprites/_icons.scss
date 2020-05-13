@@ -1,0 +1,241 @@
+@import "compass/utilities/sprites/base";
+
+// General Sprite Defaults
+// You can override them before you import this file.
+$icons-sprite-dimensions : false !default;
+$icons-use-percentages   : false !default;
+$icons-position          : 0% !default;
+$icons-spacing           : 0 !default;
+$icons-repeat            : no-repeat !default;
+$icons-prefix            : '' !default;
+$icons-clean-up          : true !default;
+$icons-layout            : vertical !default;
+$icons-inline            : false !default;
+$icons-sort-by           : 'none' !default;
+$icons-class-separator   : $default-sprite-separator !default;
+$icons-sprite-base-class : ".icons#{$icons-class-separator}sprite" !default;
+
+  
+ // These variables control the generated sprite output
+ // You can override them selectively before you import this file.
+ 
+   $icons-LGD-position: $icons-position !default;
+   $icons-LGD-spacing:  $icons-spacing !default;
+   $icons-LGD-repeat:   $icons-repeat !default;
+ 
+   $icons-editguess-hidden-position: $icons-position !default;
+   $icons-editguess-hidden-spacing:  $icons-spacing !default;
+   $icons-editguess-hidden-repeat:   $icons-repeat !default;
+ 
+   $icons-end-hidden-btn-position: $icons-position !default;
+   $icons-end-hidden-btn-spacing:  $icons-spacing !default;
+   $icons-end-hidden-btn-repeat:   $icons-repeat !default;
+ 
+   $icons-error-position: $icons-position !default;
+   $icons-error-spacing:  $icons-spacing !default;
+   $icons-error-repeat:   $icons-repeat !default;
+ 
+   $icons-fail-position: $icons-position !default;
+   $icons-fail-spacing:  $icons-spacing !default;
+   $icons-fail-repeat:   $icons-repeat !default;
+ 
+   $icons-icon-add-games-position: $icons-position !default;
+   $icons-icon-add-games-spacing:  $icons-spacing !default;
+   $icons-icon-add-games-repeat:   $icons-repeat !default;
+ 
+   $icons-icon-add-guess-position: $icons-position !default;
+   $icons-icon-add-guess-spacing:  $icons-spacing !default;
+   $icons-icon-add-guess-repeat:   $icons-repeat !default;
+ 
+   $icons-icon-buld-guess-position: $icons-position !default;
+   $icons-icon-buld-guess-spacing:  $icons-spacing !default;
+   $icons-icon-buld-guess-repeat:   $icons-repeat !default;
+ 
+   $icons-icon-edit-guess-position: $icons-position !default;
+   $icons-icon-edit-guess-spacing:  $icons-spacing !default;
+   $icons-icon-edit-guess-repeat:   $icons-repeat !default;
+ 
+   $icons-icon-leagues-position: $icons-position !default;
+   $icons-icon-leagues-spacing:  $icons-spacing !default;
+   $icons-icon-leagues-repeat:   $icons-repeat !default;
+ 
+   $icons-icon-loading-position: $icons-position !default;
+   $icons-icon-loading-spacing:  $icons-spacing !default;
+   $icons-icon-loading-repeat:   $icons-repeat !default;
+ 
+   $icons-icon-no-data-position: $icons-position !default;
+   $icons-icon-no-data-spacing:  $icons-spacing !default;
+   $icons-icon-no-data-repeat:   $icons-repeat !default;
+ 
+   $icons-icon-out-guess-position: $icons-position !default;
+   $icons-icon-out-guess-spacing:  $icons-spacing !default;
+   $icons-icon-out-guess-repeat:   $icons-repeat !default;
+ 
+   $icons-icon-teams-position: $icons-position !default;
+   $icons-icon-teams-spacing:  $icons-spacing !default;
+   $icons-icon-teams-repeat:   $icons-repeat !default;
+ 
+   $icons-icon-wait-leagues-position: $icons-position !default;
+   $icons-icon-wait-leagues-spacing:  $icons-spacing !default;
+   $icons-icon-wait-leagues-repeat:   $icons-repeat !default;
+ 
+   $icons-icon-wait-teams-position: $icons-position !default;
+   $icons-icon-wait-teams-spacing:  $icons-spacing !default;
+   $icons-icon-wait-teams-repeat:   $icons-repeat !default;
+ 
+   $icons-original-position: $icons-position !default;
+   $icons-original-spacing:  $icons-spacing !default;
+   $icons-original-repeat:   $icons-repeat !default;
+ 
+   $icons-right-position: $icons-position !default;
+   $icons-right-spacing:  $icons-spacing !default;
+   $icons-right-repeat:   $icons-repeat !default;
+ 
+   $icons-twomenu-position: $icons-position !default;
+   $icons-twomenu-spacing:  $icons-spacing !default;
+   $icons-twomenu-repeat:   $icons-repeat !default;
+ 
+   $icons-win-position: $icons-position !default;
+   $icons-win-spacing:  $icons-spacing !default;
+   $icons-win-repeat:   $icons-repeat !default;
+ 
+
+ $icons-sprites: sprite-map("icons/*.png",
+ 
+   $icons-LGD-position: $icons-LGD-position, 
+   $icons-LGD-spacing:  $icons-LGD-spacing, 
+   $icons-LGD-repeat:   $icons-LGD-repeat,
+ 
+   $icons-editguess-hidden-position: $icons-editguess-hidden-position, 
+   $icons-editguess-hidden-spacing:  $icons-editguess-hidden-spacing, 
+   $icons-editguess-hidden-repeat:   $icons-editguess-hidden-repeat,
+ 
+   $icons-end-hidden-btn-position: $icons-end-hidden-btn-position, 
+   $icons-end-hidden-btn-spacing:  $icons-end-hidden-btn-spacing, 
+   $icons-end-hidden-btn-repeat:   $icons-end-hidden-btn-repeat,
+ 
+   $icons-error-position: $icons-error-position, 
+   $icons-error-spacing:  $icons-error-spacing, 
+   $icons-error-repeat:   $icons-error-repeat,
+ 
+   $icons-fail-position: $icons-fail-position, 
+   $icons-fail-spacing:  $icons-fail-spacing, 
+   $icons-fail-repeat:   $icons-fail-repeat,
+ 
+   $icons-icon-add-games-position: $icons-icon-add-games-position, 
+   $icons-icon-add-games-spacing:  $icons-icon-add-games-spacing, 
+   $icons-icon-add-games-repeat:   $icons-icon-add-games-repeat,
+ 
+   $icons-icon-add-guess-position: $icons-icon-add-guess-position, 
+   $icons-icon-add-guess-spacing:  $icons-icon-add-guess-spacing, 
+   $icons-icon-add-guess-repeat:   $icons-icon-add-guess-repeat,
+ 
+   $icons-icon-buld-guess-position: $icons-icon-buld-guess-position, 
+   $icons-icon-buld-guess-spacing:  $icons-icon-buld-guess-spacing, 
+   $icons-icon-buld-guess-repeat:   $icons-icon-buld-guess-repeat,
+ 
+   $icons-icon-edit-guess-position: $icons-icon-edit-guess-position, 
+   $icons-icon-edit-guess-spacing:  $icons-icon-edit-guess-spacing, 
+   $icons-icon-edit-guess-repeat:   $icons-icon-edit-guess-repeat,
+ 
+   $icons-icon-leagues-position: $icons-icon-leagues-position, 
+   $icons-icon-leagues-spacing:  $icons-icon-leagues-spacing, 
+   $icons-icon-leagues-repeat:   $icons-icon-leagues-repeat,
+ 
+   $icons-icon-loading-position: $icons-icon-loading-position, 
+   $icons-icon-loading-spacing:  $icons-icon-loading-spacing, 
+   $icons-icon-loading-repeat:   $icons-icon-loading-repeat,
+ 
+   $icons-icon-no-data-position: $icons-icon-no-data-position, 
+   $icons-icon-no-data-spacing:  $icons-icon-no-data-spacing, 
+   $icons-icon-no-data-repeat:   $icons-icon-no-data-repeat,
+ 
+   $icons-icon-out-guess-position: $icons-icon-out-guess-position, 
+   $icons-icon-out-guess-spacing:  $icons-icon-out-guess-spacing, 
+   $icons-icon-out-guess-repeat:   $icons-icon-out-guess-repeat,
+ 
+   $icons-icon-teams-position: $icons-icon-teams-position, 
+   $icons-icon-teams-spacing:  $icons-icon-teams-spacing, 
+   $icons-icon-teams-repeat:   $icons-icon-teams-repeat,
+ 
+   $icons-icon-wait-leagues-position: $icons-icon-wait-leagues-position, 
+   $icons-icon-wait-leagues-spacing:  $icons-icon-wait-leagues-spacing, 
+   $icons-icon-wait-leagues-repeat:   $icons-icon-wait-leagues-repeat,
+ 
+   $icons-icon-wait-teams-position: $icons-icon-wait-teams-position, 
+   $icons-icon-wait-teams-spacing:  $icons-icon-wait-teams-spacing, 
+   $icons-icon-wait-teams-repeat:   $icons-icon-wait-teams-repeat,
+ 
+   $icons-original-position: $icons-original-position, 
+   $icons-original-spacing:  $icons-original-spacing, 
+   $icons-original-repeat:   $icons-original-repeat,
+ 
+   $icons-right-position: $icons-right-position, 
+   $icons-right-spacing:  $icons-right-spacing, 
+   $icons-right-repeat:   $icons-right-repeat,
+ 
+   $icons-twomenu-position: $icons-twomenu-position, 
+   $icons-twomenu-spacing:  $icons-twomenu-spacing, 
+   $icons-twomenu-repeat:   $icons-twomenu-repeat,
+ 
+   $icons-win-position: $icons-win-position, 
+   $icons-win-spacing:  $icons-win-spacing, 
+   $icons-win-repeat:   $icons-win-repeat,
+ 
+ $layout   : $icons-layout,
+ $cleanup  : $icons-clean-up,
+ $spacing  : $icons-spacing,
+ $position : $icons-position,
+ $sort-by  : $icons-sort-by
+ );
+
+
+// All sprites should extend this class
+// The icons-sprite mixin will do so for you.
+@if $icons-inline {
+  #{$icons-sprite-base-class} {
+    background-image: inline-sprite($icons-sprites);
+  } 
+} @else {
+  #{$icons-sprite-base-class} {
+    background-image: sprite-url($icons-sprites);
+    background-repeat: no-repeat;
+  }
+}
+//sass functions to return the dimensions of a sprite image as units
+
+  @function icons-sprite-width($name) {
+    @return sprite-width($icons-sprites, $name);
+  }
+
+  @function icons-sprite-height($name) {
+    @return sprite-height($icons-sprites, $name);
+  }
+
+
+// Use this to set the dimensions of an element
+// based on the size of the original image.
+@mixin icons-sprite-dimensions($name) {
+  @include sprite-dimensions($icons-sprites, $name)
+}
+
+// Move the background position to display the sprite.
+@mixin icons-sprite-position($name, $offset-x: 0, $offset-y: 0, $use-percentages: $icons-use-percentages) {
+  @include sprite-background-position($icons-sprites, $name, $offset-x, $offset-y, $use-percentages)
+}
+
+// Extends the sprite base class and set the background position for the desired sprite.
+// It will also apply the image dimensions if $dimensions is true.
+@mixin icons-sprite($name, $dimensions: $icons-sprite-dimensions, $offset-x: 0, $offset-y: 0, $use-percentages: $icons-use-percentages, $separator: $icons-class-separator) {
+  @extend #{$icons-sprite-base-class};
+  @include sprite($icons-sprites, $name, $dimensions, $offset-x, $offset-y, $use-percentages, $separator: $separator);
+}
+
+@mixin icons-sprites($sprite-names, $dimensions: $icons-sprite-dimensions, $prefix: sprite-map-name($icons-sprites), $offset-x: 0, $offset-y: 0, $use-percentages: $icons-use-percentages, $separator: $icons-class-separator) {
+  @include sprites($icons-sprites, $sprite-names, $icons-sprite-base-class, $dimensions, $prefix, $offset-x, $offset-y, $use-percentages, $separator: $separator)
+}
+
+// Generates a class for each sprited image.
+@mixin all-icons-sprites($dimensions: $icons-sprite-dimensions, $prefix: sprite-map-name($icons-sprites), $offset-x: 0, $offset-y: 0, $use-percentages: $icons-use-percentages, $separator: $icons-class-separator) {
+  @include icons-sprites(LGD editguess-hidden end-hidden-btn error fail icon-add-games icon-add-guess icon-buld-guess icon-edit-guess icon-leagues icon-loading icon-no-data icon-out-guess icon-teams icon-wait-leagues icon-wait-teams original right twomenu win, $dimensions, $prefix, $offset-x, $offset-y, $use-percentages, $separator: $separator);
+}

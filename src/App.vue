@@ -37,7 +37,7 @@ body {
 	cursor: pointer!important;
 	padding-left: 32px!important;
 	font-weight: 600!important;
-	background: #454b5a!important;
+	background: #363a46!important;
 }
 #app {
 	position: absolute;
@@ -47,12 +47,12 @@ body {
 }
 
 .el-submenu [class^=fa] {
-	vertical-align: baseline;
+	vertical-align: middle;
 	margin-right: 10px;
 }
 
 .el-menu-item [class^=fa] {
-	vertical-align: baseline;
+	vertical-align: middle;
 	margin-right: 10px;
 }
 

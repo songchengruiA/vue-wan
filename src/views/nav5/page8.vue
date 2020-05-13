@@ -1,4 +1,0 @@
-<template>
-	<section>page8...
-	</section>
-</template>

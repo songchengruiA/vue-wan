@@ -1,0 +1,169 @@
+@charset "UTF-8";
+/* Welcome to Compass.
+ * In this file you should write your main styles. (or centralize your imports)
+ * Import this file using the following HTML or equivalent:
+ * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
+/*!
+  SETTING
+  _variables.............................................变量集中存储文件
+  _mixin.................................................mixin集中存储文件
+  _icons.................................................png图片精灵图
+
+  TOOLSghy
+
+
+  COMPONENTS
+  reset.................................................Compass内置浏览器重置样式文件
+
+
+  BUSINESS
+
+
+  BASE
+  screen.scss..........................................针对当前站点主页的样式修饰
+ */
+/* line 200, icons/*.png */
+.icons-sprite, .icons-LGD, .icons-editguess-hidden, .icons-end-hidden-btn, .icons-error, .icons-fail, .icons-icon-add-games, .icons-icon-add-guess, .icons-icon-buld-guess, .icons-icon-edit-guess, .icons-icon-leagues, .icons-icon-loading, .icons-icon-no-data, .icons-icon-out-guess, .icons-icon-teams, .icons-icon-wait-leagues, .icons-icon-wait-teams, .icons-original, .icons-right, .icons-twomenu, .icons-win {
+  background-image: url('../images/icons-sf7f1d62785.png');
+  background-repeat: no-repeat;
+}
+
+/* line 84, ../../../../../../usr/local/lib/ruby/gems/2.4.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
+.icons-LGD {
+  background-position: 0 0;
+  height: 60px;
+  width: 100px;
+}
+
+/* line 84, ../../../../../../usr/local/lib/ruby/gems/2.4.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
+.icons-editguess-hidden {
+  background-position: 0 -60px;
+  height: 59px;
+  width: 59px;
+}
+
+/* line 84, ../../../../../../usr/local/lib/ruby/gems/2.4.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
+.icons-end-hidden-btn {
+  background-position: 0 -119px;
+  height: 32px;
+  width: 48px;
+}
+
+/* line 84, ../../../../../../usr/local/lib/ruby/gems/2.4.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
+.icons-error {
+  background-position: 0 -151px;
+  height: 12px;
+  width: 12px;
+}
+
+/* line 84, ../../../../../../usr/local/lib/ruby/gems/2.4.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
+.icons-fail {
+  background-position: 0 -163px;
+  height: 52px;
+  width: 52px;
+}
+
+/* line 84, ../../../../../../usr/local/lib/ruby/gems/2.4.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
+.icons-icon-add-games {
+  background-position: 0 -215px;
+  height: 23px;
+  width: 23px;
+}
+
+/* line 84, ../../../../../../usr/local/lib/ruby/gems/2.4.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
+.icons-icon-add-guess {
+  background-position: 0 -238px;
+  height: 23px;
+  width: 23px;
+}
+
+/* line 84, ../../../../../../usr/local/lib/ruby/gems/2.4.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
+.icons-icon-buld-guess {
+  background-position: 0 -261px;
+  height: 23px;
+  width: 23px;
+}
+
+/* line 84, ../../../../../../usr/local/lib/ruby/gems/2.4.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
+.icons-icon-edit-guess {
+  background-position: 0 -284px;
+  height: 23px;
+  width: 23px;
+}
+
+/* line 84, ../../../../../../usr/local/lib/ruby/gems/2.4.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
+.icons-icon-leagues {
+  background-position: 0 -307px;
+  height: 14px;
+  width: 15px;
+}
+
+/* line 84, ../../../../../../usr/local/lib/ruby/gems/2.4.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
+.icons-icon-loading {
+  background-position: 0 -321px;
+  height: 12px;
+  width: 15px;
+}
+
+/* line 84, ../../../../../../usr/local/lib/ruby/gems/2.4.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
+.icons-icon-no-data {
+  background-position: 0 -333px;
+  height: 200px;
+  width: 176px;
+}
+
+/* line 84, ../../../../../../usr/local/lib/ruby/gems/2.4.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
+.icons-icon-out-guess {
+  background-position: 0 -533px;
+  height: 23px;
+  width: 23px;
+}
+
+/* line 84, ../../../../../../usr/local/lib/ruby/gems/2.4.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
+.icons-icon-teams {
+  background-position: 0 -556px;
+  height: 14px;
+  width: 15px;
+}
+
+/* line 84, ../../../../../../usr/local/lib/ruby/gems/2.4.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
+.icons-icon-wait-leagues {
+  background-position: 0 -570px;
+  height: 23px;
+  width: 23px;
+}
+
+/* line 84, ../../../../../../usr/local/lib/ruby/gems/2.4.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
+.icons-icon-wait-teams {
+  background-position: 0 -593px;
+  height: 13px;
+  width: 15px;
+}
+
+/* line 84, ../../../../../../usr/local/lib/ruby/gems/2.4.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
+.icons-original {
+  background-position: 0 -606px;
+  height: 51px;
+  width: 50px;
+}
+
+/* line 84, ../../../../../../usr/local/lib/ruby/gems/2.4.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
+.icons-right {
+  background-position: 0 -657px;
+  height: 15px;
+  width: 27px;
+}
+
+/* line 84, ../../../../../../usr/local/lib/ruby/gems/2.4.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
+.icons-twomenu {
+  background-position: 0 -672px;
+  height: 16px;
+  width: 8px;
+}
+
+/* line 84, ../../../../../../usr/local/lib/ruby/gems/2.4.0/gems/compass-core-1.0.3/stylesheets/compass/utilities/sprites/_base.scss */
+.icons-win {
+  background-position: 0 -688px;
+  height: 52px;
+  width: 52px;
+}

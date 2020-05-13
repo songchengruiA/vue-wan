@@ -18,9 +18,10 @@
 					 unique-opened router v-show="!collapsed">
 					<template v-for="(item,index) in $router.options.routes" v-if="!item.hidden">
 						<el-menu-item v-if="item.leaf&&item.children.length>0" :index="item.children[0].path"><i :class="item.iconCls"></i>{{item.children[0].name}}</el-menu-item>
-						<el-submenu :index="index+''" v-if="!item.leaf">
+						<el-submenu :index="index+''" v-if="!item.leaf" >
 							<template slot="title"><i :class="item.iconCls"></i>{{item.name}}</template>
-							<el-menu-item v-for="child in item.children" :index="child.path" :key="child.path" v-if="!child.hidden">{{child.name}}</el-menu-item>
+							<el-menu-item v-for="child in item.children" :index="child.path" :key="child.path" v-if="!child.hidden" style="padding-left: 60px !important;">
+								<i :class="child.iconCls"></i>{{child.name}}</el-menu-item>
 						</el-submenu>
 					</template>
 				</el-menu>
@@ -37,7 +38,6 @@
 		</el-col>
 	</el-row>
 </template>
-
 <script>
 	export default {
 		data() {
@@ -75,13 +75,11 @@
 				this.$confirm('确认退出吗?', '提示', {
 					//type: 'warning'
 				}).then(() => {
-					sessionStorage.removeItem('user');
+					sessionStorage.clear();
 					_this.$router.push('/login');
 				}).catch(() => {
 
 				});
-
-
 			},
 			//折叠导航栏
 			collapse:function(){
@@ -105,7 +103,7 @@
 </script>
 
 <style scoped lang="scss">
-	.container {
+    .container {
 		font-family: "PingFangSC-Regular", "Microsoft YaHei", "sans-serif", "Arial Narrow";
 		position: absolute;
 		top: 0px;
@@ -120,6 +118,8 @@
 			border-radius: 0;
 			box-shadow: 0 2px 2px 0 #e6e6e6;
 			margin-bottom: 0;
+			position: absolute;
+			z-index: 222;
 			.title{
 				font-size: 28px;
 				margin-left: 40px;
@@ -142,7 +142,7 @@
 				width: 250px;
 				height: 90px;
 				background: #fc3938;
-				background-image: url(../images/logo.jpg);
+				background-image: url(../../resource/img/logo.jpg);
 				background-repeat: no-repeat;
 				background-position-x: 38px;
 				background-position-y: 21px;
@@ -170,7 +170,6 @@
 		}
 		.main {
 			display: flex;
-			// background: #324057;
 			position: absolute;
 			top: 90px;
 			bottom: 0px;
@@ -180,10 +179,7 @@
 				width: 250px;
 				color: #cfcfcf;
 				font-size: 16px;
-				// position: absolute;
-				// top: 0px;
-				// bottom: 0px;
-				.el-menu{
+                .el-menu{
 					height: 100%;
 					background: #3d4250;
 				}
@@ -200,27 +196,29 @@
 						height:auto;
 						display:none;
 					}
-
-				}
+                }
 			}
 			.el-menu-item:hover{
 				color: #fff;
 			}
-			.el-menu-item {
+            .el-menu-item {
 				height: 90px;
 				color: #cfcfcf;
 				font-size: 16px;
 				padding: 35px 0 38px 32px;
 				line-height: 24px;
-				border-bottom: 3px solid #323845;
+				border-bottom: 3px solid #2c313d;
 				cursor: pointer;
 				padding-left: 32px!important;
 				font-weight: 600;
-				background: #454b5a;
+				background: #363a46;
 			}
 			.el-submenu__icon-arrow{
 				margin-top: -4px;
 			}
+            .el-submenu{
+                border-bottom: 3px solid #2c313d;
+            }
 			.menu-collapsed{
 				flex:0 0 60px;
 				width: 60px;
@@ -232,19 +230,13 @@
 				overflow-y: auto;
 				padding: 0;
 				background: #3d4250;
+				z-index: 1110;
 			}
 			.content-container {
-				// background: #f1f2f7;
 				flex:1;
-				// position: absolute;
-				// right: 0px;
-				// top: 0px;
-				// bottom: 0px;
-				// left: 230px;
-				overflow-y: scroll;
+                overflow-y: scroll;
 				padding: 20px;
 				.breadcrumb-container {
-					//margin-bottom: 15px;
 					.title {
 						width: 200px;
 						float: left;

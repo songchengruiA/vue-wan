@@ -5,7 +5,7 @@
       <el-input type="text" v-model="ruleForm2.account" auto-complete="off" placeholder="账号"></el-input>
     </el-form-item>
     <el-form-item prop="checkPass">
-      <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off" placeholder="密码"></el-input>
+      <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off" placeholder="密码1" @keyup.enter.native="handleSubmit2"></el-input>
     </el-form-item>
     <el-checkbox v-model="checked" checked class="remember">记住密码</el-checkbox>
     <el-form-item style="width:100%;">
@@ -25,7 +25,7 @@
         logining: false,
         ruleForm2: {
           account: 'song',
-          checkPass: '123song'
+          checkPass: '123456'
         },
         rules2: {
           account: [
@@ -41,7 +41,7 @@
       };
     },
     methods: {
-      handleReset2() {
+        handleReset2() {
         this.$refs.ruleForm2.resetFields();
       },
       handleSubmit2(ev) {
@@ -50,11 +50,10 @@
           if (valid) {
             //_this.$router.replace('/table');
             this.logining = true;
-              let password = this.ruleForm2.checkPass
+            let password = this.ruleForm2.checkPass
             //NProgress.start();
             var loginParams = { username: this.ruleForm2.account, password: password};
             requestLogin(loginParams).then(data => {
-                console.log(data)
               this.logining = false;
               //NProgress.done();
               let { msg, status } = data;
@@ -67,7 +66,8 @@
               } else {
                 sessionStorage.setItem('user', JSON.stringify(nickname));
                 sessionStorage.setItem('token', JSON.stringify(token));
-                this.$router.push({ path: '/page6' });
+                this.$router.push({ path: '/addguess' });
+                location.reload()
               }
             });
           } else {

@@ -4,16 +4,22 @@ import axios from 'axios'
 import Login from './views/Login.vue'
 import NotFound from './views/404.vue'
 import Home from './views/Home.vue'
-import Main from './views/Main.vue'
-import Table from './views/nav1/Table.vue'
-import Form from './views/nav1/Form.vue'
-import user from './views/nav1/user.vue'
-import Page4 from './views/nav2/Page4.vue'
-import Page5 from './views/nav2/Page5.vue'
-import Page6 from './views/nav3/Page6.vue'
-import Page7 from './views/nav4/Page7.vue'
-import Page8 from './views/nav5/Page8.vue'
-import echarts from './views/charts/echarts.vue'
+import waitLeague from './views/waitaddleagues/waitleague.vue'
+import waitTeam from './views/waitaddleagues/waitteam.vue'
+import addLeague from './views/addleagues/addleague.vue'
+import addTeam from './views/addleagues/addteam.vue'
+import addGuess from './views/addguess/addguess.vue'
+import exditGuess from './views/exterguess/exterguess.vue'
+import Page from './views/page.vue'
+import editGuess from './views/editguess/editguess.vue'
+import editDetail from './views/editguess/editdetail.vue'
+import setGuess from './views/setguess/setguess.vue'
+import setGuessDetail from './views/setguess/setguessdetail.vue'
+import topicBanner from './views/topics/topicbanner.vue'
+import topicGather from './views/topics/topicgather.vue'
+import allTopic from './views/topics/alltopic.vue'
+import allTopicDetail from './views/topics/alltopicdetail.vue'
+import hotTopic from './views/topics/hottopic.vue'
 
 Vue.use(VueRouter)
 let routes = [
@@ -27,90 +33,91 @@ let routes = [
         path: '/404',
         component: NotFound,
         name: '',
+        meta: {
+            requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
+        },
         hidden: true
     },
     {
         path: '/',
         component: Home,
         name: '',
-        iconCls: 'fa fa-address-card',
+        iconCls: 'fa icons-icon-buld-guess',
         leaf: true,//只有一个节点
         children: [
-            { path: '/page6', component: Page6, name: '创建预备竞猜' }
+            { path: '/addguess', component: addGuess, name: '创建预备竞猜' }
         ]
     },
     {
         path: '/',
         component: Home,
         name: '',
-        iconCls: 'fa fa-address-card',
+        iconCls: 'fa icons-icon-out-guess',
         leaf: true,//只有一个节点
         children: [
-            { path: '/page7', component: Page7, name: '外部预备竞猜' }
+            { path: '/exterguess', component: exditGuess,meta: {requireAuth: true,}, name: '外部预备竞猜' }
         ]
     },
     {
         path: '/',
         component: Home,
         name: '',
-        iconCls: 'fa fa-address-card',
+        iconCls: 'fa icons-icon-edit-guess',
         leaf: true,//只有一个节点
         children: [
-            { path: '/page8', component: Page8, name: '编辑已上传竞猜' }
-        ]
-    },
-    {
-        path: '/',
-        component: Home,
-        name: '导航一',
-        iconCls: 'el-icon-message',//图标样式class
-        children: [
-            { path: '/main', component: Main, name: '主页', hidden: true },
-            { path: '/table', component: Table, name: 'Table' },
-            { path: '/form', component: Form, name: 'Form' },
-            { path: '/user', component: user, name: '列表' },
+            { path: '/editguess', component: Page, name: '编辑已上传竞猜',children:[
+                {path:'',meta: {requireAuth: true,},component: editGuess},
+                {path:'/editguess/:id',meta: {requireAuth: true,},component: editDetail}
+            ]}
         ]
     },
     {
         path: '/',
         component: Home,
         name: '待添加赛事及战队',
-        iconCls: 'fa fa-id-card-o',
+        iconCls: 'fa icons-icon-wait-leagues',
         children: [
-            { path: '/page4', component: Page4, name: '待添加赛事' },
-            { path: '/page5', component: Page5, name: '待添加战队' }
+            { path: '/waitleague', iconCls: 'fa icons-icon-leagues',meta: {requireAuth: true,}, component: waitLeague, name: '待添加赛事' },
+            { path: '/waitteam', iconCls: 'fa icons-icon-wait-teams',meta: {requireAuth: true,}, component: waitTeam, name: '待添加战队' }
         ]
     },
     {
         path: '/',
         component: Home,
-        name: '添加赛事以及战队',
-        iconCls: 'fa fa-id-card-o',
+        name: '添加赛事及战队',
+        iconCls: 'fa icons-icon-add-games',
         children: [
-            { path: '/page4', component: Page4, name: '添加赛事' },
-            { path: '/page5', component: Page5, name: '添加战队' }
+            { path: '/addleague', iconCls: 'fa icons-icon-loading',meta: {requireAuth: true,}, component: addLeague, name: '添加赛事' },
+            { path: '/addteam', iconCls: 'fa icons-icon-teams',meta: {requireAuth: true,}, component: addTeam, name: '添加战队' }
         ]
     },
     {
         path: '/',
-        meta: {
-            requireAuth: true,
-        },
         component: Home,
         name: '',
-        iconCls: 'fa fa-address-card',
+        iconCls: 'fa icons-icon-add-guess',
         leaf: true,//只有一个节点
         children: [
-            { path: '/page8', component: Page8, name: '创建趣味竞猜' }
+            { path: '/setguess', component: Page, name: '创建冠军竞猜' ,children:[
+                {path:'',component: setGuess},
+                {path:'/setguess/add/',meta: {requireAuth: true,},component: setGuessDetail},
+                {path:'/setguess/add/:id',meta: {requireAuth: true,},component: setGuessDetail}
+            ]}
         ]
     },
     {
         path: '/',
         component: Home,
-        name: 'Charts',
-        iconCls: 'fa fa-bar-chart',
+        name: '话题',
+        iconCls: 'fa icons-icon-add-games',
         children: [
-            { path: '/echarts', component: echarts, name: 'echarts' }
+            { path: '/topicbanner', iconCls: 'fa icons-icon-loading',meta: {requireAuth: true,}, component: topicBanner, name: '话题Banner' },
+            { path: '/topicgather', iconCls: 'fa icons-icon-teams',meta: {requireAuth: true,}, component: topicGather, name: '话题集合' },
+            { path: '/alltopic', iconCls: 'fa icons-icon-loading', component: Page, name: '全部话题', children: [
+                {path:'',meta: {requireAuth: true,},component: allTopic},
+                {path:'/alltopic/:id/:detailType/:num',meta: {requireAuth: true,},component: allTopicDetail}
+            ]},
+            { path: '/hottopic', iconCls: 'fa icons-icon-teams',meta: {requireAuth: true,}, component: hotTopic, name: '热门话题' }
         ]
     },
     {
@@ -124,31 +131,22 @@ const router = new VueRouter({
     routes
 });
 var token = JSON.parse(sessionStorage.getItem('token'));
+// 全局导航钩子
 router.beforeEach((to, from, next) => {
-    if (to.matched.some(r => r.meta.requireAuth)) {
-
+    if (to.meta.requireAuth) {  // 判断该路由是否需要登录权限
+        if (token) {  // 通过vuex state获取当前的token是否存在
+            next();
+        }
+        else {
+            next({
+                query: {redirect: to.fullPath}  // 将跳转的路由path作为参数，登录成功后跳转到该路由
+            })
+        }
     }
     else {
-        axios.interceptors.request.use(
-            config => {
-                if (token) {  // 判断是否存在token，如果存在的话，则每个http header都加上token
-                    alert(12)
-                    config.headers.Authorization = `token ${token}`;
-                }
-                return config;
-            },
-            err => {
-                alert(1212)
-            });
-        axios.interceptors.response.use(
-            response => {
-                alert(123)
-                return response;
-            },
-            error => {
-
-            });
         next();
     }
 })
+
+
 export default router;

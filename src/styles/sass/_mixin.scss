@@ -1,0 +1,15 @@
+//左边菜单下划线
+@mixin slider-border-bottom {
+  border-bottom: 3px solid #323845;
+}
+//头部下划线
+@mixin title-border-bottom {
+  border-bottom: 1px solid #dddddd;
+  box-shadow: 0 2px 2px 0 #e6e6e6;
+}
+//列表下划线
+@mixin list-border-top {
+  border: 1px solid #d7d7d7;
+}
+
+
